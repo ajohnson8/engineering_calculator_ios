@@ -161,6 +161,8 @@
         NSData* myDataKilovolt_Amps = [NSKeyedArchiver archivedDataWithRootObject:[NSNumber numberWithInt:[_kilaVoltAmpsTxt.text integerValue]]];
         [UICKeyChainStore setData:myDataKilovolt_Amps forKey:@"SystemDefaultsKilovolt_Amps"];
         
+        [TSMessage showNotificationInViewController:self title:@"SubdivisionLoadFormula" subtitle:@"Defaults has been set." type:TSMessageNotificationTypeSuccess duration:1.5];
+        
         
     }else {
         NSData* myDataXFRMR = [UICKeyChainStore dataForKey:@"SystemDefaultsXFRMR"];
@@ -179,6 +181,8 @@
         [_kilaVoltAmpsTxt setText:[NSString stringWithFormat:@"%@",subDivLoadVar.kilovolt_amps]];
         [_voltTxt setText:[NSString stringWithFormat:@"%@",subDivLoadVar.volts]];
         [_xfrmrTVC reloadData];
+        
+        [TSMessage showNotificationInViewController:self title:@"SubdivisionLoadFormula" subtitle:@"Defaults has been set." type:TSMessageNotificationTypeSuccess duration:1.5];
     }
     
 }

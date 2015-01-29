@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 #import <UICKeyChainStore/UICKeyChainStore.h>
+#import <TSMessages/TSMessage.h>
 #import "SubdivisionLoadVariables.h"
 #import "NumberPadDoneBtn.h"
 

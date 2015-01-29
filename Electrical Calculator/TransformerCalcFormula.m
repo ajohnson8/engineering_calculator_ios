@@ -93,6 +93,8 @@
         [UICKeyChainStore setData:myDataArrayLLSec forKey:@"SystemDefaultsArrayLLSec"];
         [UICKeyChainStore setData:myDataArrayPhase forKey:@"SystemDefaultsArrayPhase"];
         
+        [TSMessage showNotificationInViewController:self title:@"TransformerCalcFormula" subtitle:@"Defaults has been save." type:TSMessageNotificationTypeSuccess duration:1.5];
+        
     }else {
         NSData* myDataArrayPhase = [UICKeyChainStore dataForKey:@"SystemDefaultsArrayPhase"];
         NSMutableArray* defaultPhases = [NSKeyedUnarchiver unarchiveObjectWithData:myDataArrayPhase];
@@ -121,6 +123,8 @@
         [_tcFLAPLlb setText:[self roundingUp:0.00]];
         [_tcFLASLlb setText:[self roundingUp:0.00]];
 
+        [TSMessage showNotificationInViewController:self title:@"TransformerCalcFormula" subtitle:@"Defaults has been set." type:TSMessageNotificationTypeSuccess duration:1.5];
+        
     }
     
 }

@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import <UICKeyChainStore/UICKeyChainStore.h>
+#import <TSMessages/TSMessage.h>
 #import "TransformerCalcVariables.h"
 #import "NumberPadDoneBtn.h"
 
