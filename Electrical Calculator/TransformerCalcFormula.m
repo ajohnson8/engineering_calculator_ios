@@ -52,6 +52,13 @@
 #pragma mark - IBActions
 
 - (IBAction)pressedConfig:(id)sender {
+    
+    [UIView transitionWithView:self.view
+                      duration:1
+                       options:UIViewAnimationOptionTransitionFlipFromRight
+                    animations:^{ }
+                    completion:NULL];
+    
     BOOL boolValue = [[UICKeyChainStore stringForKey:@"SubdivisionLoadFormulaConfig"] boolValue];
     [self.view endEditing:YES];
     
@@ -93,7 +100,7 @@
         [UICKeyChainStore setData:myDataArrayLLSec forKey:@"SystemDefaultsArrayLLSec"];
         [UICKeyChainStore setData:myDataArrayPhase forKey:@"SystemDefaultsArrayPhase"];
         
-        [TSMessage showNotificationInViewController:self title:@"TransformerCalcFormula" subtitle:@"Defaults has been save." type:TSMessageNotificationTypeSuccess duration:1.5];
+        [TSMessage showNotificationInViewController:self.navigationController.viewControllers.lastObject title:@"TransformerCalcFormula" subtitle:@"Defaults has been save." type:TSMessageNotificationTypeSuccess duration:1.5];
         
     }else {
         NSData* myDataArrayPhase = [UICKeyChainStore dataForKey:@"SystemDefaultsArrayPhase"];
@@ -123,7 +130,7 @@
         [_tcFLAPLlb setText:[self roundingUp:0.00]];
         [_tcFLASLlb setText:[self roundingUp:0.00]];
 
-        [TSMessage showNotificationInViewController:self title:@"TransformerCalcFormula" subtitle:@"Defaults has been set." type:TSMessageNotificationTypeSuccess duration:1.5];
+        [TSMessage showNotificationInViewController:self.navigationController.viewControllers.lastObject title:@"TransformerCalcFormula" subtitle:@"Defaults has been set." type:TSMessageNotificationTypeSuccess duration:1.5];
         
     }
     

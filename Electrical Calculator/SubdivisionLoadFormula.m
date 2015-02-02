@@ -16,7 +16,7 @@
 @end
 
 @implementation SubdivisionLoadFormula
-@synthesize subDivLoadVar;
+@synthesize subDivLoadVar,quantityPickerPopover = _quantityPickerPopover;
 
 #pragma mark - Life cycle
 
@@ -76,9 +76,9 @@
         }
     }
     if (UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPad){
-    UITapGestureRecognizer *tapper = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleSingleTap:)];
-    tapper.cancelsTouchesInView = NO;
-    [self.view addGestureRecognizer:tapper];
+        UITapGestureRecognizer *tapper = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleSingleTap:)];
+        tapper.cancelsTouchesInView = NO;
+        [self.view addGestureRecognizer:tapper];
     }
 }
 
@@ -121,6 +121,13 @@
 #pragma mark - IBActions
 
 - (IBAction)pressedConfig:(id)sender {
+    
+    [UIView transitionWithView:self.view
+                      duration:1
+                       options:UIViewAnimationOptionTransitionFlipFromRight
+                    animations:^{ }
+                    completion:NULL];
+    
     BOOL boolValue = [[UICKeyChainStore stringForKey:@"SubdivisionLoadFormulaConfig"] boolValue];
     [self resignFirstResponder];
     if (boolValue) {
@@ -161,7 +168,7 @@
         NSData* myDataKilovolt_Amps = [NSKeyedArchiver archivedDataWithRootObject:[NSNumber numberWithInt:[_kilaVoltAmpsTxt.text integerValue]]];
         [UICKeyChainStore setData:myDataKilovolt_Amps forKey:@"SystemDefaultsKilovolt_Amps"];
         
-        [TSMessage showNotificationInViewController:self title:@"SubdivisionLoadFormula" subtitle:@"Defaults has been set." type:TSMessageNotificationTypeSuccess duration:1.5];
+        [TSMessage showNotificationInViewController:self.navigationController.viewControllers.lastObject title:@"SubdivisionLoadFormula" subtitle:@"Defaults has been set." type:TSMessageNotificationTypeSuccess duration:1.5];
         
         
     }else {
@@ -182,7 +189,7 @@
         [_voltTxt setText:[NSString stringWithFormat:@"%@",subDivLoadVar.volts]];
         [_xfrmrTVC reloadData];
         
-        [TSMessage showNotificationInViewController:self title:@"SubdivisionLoadFormula" subtitle:@"Defaults has been set." type:TSMessageNotificationTypeSuccess duration:1.5];
+        [TSMessage showNotificationInViewController:self.navigationController.viewControllers.lastObject title:@"SubdivisionLoadFormula" subtitle:@"Defaults has been set." type:TSMessageNotificationTypeSuccess duration:1.5];
     }
     
 }
@@ -202,6 +209,14 @@
     return subDivLoadVar.xfrmr.count;
 }
 
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (_config) {
+        return 60;
+    } else {
+        return 60;
+    }
+}
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     if (!_config) {
         static NSString *simpleTableIdentifier = @"SetQuantity";
@@ -211,17 +226,14 @@
             NSArray *nib = [[NSBundle mainBundle] loadNibNamed:@"SetQuantity" owner:self options:nil];
             cell = [nib objectAtIndex:0];
         }
-        NumberPadDoneBtn *doneNumBtn = [[NumberPadDoneBtn alloc]initWithFrame:CGRectMake(0,0,1,1)];
         
         XFRMR *temp = subDivLoadVar.xfrmr[indexPath.row];
-        [cell.quantityTxt setDelegate:cell];
         [cell.sizeLbl setText:[NSString stringWithFormat:@"%i",(int)temp.size]];
-        [cell.quantityTxt setText:@""];
-         if (UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPad){
-        cell.quantityTxt.inputAccessoryView = doneNumBtn;
-         }
-        
+        [cell.quantityLbl setText:[NSString stringWithFormat:@"%i",(int)temp.qtyl]];
         [cell setDelegate:self];
+        
+        [self calulateXFRMRFULLLOAD];
+        
         return cell;
     } else {
         static NSString *simpleTableIdentifier = @"SetSize";
@@ -242,15 +254,55 @@
             [cell OneAtATime];
         }
         [cell.SizeTxt setDelegate:cell];
-         if (UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPad){
-             [cell.SizeTxt setInputAccessoryView:doneNumBtn];
-         }
+        if (UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPad){
+            [cell.SizeTxt setInputAccessoryView:doneNumBtn];
+        }
         [cell setDelegate:self];
         [cell setTag:indexPath.row];
         
         return cell;
-        
     }
+}
+
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    
+    if (tableView == _xfrmrTVC) {
+        if (!_config && (_quantityPickerPopover==nil  ||  ![_quantityPickerPopover isPopoverVisible])) {
+            _quantityPickerPopover = nil;
+            XFRMRQtylCell *cell =(XFRMRQtylCell *) [tableView cellForRowAtIndexPath:indexPath];
+            [self createQuantityPopoverListWithCell:cell];
+        }
+    }
+}
+
+-(void)createQuantityPopoverListWithCell:(XFRMRQtylCell *)cell{
+    
+    
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad ){
+        UIViewController *popoverContent=[[UIViewController alloc] init];
+        
+        UITableView *tableView2=[[UITableView alloc] initWithFrame:CGRectMake(265, 680, 0, 0) style:UITableViewStylePlain];
+        
+        popoverContent.preferredContentSize=CGSizeMake(200, 420);
+        popoverContent.view=tableView2; //Adding tableView to popover
+        tableView2.delegate = cell;
+        tableView2.dataSource = cell;
+        
+        _quantityPickerPopover = [[UIPopoverController alloc] initWithContentViewController:popoverContent];
+        [_quantityPickerPopover setDelegate:self];
+        _quantityPickerPopover.contentViewController.preferredContentSize = CGSizeMake(150, 200);
+        [_quantityPickerPopover presentPopoverFromRect:CGRectMake(cell.frame.size.width, cell.frame.size.height/2, 0, 0) inView:cell
+                              permittedArrowDirections:UIPopoverArrowDirectionLeft
+                                              animated:YES];
+        
+    }else {
+        UITableViewController *tableView = [[UITableViewController alloc]init];
+        tableView.tableView.delegate = cell;
+        tableView.tableView.dataSource = cell;
+        
+        [self.navigationController pushViewController:tableView animated:YES];
+    }
+    
 }
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -287,6 +339,11 @@
     return (match != nil);
 }
 
+#pragma  mark - PopoverControllerDelegate
+-(BOOL)popoverControllerShouldDismissPopover:(UIPopoverController *)popoverController{
+    return YES;
+}
+
 
 #pragma  mark - Calulations and Editting
 -(void)calulateXFRMRFULLLOAD{
@@ -304,12 +361,20 @@
 #pragma  mark - XFRMRQtylCellDelegate
 
 -(void)updateXFRMRQuantity:(XFRMR *)xfrmr{
+    
+    if (UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPad){
+            [[self navigationController] popViewControllerAnimated:YES];
+    }else{
+        [_quantityPickerPopover dismissPopoverAnimated:NO];
+        _quantityPickerPopover = nil;
+    }
     for (int x = 0; x < subDivLoadVar.xfrmr.count; x++) {
         XFRMR *temp = subDivLoadVar.xfrmr[x];
         if (temp.size == xfrmr.size){
             subDivLoadVar.xfrmr[x] = xfrmr;
         }
     }
+    [_xfrmrTVC reloadData];
     [self calulateXFRMRFULLLOAD];
 }
 
@@ -325,6 +390,13 @@
 -(void)canAddAnother:(BOOL)check{
     [_addSizeBtn setEnabled:check];
 }
+
+//-(void)prepareForSegue:(UIStoryboardPopoverSegue *)segue sender:(id)sender{
+//    if([[segue identifier] isEqualToString:@"EditFilterSegue"]){
+//        //editPopover = [(UIStoryboardPopoverSegue *)segue popoverController];
+//        //editPopover.delegate = (id <UIPopoverControllerDelegate>)self;
+//    }
+//}
 
 #pragma  mark - XFRMRVaules
 
@@ -368,30 +440,33 @@
 @end
 
 @implementation XFRMRQtylCell
-@synthesize quantityTxt;
+@synthesize quantityLbl;
 
-#pragma mark - UITextFieldDelegate
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    return 1;
+}
 
-- (void)textFieldDidEndEditing:(UITextField *)textField{
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    return 21;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    UITableViewCell *cell = [[UITableViewCell alloc]init];
+    [cell.textLabel setText:[NSString stringWithFormat:@"%i",(int)indexPath.row]];
+    if (indexPath.row == [quantityLbl.text integerValue] )
+        [cell setAccessoryType:UITableViewCellAccessoryCheckmark];
+    else
+        [cell setAccessoryType:UITableViewCellAccessoryNone];
+    return cell;
+}
+
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     XFRMR * updated = [[ XFRMR alloc]init];
     [updated setSize:[_sizeLbl.text floatValue]];
-    [updated setQtyl:[textField.text integerValue]];
+    [updated setQtyl:(int)indexPath.row];
     [[self delegate] updateXFRMRQuantity:updated];
 }
 
-- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
-    NSString *s = [textField.text stringByReplacingCharactersInRange:range withString:string];
-    NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"^\\d{0,9}$" options:0 error:nil];
-    NSTextCheckingResult *match = [regex firstMatchInString:s options:0 range:NSMakeRange(0, [s length])];
-    
-    if ((match != nil)) {
-        XFRMR * updated = [[ XFRMR alloc]init];
-        [updated setSize:[_sizeLbl.text floatValue]];
-        [updated setQtyl:[s integerValue]];
-        [[self delegate] updateXFRMRQuantity:updated];
-    }
-    return (match != nil);
-}
 
 
 @end

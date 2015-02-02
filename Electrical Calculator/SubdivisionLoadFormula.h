@@ -27,7 +27,7 @@
 -(void)canAddAnother:(BOOL)check;
 
 @end
-@interface SubdivisionLoadFormula : UIViewController <UITableViewDataSource,UITableViewDelegate,UITextFieldDelegate,XFRMRQtylCellDelegate,XFRMRSizeCellDelegate>
+@interface SubdivisionLoadFormula : UIViewController <UITableViewDataSource,UITableViewDelegate,UITextFieldDelegate,UIPopoverControllerDelegate,XFRMRQtylCellDelegate,XFRMRSizeCellDelegate>
 
 @property (strong, nonatomic) IBOutlet UILabel *calulationTotal;
 @property (strong, nonatomic) IBOutlet UITextField *kilaVoltAmpsTxt;
@@ -35,17 +35,17 @@
 @property (strong, nonatomic) IBOutlet UITableView *xfrmrTVC;
 @property (strong, nonatomic) IBOutlet UIButton *configBtn;
 @property (weak, nonatomic) IBOutlet UIButton *addSizeBtn;
-
 @property (strong, nonatomic) IBOutlet UIButton *defaultBtn;
+@property (nonatomic, strong) UIPopoverController *quantityPickerPopover;
 
 @property (strong,nonatomic) SubdivisionLoadVariables *subDivLoadVar;
 
 @end
 
 
-@interface XFRMRQtylCell : UITableViewCell <UITextFieldDelegate>
+@interface XFRMRQtylCell : UITableViewCell <UITableViewDataSource,UITableViewDelegate>
 
-@property (strong, nonatomic) IBOutlet UITextField *quantityTxt;
+@property (strong, nonatomic) IBOutlet UILabel *quantityLbl;
 @property (strong, nonatomic) IBOutlet UILabel *sizeLbl;
 @property (weak, nonatomic)id <XFRMRQtylCellDelegate> delegate;
 

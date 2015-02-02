@@ -21,6 +21,7 @@
 		E53D099A1A6FE82F00A101E8 /* Electrical_CalculatorTests.m in Sources */ = {isa = PBXBuildFile; fileRef = E53D09991A6FE82F00A101E8 /* Electrical_CalculatorTests.m */; };
 		E53D09BC1A704B1500A101E8 /* SubdivisionLoadFormula.m in Sources */ = {isa = PBXBuildFile; fileRef = E53D09BB1A704B1500A101E8 /* SubdivisionLoadFormula.m */; };
 		E53D09BF1A704B5A00A101E8 /* SubdivisionLoadVariables.m in Sources */ = {isa = PBXBuildFile; fileRef = E53D09BE1A704B5A00A101E8 /* SubdivisionLoadVariables.m */; };
+		E55BD2131A7FD20B00F4230E /* TransformerRatingCalcVariables.m in Sources */ = {isa = PBXBuildFile; fileRef = E55BD2121A7FD20B00F4230E /* TransformerRatingCalcVariables.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -62,6 +63,8 @@
 		E53D09BB1A704B1500A101E8 /* SubdivisionLoadFormula.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SubdivisionLoadFormula.m; sourceTree = "<group>"; };
 		E53D09BD1A704B5A00A101E8 /* SubdivisionLoadVariables.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SubdivisionLoadVariables.h; sourceTree = "<group>"; };
 		E53D09BE1A704B5A00A101E8 /* SubdivisionLoadVariables.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SubdivisionLoadVariables.m; sourceTree = "<group>"; };
+		E55BD2111A7FD20B00F4230E /* TransformerRatingCalcVariables.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TransformerRatingCalcVariables.h; sourceTree = "<group>"; };
+		E55BD2121A7FD20B00F4230E /* TransformerRatingCalcVariables.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransformerRatingCalcVariables.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -224,6 +227,7 @@
 			children = (
 				E52807DE1A76A7EB00AF1A17 /* VSubdivisionLoad */,
 				E52807E31A76CE9B00AF1A17 /* VTransformerCalcs */,
+				E55BD2141A7FD22E00F4230E /* VTransformerRatingCalc */,
 			);
 			name = Variables;
 			sourceTree = "<group>";
@@ -235,6 +239,15 @@
 				E52807DF1A76A7F300AF1A17 /* FSubdivisionLoad */,
 			);
 			name = Formulas;
+			sourceTree = "<group>";
+		};
+		E55BD2141A7FD22E00F4230E /* VTransformerRatingCalc */ = {
+			isa = PBXGroup;
+			children = (
+				E55BD2111A7FD20B00F4230E /* TransformerRatingCalcVariables.h */,
+				E55BD2121A7FD20B00F4230E /* TransformerRatingCalcVariables.m */,
+			);
+			name = VTransformerRatingCalc;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -378,6 +391,7 @@
 				E52807EA1A782B7700AF1A17 /* NumberPadDoneBtn.m in Sources */,
 				E52807E71A76CF0300AF1A17 /* TransformerCalcFormula.m in Sources */,
 				E52807E21A76CE9700AF1A17 /* TransformerCalcVariables.m in Sources */,
+				E55BD2131A7FD20B00F4230E /* TransformerRatingCalcVariables.m in Sources */,
 				E53D09831A6FE82F00A101E8 /* AppDelegate.m in Sources */,
 				E53D09801A6FE82F00A101E8 /* main.m in Sources */,
 				E52807DC1A7692B600AF1A17 /* MasterViewController.m in Sources */,

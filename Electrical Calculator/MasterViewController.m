@@ -12,6 +12,8 @@
 @interface MasterViewController (){
     
     DetailViewController *controller;
+    int _trans;
+    int _preTrans;
 }
 @property NSMutableArray *objects;
 @end
@@ -26,14 +28,20 @@
     }
 }
 
+
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.detailViewController = (DetailViewController *)[[self.splitViewController.viewControllers lastObject] topViewController];
+    self.detailViewController = (DetailViewController *)[[self.splitViewController.viewControllers
+                                                          lastObject] topViewController];
+    self.detailViewController = [self.detailViewController init];
     if (!_objects){
         _objects = [[NSMutableArray alloc]init];
     }
+    
     [self.objects addObject:@"SubdivisionLoadFormula"];
     [self.objects addObject:@"TransformerCalcFormula"];
+    _trans = 0;
+    _preTrans = 0;
     [self.tableView reloadData];
 
 }
@@ -51,9 +59,14 @@
         NSDate *object = self.objects[indexPath.row];
         controller = (DetailViewController *)[[segue destinationViewController] topViewController];
         [controller setDetailItem:object];
+        if (_trans > _preTrans)
+            [controller setTransition:0];
+        else
+            [controller setTransition:1];
         controller.navigationItem.leftBarButtonItem = self.splitViewController.displayModeButtonItem;
         controller.navigationItem.leftItemsSupplementBackButton = YES;
     }
+
 }
 
 #pragma mark - Table View
@@ -81,9 +94,19 @@
 
 -(void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     NSDate *object = self.objects[indexPath.row];
-    [controller setDetailItem:object];
-    [self performSegueWithIdentifier:@"showDetail" sender:self];
-    
+    if (_trans != indexPath.row) {
+        _trans = (int)indexPath.row;
+        if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad){
+            [self.detailViewController setDetailItem:object];
+            if (_trans > _preTrans)
+                [self.detailViewController setTransition:1];
+            else
+                [self.detailViewController setTransition:0];
+            _preTrans = _trans;
+        }else {
+            [self performSegueWithIdentifier:@"showDetail" sender:self];
+        }
+    }
 }
 
 @end

@@ -20,7 +20,6 @@
 - (void)setDetailItem:(id)newDetailItem {
     if (_detailItem != newDetailItem) {
         _detailItem = newDetailItem;
-            
         // Update the view.
         [self configureView:newDetailItem];
     }
@@ -37,23 +36,36 @@
     [self removeChildViewControllers];
     [self addChildViewController:myCtrl];
     
-    [UIView transitionWithView:self.view
-                      duration:.75
-                       options:UIViewAnimationOptionTransitionFlipFromRight
-                    animations:^{
-                        [self.view addSubview:myCtrl.view];
-                        [myCtrl didMoveToParentViewController:self];
-                    }
-                    completion:nil];
-    
+    if (_transition == 0)
+        [UIView transitionWithView:self.view
+                          duration:.75
+                           options:UIViewAnimationOptionTransitionCurlUp
+                        animations:^{
+                            [self.view addSubview:myCtrl.view];
+                            [myCtrl didMoveToParentViewController:self];
+                        }
+                        completion:nil];
+    else
+        [UIView transitionWithView:self.view
+                          duration:.75
+                           options:UIViewAnimationOptionTransitionCurlDown
+                        animations:^{
+                            [self.view addSubview:myCtrl.view];
+                            [myCtrl didMoveToParentViewController:self];
+                        }
+                        completion:nil];
+}
+-(id)init{
+    self = [ super init];
+    if (self) {
+        [UICKeyChainStore setString:@"NO" forKey:@"SubdivisionLoadFormulaConfig"];
+        [self configureView:@"SubdivisionLoadFormula"];
+    }
+    return self;
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view, typically from a nib.
-    //[self configureView];
-    
-
 }
 
 - (void)didReceiveMemoryWarning {
