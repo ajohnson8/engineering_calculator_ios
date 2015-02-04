@@ -12,7 +12,6 @@
 		E52807DD1A7692B600AF1A17 /* DetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E52807DB1A7692B600AF1A17 /* DetailViewController.m */; };
 		E52807E21A76CE9700AF1A17 /* TransformerCalcVariables.m in Sources */ = {isa = PBXBuildFile; fileRef = E52807E11A76CE9700AF1A17 /* TransformerCalcVariables.m */; };
 		E52807E71A76CF0300AF1A17 /* TransformerCalcFormula.m in Sources */ = {isa = PBXBuildFile; fileRef = E52807E61A76CF0300AF1A17 /* TransformerCalcFormula.m */; };
-		E52807EA1A782B7700AF1A17 /* NumberPadDoneBtn.m in Sources */ = {isa = PBXBuildFile; fileRef = E52807E91A782B7700AF1A17 /* NumberPadDoneBtn.m */; };
 		E53D09801A6FE82F00A101E8 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = E53D097F1A6FE82F00A101E8 /* main.m */; };
 		E53D09831A6FE82F00A101E8 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = E53D09821A6FE82F00A101E8 /* AppDelegate.m */; };
 		E53D09891A6FE82F00A101E8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E53D09871A6FE82F00A101E8 /* Main.storyboard */; };
@@ -21,6 +20,8 @@
 		E53D099A1A6FE82F00A101E8 /* Electrical_CalculatorTests.m in Sources */ = {isa = PBXBuildFile; fileRef = E53D09991A6FE82F00A101E8 /* Electrical_CalculatorTests.m */; };
 		E53D09BC1A704B1500A101E8 /* SubdivisionLoadFormula.m in Sources */ = {isa = PBXBuildFile; fileRef = E53D09BB1A704B1500A101E8 /* SubdivisionLoadFormula.m */; };
 		E53D09BF1A704B5A00A101E8 /* SubdivisionLoadVariables.m in Sources */ = {isa = PBXBuildFile; fileRef = E53D09BE1A704B5A00A101E8 /* SubdivisionLoadVariables.m */; };
+		E54A66691A811D440044C488 /* Celldivider.png in Resources */ = {isa = PBXBuildFile; fileRef = E54A66681A811D440044C488 /* Celldivider.png */; };
+		E54A666D1A812B210044C488 /* TransformerRatingCalcFormula.m in Sources */ = {isa = PBXBuildFile; fileRef = E54A666C1A812B210044C488 /* TransformerRatingCalcFormula.m */; };
 		E55BD2131A7FD20B00F4230E /* TransformerRatingCalcVariables.m in Sources */ = {isa = PBXBuildFile; fileRef = E55BD2121A7FD20B00F4230E /* TransformerRatingCalcVariables.m */; };
 /* End PBXBuildFile section */
 
@@ -46,8 +47,6 @@
 		E52807E11A76CE9700AF1A17 /* TransformerCalcVariables.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransformerCalcVariables.m; sourceTree = "<group>"; };
 		E52807E51A76CF0300AF1A17 /* TransformerCalcFormula.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TransformerCalcFormula.h; sourceTree = "<group>"; };
 		E52807E61A76CF0300AF1A17 /* TransformerCalcFormula.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransformerCalcFormula.m; sourceTree = "<group>"; };
-		E52807E81A782B7700AF1A17 /* NumberPadDoneBtn.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NumberPadDoneBtn.h; sourceTree = "<group>"; };
-		E52807E91A782B7700AF1A17 /* NumberPadDoneBtn.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NumberPadDoneBtn.m; sourceTree = "<group>"; };
 		E53D097A1A6FE82E00A101E8 /* Electrical Calculator.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Electrical Calculator.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E53D097E1A6FE82F00A101E8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E53D097F1A6FE82F00A101E8 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -63,6 +62,9 @@
 		E53D09BB1A704B1500A101E8 /* SubdivisionLoadFormula.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SubdivisionLoadFormula.m; sourceTree = "<group>"; };
 		E53D09BD1A704B5A00A101E8 /* SubdivisionLoadVariables.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SubdivisionLoadVariables.h; sourceTree = "<group>"; };
 		E53D09BE1A704B5A00A101E8 /* SubdivisionLoadVariables.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SubdivisionLoadVariables.m; sourceTree = "<group>"; };
+		E54A66681A811D440044C488 /* Celldivider.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Celldivider.png; sourceTree = "<group>"; };
+		E54A666B1A812B210044C488 /* TransformerRatingCalcFormula.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TransformerRatingCalcFormula.h; sourceTree = "<group>"; };
+		E54A666C1A812B210044C488 /* TransformerRatingCalcFormula.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransformerRatingCalcFormula.m; sourceTree = "<group>"; };
 		E55BD2111A7FD20B00F4230E /* TransformerRatingCalcVariables.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TransformerRatingCalcVariables.h; sourceTree = "<group>"; };
 		E55BD2121A7FD20B00F4230E /* TransformerRatingCalcVariables.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransformerRatingCalcVariables.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -139,15 +141,6 @@
 			name = FTransformerCalc;
 			sourceTree = "<group>";
 		};
-		E52807EB1A782B8200AF1A17 /* KeyboardDoneBtn */ = {
-			isa = PBXGroup;
-			children = (
-				E52807E81A782B7700AF1A17 /* NumberPadDoneBtn.h */,
-				E52807E91A782B7700AF1A17 /* NumberPadDoneBtn.m */,
-			);
-			name = KeyboardDoneBtn;
-			sourceTree = "<group>";
-		};
 		E53D09711A6FE82E00A101E8 = {
 			isa = PBXGroup;
 			children = (
@@ -179,7 +172,6 @@
 				E52807DB1A7692B600AF1A17 /* DetailViewController.m */,
 				E53D09C01A704B6E00A101E8 /* Variables */,
 				E53D09C11A704B8200A101E8 /* Formulas */,
-				E52807EB1A782B8200AF1A17 /* KeyboardDoneBtn */,
 				E53D09AD1A6FF01D00A101E8 /* Resorces */,
 				E53D097D1A6FE82F00A101E8 /* Supporting Files */,
 			);
@@ -215,6 +207,7 @@
 		E53D09AD1A6FF01D00A101E8 /* Resorces */ = {
 			isa = PBXGroup;
 			children = (
+				E54A66681A811D440044C488 /* Celldivider.png */,
 				E53D09871A6FE82F00A101E8 /* Main.storyboard */,
 				E53D098A1A6FE82F00A101E8 /* Images.xcassets */,
 				E53D098C1A6FE82F00A101E8 /* LaunchScreen.xib */,
@@ -235,10 +228,20 @@
 		E53D09C11A704B8200A101E8 /* Formulas */ = {
 			isa = PBXGroup;
 			children = (
-				E52807E41A76CECC00AF1A17 /* FTransformerCalc */,
 				E52807DF1A76A7F300AF1A17 /* FSubdivisionLoad */,
+				E52807E41A76CECC00AF1A17 /* FTransformerCalc */,
+				E54A666A1A812ADF0044C488 /* FTransformerRatingCalc */,
 			);
 			name = Formulas;
+			sourceTree = "<group>";
+		};
+		E54A666A1A812ADF0044C488 /* FTransformerRatingCalc */ = {
+			isa = PBXGroup;
+			children = (
+				E54A666B1A812B210044C488 /* TransformerRatingCalcFormula.h */,
+				E54A666C1A812B210044C488 /* TransformerRatingCalcFormula.m */,
+			);
+			name = FTransformerRatingCalc;
 			sourceTree = "<group>";
 		};
 		E55BD2141A7FD22E00F4230E /* VTransformerRatingCalc */ = {
@@ -333,6 +336,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E53D09891A6FE82F00A101E8 /* Main.storyboard in Resources */,
+				E54A66691A811D440044C488 /* Celldivider.png in Resources */,
 				E53D098E1A6FE82F00A101E8 /* LaunchScreen.xib in Resources */,
 				E53D098B1A6FE82F00A101E8 /* Images.xcassets in Resources */,
 			);
@@ -386,9 +390,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				E53D09BC1A704B1500A101E8 /* SubdivisionLoadFormula.m in Sources */,
+				E54A666D1A812B210044C488 /* TransformerRatingCalcFormula.m in Sources */,
 				E53D09BF1A704B5A00A101E8 /* SubdivisionLoadVariables.m in Sources */,
 				E52807DD1A7692B600AF1A17 /* DetailViewController.m in Sources */,
-				E52807EA1A782B7700AF1A17 /* NumberPadDoneBtn.m in Sources */,
 				E52807E71A76CF0300AF1A17 /* TransformerCalcFormula.m in Sources */,
 				E52807E21A76CE9700AF1A17 /* TransformerCalcVariables.m in Sources */,
 				E55BD2131A7FD20B00F4230E /* TransformerRatingCalcVariables.m in Sources */,

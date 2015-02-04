@@ -29,13 +29,17 @@
 @end
 @interface SubdivisionLoadFormula : UIViewController <UITableViewDataSource,UITableViewDelegate,UITextFieldDelegate,UIPopoverControllerDelegate,XFRMRQtylCellDelegate,XFRMRSizeCellDelegate>
 
-@property (strong, nonatomic) IBOutlet UILabel *calulationTotal;
+@property (strong, nonatomic) IBOutlet UITableView *xfrmrTVC;
+
 @property (strong, nonatomic) IBOutlet UITextField *kilaVoltAmpsTxt;
 @property (strong, nonatomic) IBOutlet UITextField *voltTxt;
-@property (strong, nonatomic) IBOutlet UITableView *xfrmrTVC;
+
+@property (strong, nonatomic) IBOutlet UILabel *calulationTotal;
+
 @property (strong, nonatomic) IBOutlet UIButton *configBtn;
-@property (weak, nonatomic) IBOutlet UIButton *addSizeBtn;
+@property (weak  , nonatomic) IBOutlet UIButton *addSizeBtn;
 @property (strong, nonatomic) IBOutlet UIButton *defaultBtn;
+
 @property (nonatomic, strong) UIPopoverController *quantityPickerPopover;
 
 @property (strong,nonatomic) SubdivisionLoadVariables *subDivLoadVar;
@@ -54,9 +58,9 @@
 
 @interface XFRMRSizeCell : UITableViewCell <UITextFieldDelegate>
 
-@property (strong, nonatomic) IBOutlet UITextField *SizeTxt;
+@property (strong, nonatomic) IBOutlet UITextField *sizeTxt;
 @property (weak, nonatomic)id <XFRMRSizeCellDelegate> delegate;
 
--(void)OneAtATime;
+-(void)toggleAddSize;
 @end
 

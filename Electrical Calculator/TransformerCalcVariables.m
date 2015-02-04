@@ -11,6 +11,7 @@
 @implementation TransformerCalcVariables
 @synthesize phases,llSecs,ampsPer,kilovolt_amps;
 
+#pragma mark - Initialize
 -(id)init{
     self = [super init];
     if (self) {
@@ -22,8 +23,9 @@
     return self;
 }
 
+#pragma mark - Defaults
 -(void)setDefaultsTCPhase:(NSMutableArray *)phaseArray{
-
+    
     phases = [[NSMutableArray alloc]initWithArray:[phaseArray copy]];
 }
 
@@ -49,25 +51,28 @@
     kilovolt_amps = updatedKilovolt_amps;
 }
 
+#pragma mark - Add
 -(void)addTCLLSec:(TCLLSec *)newLLSec {
     [llSecs addObject:newLLSec];
-    [self sortAndRemoveDoubles];
+    [self filterSecLLs];
 }
 
 -(void) deleteTCLLSec:(TCLLSec *)llsec{
     [llSecs removeObject:llsec];
-    [self sortAndRemoveDoubles];
+    [self filterSecLLs];
 }
 
+#pragma mark - Update
 -(void) updateTCLLSec:(TCLLSec *)llsec andIndex:(int)index{
     self.llSecs[index] = llsec;
-    [self sortAndRemoveDoubles];
+    [self filterSecLLs];
 }
 
 -(void) updateTCPhase:(TCPhase *)phase andIndex:(int)index{
     self.phases[index] = phase;
 }
 
+#pragma mark - Calulate
 -(float)calulateFullLoadAmpsOnPri:(TCPhase *)phaseCAL {
     return (kilovolt_amps*1000)/(phaseCAL.phaseLL*phaseCAL.phasevalue);
 }
@@ -82,17 +87,17 @@
 }
 -(float)calulateAvailablFaultCurrentSec:(TCPhase *)phaseCAL andLLSec:(TCLLSec *)llsec {
     
-     return [self calulateFullLoadAmpsOnSec:phaseCAL andLLSec:llsec]/(ampsPer*.01);
+    return [self calulateFullLoadAmpsOnSec:phaseCAL andLLSec:llsec]/(ampsPer*.01);
 }
 
-
--(void)sortAndRemoveDoubles{
+#pragma mark - Private Methods
+-(void)filterSecLLs{
     
     NSMutableArray *unique = [NSMutableArray array];
     NSMutableSet *processedXFRMR = [NSMutableSet set];
     
     for (TCLLSec *wo in llSecs) {
-        if (!([processedXFRMR containsObject:[NSNumber numberWithFloat:wo.llSecVaule]])){
+        if (!([processedXFRMR containsObject:[NSNumber numberWithFloat:wo.llSecVaule]]) && wo.llSecVaule > 0){
             [unique addObject:wo];
             [processedXFRMR addObject:[NSNumber numberWithFloat:wo.llSecVaule]];
         }
@@ -105,9 +110,11 @@
 
 @end
 
+#pragma mark - Implementation TCPhase
 @implementation TCPhase
 @synthesize phasevalue,phaseID,phaseLL;
 
+#pragma mark - Coder
 -(void) encodeWithCoder: (NSCoder *) encoder
 {
     [encoder encodeObject:[NSNumber numberWithInteger:phaseID] forKey:@"phaseID"];
@@ -125,9 +132,11 @@
 
 @end
 
+#pragma mark - Implementation TCLLSec
 @implementation TCLLSec
 @synthesize llSecVaule;
 
+#pragma mark - Coder
 -(void) encodeWithCoder: (NSCoder *) encoder
 {
     [encoder encodeObject:[NSNumber numberWithFloat:llSecVaule] forKey:@"llSecVaule"];

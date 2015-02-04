@@ -29,14 +29,17 @@
 
 @interface TransformerCalcFormula : UIViewController <UITableViewDataSource,UITableViewDelegate,UITextFieldDelegate,TransformerLLCellDelegate,TransformerPhaseCellDelegate>
 
-@property (strong, nonatomic) IBOutlet UITextField *kilaVoltTxt;
+@property (strong, nonatomic) IBOutlet UITextField *kilaVoltAmpsTxt;
 @property (strong, nonatomic) IBOutlet UITextField *ampsTxt;
-@property (strong, nonatomic) IBOutlet UITableView *tcPhaseTVC;
-@property (strong, nonatomic) IBOutlet UITableView *tcLLSecTVC;
-@property (strong, nonatomic) IBOutlet UILabel *tcFLAPLlb;
-@property (strong, nonatomic) IBOutlet UILabel *tcFLASLlb;
-@property (strong, nonatomic) IBOutlet UILabel *tcAFCPLlb;
-@property (strong, nonatomic) IBOutlet UILabel *tcAFCSLlb;
+
+@property (strong, nonatomic) IBOutlet UITableView *phaseTV;
+@property (strong, nonatomic) IBOutlet UITableView *secLLVoltTV;
+
+@property (strong, nonatomic) IBOutlet UILabel *FLAPLlb;
+@property (strong, nonatomic) IBOutlet UILabel *FLASLlb;
+@property (strong, nonatomic) IBOutlet UILabel *AFCPLlb;
+@property (strong, nonatomic) IBOutlet UILabel *AFCSLlb;
+
 @property (weak, nonatomic) IBOutlet UIButton *addLLVoltsBtn;
 @property (weak, nonatomic) IBOutlet UIButton *defaultBtn;
 @property (weak, nonatomic) IBOutlet UIButton *configBtn;
@@ -50,6 +53,7 @@
 @property (strong, nonatomic) IBOutlet UITextField *phaseIDTxt;
 @property (strong, nonatomic) IBOutlet UITextField *phaseVauleTxt;
 @property (strong, nonatomic) IBOutlet UITextField *phaseLLTxt;
+
 @property (weak, nonatomic)id <TransformerPhaseCellDelegate> delegate;
 
 @end
@@ -58,6 +62,7 @@
 @interface TransformerLLCell : UITableViewCell <UITextFieldDelegate>
 
 @property (strong, nonatomic) IBOutlet UITextField *LLSecVauleTxt;
+
 @property (weak, nonatomic)id <TransformerLLCellDelegate> delegate;
 
 -(void)OneAtATime;

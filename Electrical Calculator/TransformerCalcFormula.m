@@ -17,7 +17,6 @@
 @end
 
 @implementation TransformerCalcFormula
-@synthesize kilaVoltTxt = _kilaVoltTxt,ampsTxt = _ampsTxt,tcPhaseTVC = _tcPhaseTVC,tcLLSecTVC = _tcLLSecTVC,tcFLAPLlb = _tcFLAPLlb,tcFLASLlb = _tcFLASLlb,tcAFCPLlb = _tcAFCPLlb,tcAFCSLlb = _tcAFCSLlb,addLLVoltsBtn = _addLLVoltsBtn,defaultBtn=_defaultBtn,transformerCalcV;
 
 -(void)viewDidLoad{
     [super viewDidLoad];
@@ -27,20 +26,22 @@
 -(void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     
-    [_kilaVoltTxt setDelegate:self];
+    [_kilaVoltAmpsTxt setDelegate:self];
     [_ampsTxt setDelegate:self];
     
-    BOOL boolValue = [[UICKeyChainStore stringForKey:@"SubdivisionLoadFormulaConfig"] boolValue];
+    BOOL boolValue = [[UICKeyChainStore stringForKey:@"FormulaConfiguration"] boolValue];
     if (!boolValue) {
         _config = NO;
         [_defaultBtn setTitle:@"Default" forState:UIControlStateNormal];[_defaultBtn setNeedsLayout];
         [_addLLVoltsBtn setHidden:YES];
         [_addLLVoltsBtn setEnabled:NO];
+        [self.navigationController.viewControllers.lastObject setTitle:@"Transformer"];
     }else {
         _config = YES;
         [_defaultBtn setTitle:@"Set Default" forState:UIControlStateNormal];[_defaultBtn setNeedsLayout];
         [_addLLVoltsBtn setHidden:NO];
         [_addLLVoltsBtn setEnabled:YES];
+        [self.navigationController.viewControllers.lastObject setTitle:@"Transformer Configuration"];
     }
 }
 
@@ -59,34 +60,36 @@
                     animations:^{ }
                     completion:NULL];
     
-    BOOL boolValue = [[UICKeyChainStore stringForKey:@"SubdivisionLoadFormulaConfig"] boolValue];
+    BOOL boolValue = [[UICKeyChainStore stringForKey:@"FormulaConfiguration"] boolValue];
     [self.view endEditing:YES];
     
     if (boolValue) {
         _config = NO;
-        [UICKeyChainStore setString:@"NO" forKey:@"SubdivisionLoadFormulaConfig"];
+        [UICKeyChainStore setString:@"NO" forKey:@"FormulaConfiguration"];
         [_defaultBtn setTitle:@"Default" forState:UIControlStateNormal];[_defaultBtn setNeedsLayout];
         [_addLLVoltsBtn setHidden:YES];
         [_addLLVoltsBtn setEnabled:NO];
+        [self.navigationController.viewControllers.lastObject setTitle:@"Transformer"];
     }else {
         _config = YES;
-        [UICKeyChainStore setString:@"YES" forKey:@"SubdivisionLoadFormulaConfig"];
+        [UICKeyChainStore setString:@"YES" forKey:@"FormulaConfiguration"];
         [_defaultBtn setTitle:@"Set Default" forState:UIControlStateNormal];[_defaultBtn setNeedsLayout];
         [_addLLVoltsBtn setHidden:NO];
         [_addLLVoltsBtn setEnabled:YES];
+        [self.navigationController.viewControllers.lastObject setTitle:@"Transformer Configuration"];
     }
     
-    [_tcPhaseTVC deselectRowAtIndexPath:[_tcPhaseTVC indexPathForSelectedRow] animated:YES];
-    [_tcLLSecTVC deselectRowAtIndexPath:[_tcLLSecTVC indexPathForSelectedRow] animated:YES];
-    [_tcLLSecTVC reloadData];
-    [_tcPhaseTVC reloadData];
+    [_phaseTV deselectRowAtIndexPath:[_phaseTV indexPathForSelectedRow] animated:YES];
+    [_secLLVoltTV deselectRowAtIndexPath:[_secLLVoltTV indexPathForSelectedRow] animated:YES];
+    [_secLLVoltTV reloadData];
+    [_phaseTV reloadData];
 }
 
 - (IBAction)addLLVoltAction:(id)sender {
-    [_tcLLSecTVC endEditing:YES];
+    [_secLLVoltTV endEditing:YES];
     TCLLSec *temp = [[TCLLSec alloc]init];
-    [transformerCalcV addTCLLSec:temp];
-    [_tcLLSecTVC reloadData];
+    [_transformerCalcV addTCLLSec:temp];
+    [_secLLVoltTV reloadData];
     [_addLLVoltsBtn setEnabled:NO];
 }
 
@@ -94,8 +97,8 @@
     
     if (_config) {
         
-        NSData* myDataArrayPhase = [NSKeyedArchiver archivedDataWithRootObject:[transformerCalcV phases]];
-        NSData* myDataArrayLLSec = [NSKeyedArchiver archivedDataWithRootObject:[transformerCalcV llSecs]];
+        NSData* myDataArrayPhase = [NSKeyedArchiver archivedDataWithRootObject:[_transformerCalcV phases]];
+        NSData* myDataArrayLLSec = [NSKeyedArchiver archivedDataWithRootObject:[_transformerCalcV llSecs]];
         
         [UICKeyChainStore setData:myDataArrayLLSec forKey:@"SystemDefaultsArrayLLSec"];
         [UICKeyChainStore setData:myDataArrayPhase forKey:@"SystemDefaultsArrayPhase"];
@@ -109,27 +112,27 @@
         NSData* myDataArrayLLSec = [UICKeyChainStore dataForKey:@"SystemDefaultsArrayLLSec"];
         NSMutableArray* defaultLLSecs = [NSKeyedUnarchiver unarchiveObjectWithData:myDataArrayLLSec];
         
-        [transformerCalcV setDefaultsTCLLSec:defaultLLSecs];
-        [transformerCalcV setDefaultsTCPhase:defaultPhases];
-        [_tcLLSecTVC reloadData];
-        [_tcPhaseTVC reloadData];
+        [_transformerCalcV setDefaultsTCLLSec:defaultLLSecs];
+        [_transformerCalcV setDefaultsTCPhase:defaultPhases];
+        [_secLLVoltTV reloadData];
+        [_phaseTV reloadData];
         
         _selectedPhase = nil;
         _selectedLLSec = nil;
-        [_tcPhaseTVC deselectRowAtIndexPath:[_tcPhaseTVC indexPathForSelectedRow] animated:YES];
-        [_tcLLSecTVC deselectRowAtIndexPath:[_tcLLSecTVC indexPathForSelectedRow] animated:YES];
+        [_phaseTV deselectRowAtIndexPath:[_phaseTV indexPathForSelectedRow] animated:YES];
+        [_secLLVoltTV deselectRowAtIndexPath:[_secLLVoltTV indexPathForSelectedRow] animated:YES];
         
-        [_kilaVoltTxt setText:@""];
+        [_kilaVoltAmpsTxt setText:@""];
         [_ampsTxt setText:@""];
         
-        [transformerCalcV setDefaultskilovolt_amps:0];
-        [transformerCalcV setDefaultsAmpsPer:0];
+        [_transformerCalcV setDefaultskilovolt_amps:0];
+        [_transformerCalcV setDefaultsAmpsPer:0];
         
-        [_tcAFCPLlb setText:[self roundingUp:0.00]];
-        [_tcAFCSLlb setText:[self roundingUp:0.00]];
-        [_tcFLAPLlb setText:[self roundingUp:0.00]];
-        [_tcFLASLlb setText:[self roundingUp:0.00]];
-
+        [_AFCPLlb setText:[self roundingUp:0.00]];
+        [_AFCSLlb setText:[self roundingUp:0.00]];
+        [_FLAPLlb setText:[self roundingUp:0.00]];
+        [_FLASLlb setText:[self roundingUp:0.00]];
+        
         [TSMessage showNotificationInViewController:self.navigationController.viewControllers.lastObject title:@"TransformerCalcFormula" subtitle:@"Defaults has been set." type:TSMessageNotificationTypeSuccess duration:1.5];
         
     }
@@ -149,7 +152,7 @@
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (_config) {
-        if (tableView == _tcLLSecTVC) {
+        if (tableView == _secLLVoltTV) {
             return 44;
         }else {
             return 130;
@@ -160,15 +163,15 @@
 }
 
 -(NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section{
-    if (tableView == _tcLLSecTVC) {
+    if (tableView == _secLLVoltTV) {
         return @"Sec. L-L Volts";
     }else {
         return @"Phase (1 or 3)";
     }
 }
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    if (tableView == _tcLLSecTVC) {
-        return transformerCalcV.llSecs.count;
+    if (tableView == _secLLVoltTV) {
+        return _transformerCalcV.llSecs.count;
     }else {
         return 2;
     }
@@ -178,16 +181,16 @@
     UITableViewCell *cell = [[UITableViewCell alloc]init];
     
     if (_config) {
-        if (tableView == _tcLLSecTVC) {
+        if (tableView == _secLLVoltTV) {
             static NSString *simpleTableIdentifier = @"EditLLVolts";
-            TransformerLLCell *cell = (TransformerLLCell *)[_tcLLSecTVC dequeueReusableCellWithIdentifier:simpleTableIdentifier];
+            TransformerLLCell *cell = (TransformerLLCell *)[_secLLVoltTV dequeueReusableCellWithIdentifier:simpleTableIdentifier];
             if (cell == nil)
             {
                 NSArray *nib = [[NSBundle mainBundle] loadNibNamed:@"EditLLVolts" owner:self options:nil];
                 cell = [nib objectAtIndex:0];
             }
             
-            TCLLSec *temp = transformerCalcV.llSecs[indexPath.row];
+            TCLLSec *temp = _transformerCalcV.llSecs[indexPath.row];
             
             if (temp.llSecVaule != 0 ){
                 [cell.LLSecVauleTxt setText:[NSString stringWithFormat:@"%i",(int)temp.llSecVaule]];}
@@ -205,39 +208,39 @@
             
         }else {
             static NSString *simpleTableIdentifier = @"EditPhase";
-            TransformerPhaseCell *cell = (TransformerPhaseCell *)[_tcPhaseTVC dequeueReusableCellWithIdentifier:simpleTableIdentifier];
+            TransformerPhaseCell *cell = (TransformerPhaseCell *)[_phaseTV dequeueReusableCellWithIdentifier:simpleTableIdentifier];
             if (cell == nil)
             {
                 NSArray *nib = [[NSBundle mainBundle] loadNibNamed:@"EditPhase" owner:self options:nil];
                 cell = [nib objectAtIndex:0];
             }
             
-            TCPhase *temp = transformerCalcV.phases[indexPath.row];
+            TCPhase *temp = _transformerCalcV.phases[indexPath.row];
             
             [cell.phaseIDTxt setText:[NSString stringWithFormat:@"%i",(int)temp.phaseID]];
             [cell.phaseLLTxt setText:[NSString stringWithFormat:@"%i",(int)temp.phaseLL]];
             [cell.phaseVauleTxt setText:[NSString stringWithFormat:@"%f",temp.phasevalue]];
-
+            
             [cell setTag:indexPath.row];
             
             [cell setDelegate:self];
-             [cell.phaseVauleTxt setDelegate:cell];
+            [cell.phaseVauleTxt setDelegate:cell];
             [cell.phaseLLTxt setDelegate:cell];
             [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
             return cell;
             
         }
     } else {
-        if (tableView == _tcLLSecTVC) {
+        if (tableView == _secLLVoltTV) {
             static NSString *simpleTableIdentifier = @"Cell";
-            UITableViewCell *cell = (UITableViewCell *)[_tcLLSecTVC dequeueReusableCellWithIdentifier:simpleTableIdentifier];
+            UITableViewCell *cell = (UITableViewCell *)[_secLLVoltTV dequeueReusableCellWithIdentifier:simpleTableIdentifier];
             if (cell == nil)
             {
                 NSArray *nib = [[NSBundle mainBundle] loadNibNamed:@"Cell" owner:self options:nil];
                 cell = [nib objectAtIndex:0];
             }
             
-            TCLLSec *temp = transformerCalcV.llSecs[indexPath.row];
+            TCLLSec *temp = _transformerCalcV.llSecs[indexPath.row];
             
             if (temp.llSecVaule != 0 ){
                 [cell.textLabel setText:[NSString stringWithFormat:@"%i",(int)temp.llSecVaule]];}
@@ -250,14 +253,14 @@
             
         }else {
             static NSString *simpleTableIdentifier = @"Cell";
-            UITableViewCell *cell = (UITableViewCell *)[_tcPhaseTVC dequeueReusableCellWithIdentifier:simpleTableIdentifier];
+            UITableViewCell *cell = (UITableViewCell *)[_phaseTV dequeueReusableCellWithIdentifier:simpleTableIdentifier];
             if (cell == nil)
             {
                 NSArray *nib = [[NSBundle mainBundle] loadNibNamed:@"Cell" owner:self options:nil];
                 cell = [nib objectAtIndex:0];
             }
             
-            TCPhase *temp = transformerCalcV.phases[indexPath.row];
+            TCPhase *temp = _transformerCalcV.phases[indexPath.row];
             
             [cell.textLabel setText:[NSString stringWithFormat:@"%i",(int)temp.phaseID]];
             [cell.detailTextLabel setText:[NSString stringWithFormat:@"%i",(int)temp.phaseLL]];
@@ -275,12 +278,12 @@
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     
     if (!_config){
-        if (tableView == _tcLLSecTVC) {
+        if (tableView == _secLLVoltTV) {
             _selectedLLSec = [[TCLLSec alloc]init];
-            _selectedLLSec = transformerCalcV.llSecs[indexPath.row];
+            _selectedLLSec = _transformerCalcV.llSecs[indexPath.row];
         }else{
             _selectedPhase = [[TCPhase alloc]init];
-            _selectedPhase = transformerCalcV.phases[indexPath.row];
+            _selectedPhase = _transformerCalcV.phases[indexPath.row];
         }
     }
     if (_selectedLLSec && _selectedPhase) {
@@ -289,7 +292,7 @@
 }
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (tableView == _tcLLSecTVC) {
+    if (tableView == _secLLVoltTV) {
         return _config;
     }else {
         return NO;
@@ -301,10 +304,10 @@
 }
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (tableView == _tcLLSecTVC) {
+    if (tableView == _secLLVoltTV) {
         if (editingStyle == UITableViewCellEditingStyleDelete) {
-            TCLLSec *temp = transformerCalcV.llSecs[indexPath.row];
-            [transformerCalcV deleteTCLLSec:temp];
+            TCLLSec *temp = _transformerCalcV.llSecs[indexPath.row];
+            [_transformerCalcV deleteTCLLSec:temp];
             [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section]] withRowAnimation:UITableViewRowAnimationLeft];
         }
     }
@@ -327,9 +330,9 @@
     
     if (match != nil) {
         if (textField == _ampsTxt) {
-            [transformerCalcV setDefaultsAmpsPer:[s floatValue]];
+            [_transformerCalcV setDefaultsAmpsPer:[s floatValue]];
         }else {
-            [transformerCalcV setDefaultskilovolt_amps:[s floatValue]];
+            [_transformerCalcV setDefaultskilovolt_amps:[s floatValue]];
         }
         [self calulateTotal];
     }
@@ -338,20 +341,20 @@
 #pragma mark - TransformerPhaseCellDelegate
 
 -(void)updateTransformerPhase:(TCPhase *)phase andIndexPath:(int)row{
-    [transformerCalcV updateTCPhase:phase andIndex:row];
-    [_tcPhaseTVC reloadData];
+    [_transformerCalcV updateTCPhase:phase andIndex:row];
+    [_phaseTV reloadData];
 }
 
 #pragma mark - TransformerLLCellDelegate
 
 -(void)updateTransformerLL:(TCLLSec *)LLSec andIndexPath:(int)row{
     if (LLSec.llSecVaule == 0) {
-        [transformerCalcV deleteTCLLSec:LLSec];
+        [_transformerCalcV deleteTCLLSec:LLSec];
         [self canAddAnotherLLSec:YES];
     } else
-        [transformerCalcV updateTCLLSec:LLSec andIndex:row];
+        [_transformerCalcV updateTCLLSec:LLSec andIndex:row];
     
-    [_tcLLSecTVC reloadData];
+    [_secLLVoltTV reloadData];
 }
 
 -(void)canAddAnotherLLSec:(BOOL)check{
@@ -362,15 +365,15 @@
 
 -(void)initView{
     
-    if (transformerCalcV == nil) {
+    if (_transformerCalcV == nil) {
         
         NSData *t =[UICKeyChainStore dataForKey:@"SystemDefaultsArrayLLSec"];
         NSData *t2 =[UICKeyChainStore dataForKey:@"SystemDefaultsArrayPhase"];
         
-        transformerCalcV = [[ TransformerCalcVariables alloc ]init];
+        _transformerCalcV = [[ TransformerCalcVariables alloc ]init];
         
         if (t.length == 0  || t2.length == 0) {
-
+            
             TCPhase *phase = [[TCPhase alloc]init];
             [phase setPhaseID:1];
             [phase setPhaseLL:7200];
@@ -391,17 +394,17 @@
             [defaultLLSec addObject:[NSNumber numberWithInt:480]];
             [defaultLLSec addObject:[NSNumber numberWithInt:577]];
             
-            [transformerCalcV setDefaultsTCLLSec:defaultLLSec];
-            [transformerCalcV setDefaultsTCPhase:defaultPhase];
-            [transformerCalcV setDefaultskilovolt_amps:750];
-            [transformerCalcV setDefaultsAmpsPer:5.67];
-            [_kilaVoltTxt setText:[NSString stringWithFormat:@"%i",750]];
+            [_transformerCalcV setDefaultsTCLLSec:defaultLLSec];
+            [_transformerCalcV setDefaultsTCPhase:defaultPhase];
+            [_transformerCalcV setDefaultskilovolt_amps:750];
+            [_transformerCalcV setDefaultsAmpsPer:5.67];
+            [_kilaVoltAmpsTxt setText:[NSString stringWithFormat:@"%i",750]];
             [_ampsTxt setText:[NSString stringWithFormat:@"%f",5.67]];
             
-            [_tcPhaseTVC setDataSource:self];
-            [_tcPhaseTVC setDelegate:self];
-            [_tcLLSecTVC setDataSource:self];
-            [_tcLLSecTVC setDelegate:self];
+            [_phaseTV setDataSource:self];
+            [_phaseTV setDelegate:self];
+            [_secLLVoltTV setDataSource:self];
+            [_secLLVoltTV setDelegate:self];
             
             NSData* myDataArrayPhase = [NSKeyedArchiver archivedDataWithRootObject:defaultPhase];
             [UICKeyChainStore setData:myDataArrayPhase forKey:@"SystemDefaultsArrayPhase"];
@@ -409,7 +412,7 @@
             NSData* myDataArrayLLSec = [NSKeyedArchiver archivedDataWithRootObject:defaultLLSec];
             [UICKeyChainStore setData:myDataArrayLLSec forKey:@"SystemDefaultsArrayLLSec"];
             
-            [UICKeyChainStore setString:@"NO" forKey:@"SubdivisionLoadFormulaConfig"];
+            [UICKeyChainStore setString:@"NO" forKey:@"FormulaConfiguration"];
             
         }else{
             NSData* myDataArrayPhase = [UICKeyChainStore dataForKey:@"SystemDefaultsArrayPhase"];
@@ -418,30 +421,30 @@
             NSData* myDataArrayLLSec = [UICKeyChainStore dataForKey:@"SystemDefaultsArrayLLSec"];
             NSMutableArray* defaultLLSecs = [NSKeyedUnarchiver unarchiveObjectWithData:myDataArrayLLSec];
             
-            [transformerCalcV setDefaultsTCLLSec:defaultLLSecs];
-            [transformerCalcV setDefaultsTCPhase:defaultPhases];
+            [_transformerCalcV setDefaultsTCLLSec:defaultLLSecs];
+            [_transformerCalcV setDefaultsTCPhase:defaultPhases];
             
-            [_tcPhaseTVC setDataSource:self];
-            [_tcPhaseTVC setDelegate:self];
-            [_tcLLSecTVC setDataSource:self];
-            [_tcLLSecTVC setDelegate:self];
+            [_phaseTV setDataSource:self];
+            [_phaseTV setDelegate:self];
+            [_secLLVoltTV setDataSource:self];
+            [_secLLVoltTV setDelegate:self];
             
             _selectedPhase = nil;
             _selectedLLSec = nil;
-            [_tcPhaseTVC deselectRowAtIndexPath:[_tcPhaseTVC indexPathForSelectedRow] animated:YES];
-            [_tcLLSecTVC deselectRowAtIndexPath:[_tcLLSecTVC indexPathForSelectedRow] animated:YES];
+            [_phaseTV deselectRowAtIndexPath:[_phaseTV indexPathForSelectedRow] animated:YES];
+            [_secLLVoltTV deselectRowAtIndexPath:[_secLLVoltTV indexPathForSelectedRow] animated:YES];
             
-            [_kilaVoltTxt setText:@""];
+            [_kilaVoltAmpsTxt setText:@""];
             [_ampsTxt setText:@""];
             
-            [transformerCalcV setDefaultskilovolt_amps:0];
-            [transformerCalcV setDefaultsAmpsPer:0];
+            [_transformerCalcV setDefaultskilovolt_amps:0];
+            [_transformerCalcV setDefaultsAmpsPer:0];
             
-            [_tcAFCPLlb setText:[self roundingUp:0.00]];
-            [_tcAFCSLlb setText:[self roundingUp:0.00]];
-            [_tcFLAPLlb setText:[self roundingUp:0.00]];
-            [_tcFLASLlb setText:[self roundingUp:0.00]];
-
+            [_AFCPLlb setText:[self roundingUp:0.00]];
+            [_AFCSLlb setText:[self roundingUp:0.00]];
+            [_FLAPLlb setText:[self roundingUp:0.00]];
+            [_FLASLlb setText:[self roundingUp:0.00]];
+            
         }
         
     }
@@ -451,17 +454,17 @@
         [self.view addGestureRecognizer:tapper];
     }
     
-    [_tcAFCPLlb setText:[self roundingUp:0.00]];
-    [_tcAFCSLlb setText:[self roundingUp:0.00]];
-    [_tcFLAPLlb setText:[self roundingUp:0.00]];
-    [_tcFLASLlb setText:[self roundingUp:0.00]];
+    [_AFCPLlb setText:[self roundingUp:0.00]];
+    [_AFCSLlb setText:[self roundingUp:0.00]];
+    [_FLAPLlb setText:[self roundingUp:0.00]];
+    [_FLASLlb setText:[self roundingUp:0.00]];
 }
 
 -(void)calulateTotal{
-    [_tcFLAPLlb setText:[self roundingUp:[transformerCalcV calulateFullLoadAmpsOnPri:_selectedPhase]]];
-    [_tcFLASLlb setText:[self roundingUp:[transformerCalcV calulateFullLoadAmpsOnSec:_selectedPhase andLLSec:_selectedLLSec]]];
-    [_tcAFCPLlb setText:[self roundingUp:[transformerCalcV calulateAvailablFaultCurrentPri:_selectedPhase]]];
-    [_tcAFCSLlb setText:[self roundingUp:[transformerCalcV calulateAvailablFaultCurrentSec:_selectedPhase andLLSec:_selectedLLSec]]];
+    [_FLAPLlb setText:[self roundingUp:[_transformerCalcV calulateFullLoadAmpsOnPri:_selectedPhase]]];
+    [_FLASLlb setText:[self roundingUp:[_transformerCalcV calulateFullLoadAmpsOnSec:_selectedPhase andLLSec:_selectedLLSec]]];
+    [_AFCPLlb setText:[self roundingUp:[_transformerCalcV calulateAvailablFaultCurrentPri:_selectedPhase]]];
+    [_AFCSLlb setText:[self roundingUp:[_transformerCalcV calulateAvailablFaultCurrentSec:_selectedPhase andLLSec:_selectedLLSec]]];
     
 }
 
@@ -487,11 +490,11 @@
 - (void)textFieldDidEndEditing:(UITextField *)textField{
     
     TCPhase * updated = [TCPhase new];
-    [updated setPhaseID:[phaseIDTxt.text integerValue]];
+    [updated setPhaseID:(int)[phaseIDTxt.text integerValue]];
     [updated setPhaseLL:[phaseLLTxt.text floatValue]];
     [updated setPhasevalue:[phaseVauleTxt.text floatValue]];
     
-    [[self delegate]updateTransformerPhase:updated andIndexPath:self.tag];
+    [[self delegate]updateTransformerPhase:updated andIndexPath:(int)self.tag];
 }
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
@@ -512,7 +515,7 @@
 - (void)textFieldDidEndEditing:(UITextField *)textField{
     TCLLSec * updated = [[ TCLLSec alloc]init];
     [updated setLlSecVaule:[textField.text floatValue]];
-    [[self delegate]updateTransformerLL:updated andIndexPath:self.tag];
+    [[self delegate]updateTransformerLL:updated andIndexPath:(int)self.tag];
 }
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {

@@ -33,10 +33,13 @@
 -(void) setDefaultsTCLLSec:(NSMutableArray *)llSecArray;
 -(void) setDefaultsAmpsPer:(float)updatedAmpsPer;
 -(void) setDefaultskilovolt_amps:(float)updatedKilovolt_amps;
+
 -(void) addTCLLSec:(TCLLSec *)newLLSec;
 -(void) deleteTCLLSec:(TCLLSec *)llsec;
+
 -(void) updateTCLLSec:(TCLLSec *)llsec andIndex:(int)index;
 -(void) updateTCPhase:(TCPhase *)phase andIndex:(int)index;
+
 -(float)calulateFullLoadAmpsOnPri:(TCPhase *)phaseCAL;
 -(float)calulateFullLoadAmpsOnSec:(TCPhase *)phaseCAL andLLSec:(TCLLSec *)llsec;
 -(float)calulateAvailablFaultCurrentPri:(TCPhase *)phaseCAL;

@@ -25,8 +25,12 @@
 - (void)setDefaultKilovolt_Amps:(NSNumber *)kamps;
 - (void)setDefaultVolts:(NSNumber *)volts;
 - (void)setDefaultXFRMR:(NSMutableArray *)xmfrmr;
+
 - (void)addXFRMR:(XFRMR *)xfrmr;
+
 - (SubdivisionLoadVariables *)updateXFRMRQuantity:(XFRMR *)xfrmr;
 - (void)updateXFRMRSize:(XFRMR *)xfrmr andIndex:(int)index;
+
+- (float)calulateXFRMRFullLoad;
 
 @end

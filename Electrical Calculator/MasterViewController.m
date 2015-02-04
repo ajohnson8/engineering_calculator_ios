@@ -38,12 +38,11 @@
         _objects = [[NSMutableArray alloc]init];
     }
     
-    [self.objects addObject:@"SubdivisionLoadFormula"];
-    [self.objects addObject:@"TransformerCalcFormula"];
+    [self addViews];
     _trans = 0;
     _preTrans = 0;
     [self.tableView reloadData];
-
+    
 }
 
 - (void)didReceiveMemoryWarning {
@@ -66,7 +65,7 @@
         controller.navigationItem.leftBarButtonItem = self.splitViewController.displayModeButtonItem;
         controller.navigationItem.leftItemsSupplementBackButton = YES;
     }
-
+    
 }
 
 #pragma mark - Table View
@@ -80,10 +79,14 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell" forIndexPath:indexPath];
-    
-    NSDate *object = self.objects[indexPath.row];
-    cell.textLabel.text = [object description];
+    ForumalCell *cell = (ForumalCell *) [_table dequeueReusableCellWithIdentifier:@"Cell" forIndexPath:indexPath];
+    if (cell == nil)
+    {
+        NSArray *nib = [[NSBundle mainBundle] loadNibNamed:@"Cell" owner:self options:nil];
+        cell = [nib objectAtIndex:0];
+    }
+    Forumal *object = self.objects[indexPath.row];
+    cell.name.text = object.name;
     return cell;
 }
 
@@ -93,20 +96,57 @@
 }
 
 -(void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    NSDate *object = self.objects[indexPath.row];
+    Forumal *object = self.objects[indexPath.row];
+    NSLog(@"%ld > %ld",(long)indexPath.row ,(long)_trans);
     if (_trans != indexPath.row) {
-        _trans = (int)indexPath.row;
         if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad){
-            [self.detailViewController setDetailItem:object];
-            if (_trans > _preTrans)
+            
+            if (indexPath.row > _trans)
                 [self.detailViewController setTransition:1];
             else
                 [self.detailViewController setTransition:0];
-            _preTrans = _trans;
+            _trans = (int)indexPath.row;
+            _preTrans = (int)indexPath.row;
+            
+            [self.detailViewController setDetailItem:object.storyboardName];
+            
         }else {
             [self performSegueWithIdentifier:@"showDetail" sender:self];
         }
     }
 }
+
+-(void)addViews{
+    
+    Forumal *Forumal1 = [[Forumal alloc]init];
+    [Forumal1 setStoryboardName:@"SubdivisionLoadFormula"];
+    [Forumal1 setName:@"Subdivision Load"];
+    [self.objects addObject:Forumal1];
+    
+    Forumal *Forumal2 = [[Forumal alloc]init];
+    [Forumal2 setStoryboardName:@"TransformerCalcFormula"];
+    [Forumal2 setName:@"Transformer"];
+    [self.objects addObject:Forumal2];
+    
+    Forumal *Forumal3 = [[Forumal alloc]init];
+    [Forumal3 setStoryboardName:@"TransformerRatingCalcFormula"];
+    [Forumal3 setName:@"Transformer Rating"];
+    [self.objects addObject:Forumal3];
+    
+}
+
+@end
+
+@implementation Forumal
+
+-(id)init{
+    self = [super init];
+    if (self) {
+    }
+    return self;
+}
+@end
+
+@implementation ForumalCell
 
 @end

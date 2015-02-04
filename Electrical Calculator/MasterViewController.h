@@ -15,7 +15,17 @@
 
 @property (strong, nonatomic) DetailViewController *detailViewController;
 @property (strong, nonatomic) TransformerCalcVariables *tranfor;
-
+@property (strong, nonatomic) IBOutlet UITableView *table;
 
 @end
 
+@interface Forumal : NSObject
+@property (strong, nonatomic) NSString *storyboardName;
+@property (strong, nonatomic) NSString *name;
+@end
+
+@interface ForumalCell : UITableViewCell
+
+@property (strong, nonatomic) IBOutlet UILabel *name;
+
+@end

@@ -74,6 +74,18 @@
 }
 
 
+#pragma  mark - Calulations
+-(float)calulateXFRMRFullLoad{
+    
+    float FULLLOAD = 0.00;
+    for (XFRMR *temp in self.xfrmr) {
+        float x = ((temp.size * [self.kilovolt_amps floatValue])/[self.volts floatValue])*temp.qtyl;
+        FULLLOAD+=x;
+    }
+    
+    return FULLLOAD;
+}
+
 @end
 
 @implementation XFRMR

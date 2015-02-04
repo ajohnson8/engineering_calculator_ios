@@ -1,0 +1,471 @@
+//
+//  TransformerRatingCalcFormula.m
+//  Electrical Calculator
+//
+//  Created by Paul Marney on 2/3/15.
+//  Copyright (c) 2015 Paul Marney. All rights reserved.
+//
+
+#import "TransformerRatingCalcFormula.h"
+
+@interface TransformerRatingCalcFormula () {
+    BOOL _config;
+}
+
+@end
+
+#pragma mark - TransformerRatingCalcFormula
+
+@implementation TransformerRatingCalcFormula
+@synthesize impedanceTV = _impedanceTV;
+
+
+#pragma mark - Life Cycles
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    [self initView];
+}
+
+-(void)viewWillAppear:(BOOL)animated{
+    
+    [_secVoltTxt setDelegate:self];
+    [_priVoltTxt setDelegate:self];
+    [_kilaVoltAmpsTxt setDelegate:self];
+    
+    UIBarButtonItem * configure = [[UIBarButtonItem alloc]initWithTitle:@"Configure" style:UIBarButtonItemStylePlain target:self action:@selector(pressedConfig:)];
+    
+    BOOL boolValue = [[UICKeyChainStore stringForKey:@"FormulaConfiguration"] boolValue];
+    if (!boolValue) {
+        _config = NO;
+        [_defaultBtn setTitle:@"Default" forState:UIControlStateNormal];[_defaultBtn setNeedsLayout];
+        [_addImpedanceBtn setHidden:YES];
+        [_addImpedanceBtn setEnabled:NO];
+        [configure setTitle:@"Configure"];
+        [[self.navigationController.viewControllers.lastObject navigationItem] setRightBarButtonItem:configure];
+        [self.navigationController.viewControllers.lastObject setTitle:@"Transformer Rating"];
+    }else {
+        _config = YES;
+        [_defaultBtn setTitle:@"Set Default" forState:UIControlStateNormal];[_defaultBtn setNeedsLayout];
+        [_addImpedanceBtn setHidden:NO];
+        [_addImpedanceBtn setEnabled:YES];
+        [configure setTitle:@"Done"];
+        [[self.navigationController.viewControllers.lastObject navigationItem] setRightBarButtonItem:configure];
+        [self.navigationController.viewControllers.lastObject setTitle:@"Transformer Rating Configuration"];
+    }
+    
+}
+
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+#pragma mark - UITableViewDelegate
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    return 1;
+}
+
+-(NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section{
+    
+    return @"Impedances Table";
+}
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    if (_transformerRateCalcV.impedances.count  > 0)
+        return _transformerRateCalcV.impedances.count+1;
+    return 0;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
+    if (indexPath.row == 0){
+        static NSString *simpleTableIdentifier = @"ImpedanceCell";
+        TransformerRatingImpedanceCell *cell = (TransformerRatingImpedanceCell *)[_impedanceTV dequeueReusableCellWithIdentifier:simpleTableIdentifier];
+        if (cell == nil)
+        {
+            NSArray *nib = [[NSBundle mainBundle] loadNibNamed:@"ImpedanceCell" owner:self options:nil];
+            cell = [nib objectAtIndex:0];
+        }
+        
+        return cell;
+    }else {
+        if (_config) {
+            static NSString *simpleTableIdentifier = @"ImpedanceEditCell";
+            TransformerRatingEditImpedanceCell *cell = (TransformerRatingEditImpedanceCell *)[_impedanceTV dequeueReusableCellWithIdentifier:simpleTableIdentifier];
+            if (cell == nil)
+            {
+                NSArray *nib = [[NSBundle mainBundle] loadNibNamed:@"ImpedanceEditCell" owner:self options:nil];
+                cell = [nib objectAtIndex:0];
+            }
+            
+            TRCImpedance *temp = _transformerRateCalcV.impedances[indexPath.row-1];
+            [cell.KVATxt setText:[self roundingUp:temp.KVA andDecimalPlace:2]];
+            [cell.V208Txt setText:[self roundingUp:temp.V208 andDecimalPlace:2]];
+            [cell.V480Txt setText:[self roundingUp:temp.V480 andDecimalPlace:2]];
+            
+            [cell setTag:indexPath.row-1];
+            
+            [cell setDelegate:self];
+            [cell.KVATxt setDelegate:cell];
+            [cell.V208Txt setDelegate:cell];
+            [cell.V480Txt setDelegate:cell];
+            
+            [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
+            return cell;
+            
+            
+        } else {
+            static NSString *simpleTableIdentifier = @"ImpedanceCell";
+            TransformerRatingImpedanceCell *cell = (TransformerRatingImpedanceCell *)[_impedanceTV dequeueReusableCellWithIdentifier:simpleTableIdentifier];
+            if (cell == nil)
+            {
+                NSArray *nib = [[NSBundle mainBundle] loadNibNamed:@"ImpedanceCell" owner:self options:nil];
+                cell = [nib objectAtIndex:0];
+            }
+            
+            TRCImpedance *temp = _transformerRateCalcV.impedances[indexPath.row-1];
+            [cell.KVALbl setText:[self roundingUp:temp.KVA andDecimalPlace:2]];
+            [cell.V208Lbl setText:[self roundingUp:temp.V208 andDecimalPlace:2]];
+            [cell.V480Lbl setText:[self roundingUp:temp.V480 andDecimalPlace:2]];
+            
+            [cell setTag:indexPath.row-1];
+            [cell setSelectionStyle:UITableViewCellSelectionStyleGray];
+            return cell;
+            
+        }
+    }
+}
+
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
+    return _config;
+}
+
+- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath {
+    return NO;
+}
+
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (editingStyle == UITableViewCellEditingStyleDelete) {
+        TRCImpedance *temp = _transformerRateCalcV.impedances[indexPath.row-1];
+        [_transformerRateCalcV deleteTRCImpedances:temp];
+        [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section]] withRowAnimation:UITableViewRowAnimationLeft];
+    }
+}
+
+
+#pragma mark - UITextFieldDelegate
+- (void)textFieldDidEndEditing:(UITextField *)textField{
+}
+
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
+    
+    NSString *s = [textField.text stringByReplacingCharactersInRange:range withString:string];
+    NSRegularExpression *regex;
+    if (textField.tag == 0) {
+        regex = [NSRegularExpression regularExpressionWithPattern:@"^\\d{0,9}$" options:0 error:nil];
+    }else{
+        regex = [NSRegularExpression regularExpressionWithPattern:@"^(0*100{1,1}\\.?((?<=\\.)0*)?%?$)|(^0*\\d{0,2}\\.?((?<=\\.)\\d*)?%?)$" options:0 error:nil];
+    }
+    
+    NSTextCheckingResult *match = [regex firstMatchInString:s options:0 range:NSMakeRange(0, [s length])];
+    
+    if (match != nil) {
+        if (textField == _priVoltTxt) {
+            [_transformerRateCalcV setDefaultsPriVolts:[s floatValue]];
+        }else if (_kilaVoltAmpsTxt == textField) {
+            [_transformerRateCalcV setDefaultskilovolt_amps:[s floatValue]];
+        }
+        else {
+            [_transformerRateCalcV setDefaultsSecVolts:[s floatValue]];
+        }
+        [self calulateTotal];
+    }
+    return (match != nil);
+}
+
+
+#pragma mark - IBActions
+
+- (IBAction)pressedConfig:(id)sender {
+    
+    [UIView transitionWithView:self.view
+                      duration:1
+                       options:UIViewAnimationOptionTransitionFlipFromRight
+                    animations:^{ }
+                    completion:NULL];
+    
+    BOOL boolValue = [[UICKeyChainStore stringForKey:@"FormulaConfiguration"] boolValue];
+    [self.view endEditing:YES];
+    
+    if (boolValue) {
+        _config = NO;
+        [UICKeyChainStore setString:@"NO" forKey:@"FormulaConfiguration"];
+        [_defaultBtn setTitle:@"Default" forState:UIControlStateNormal];[_defaultBtn setNeedsLayout];
+        [_addImpedanceBtn setHidden:YES];
+        [_addImpedanceBtn setEnabled:NO];
+        [self.navigationController.viewControllers.lastObject setTitle:@"Transformer Rating"];
+        [[[self.navigationController.viewControllers.lastObject navigationItem] rightBarButtonItem]setTitle:@"Configure"];
+    }else {
+        _config = YES;
+        [UICKeyChainStore setString:@"YES" forKey:@"FormulaConfiguration"];
+        [_defaultBtn setTitle:@"Set Default" forState:UIControlStateNormal];[_defaultBtn setNeedsLayout];
+        [_addImpedanceBtn setHidden:NO];
+        [_addImpedanceBtn setEnabled:YES];
+        [self.navigationController.viewControllers.lastObject setTitle:@"Transformer Rating Configuration"];
+        [[[self.navigationController.viewControllers.lastObject navigationItem] rightBarButtonItem]setTitle:@"Done"];
+    }
+    [_impedanceTV deselectRowAtIndexPath:[_impedanceTV indexPathForSelectedRow] animated:YES];
+    [_impedanceTV reloadData];
+}
+
+- (IBAction)addImpedanceAction:(id)sender {
+    [_impedanceTV endEditing:YES];
+    TRCImpedance *temp = [[TRCImpedance alloc]init];
+    [_transformerRateCalcV addTRCImpedances:temp];
+    [_impedanceTV reloadData];
+    [_addImpedanceBtn setEnabled:NO];
+}
+
+- (IBAction)resetDefaults:(id)sender {
+    
+    if (_config) {
+        
+        NSData* myDataArrayImpedance = [NSKeyedArchiver archivedDataWithRootObject:[_transformerRateCalcV impedances]];
+        
+        [UICKeyChainStore setData:myDataArrayImpedance forKey:@"SystemDefaultsArrayImpedance"];
+        
+        [TSMessage showNotificationInViewController:self.navigationController.viewControllers.lastObject title:@"TransformerCalcFormula" subtitle:@"Defaults has been save." type:TSMessageNotificationTypeSuccess duration:1.5];
+        
+        [_addImpedanceBtn setHidden:_config];
+        [_addImpedanceBtn setEnabled:!_config];
+        
+    }else {
+        NSData* myDataArrayImpedance = [UICKeyChainStore dataForKey:@"SystemDefaultsArrayImpedance"];
+        NSMutableArray* defaultImpedance = [NSKeyedUnarchiver unarchiveObjectWithData:myDataArrayImpedance];
+        
+        [_transformerRateCalcV setDefaultsTRCImpedances:defaultImpedance];
+        
+        [_impedanceTV setDataSource:self];
+        [_impedanceTV setDelegate:self];
+        
+        [_impedanceTV deselectRowAtIndexPath:[_impedanceTV indexPathForSelectedRow] animated:YES];
+        
+        [_addImpedanceBtn setHidden:_config];
+        [_addImpedanceBtn setEnabled:!_config];
+        
+        [_addImpedanceBtn setHidden:YES];
+        [_addImpedanceBtn setEnabled:NO];
+        
+        [_impedancePerLbl setText:[self roundingUp:0.00 andDecimalPlace:0]];
+        [_priFLALbl setText:[self roundingUp:0.00 andDecimalPlace:0]];
+        [_secFLALbl setText:[self roundingUp:0.00 andDecimalPlace:0]];
+        [_priMaxLbl setText:[self roundingUp:0.00 andDecimalPlace:0]];
+        [_priMinLbl setText:[self roundingUp:0.00 andDecimalPlace:0]];
+        [_secBreakerLbl setText:[self roundingUp:0.00 andDecimalPlace:0]];
+        [_faultPriLbl setText:[self roundingUp:0.00 andDecimalPlace:0]];
+        [_faultSecLbl setText:[self roundingUp:0.00 andDecimalPlace:0]];
+        
+        [TSMessage showNotificationInViewController:self.navigationController.viewControllers.lastObject title:@"TransformerCalcFormula" subtitle:@"Defaults has been set." type:TSMessageNotificationTypeSuccess duration:1.5];
+        
+    }
+    
+    [_impedanceTV reloadData];
+}
+
+#pragma mark -  TransformerRatingEditImpedanceCellDelegate
+
+-(void)updateTransformerImpedance:(TRCImpedance *)impedance andIndexPath:(int)row{
+    
+}
+-(void)canAddAnotherImpedance:(BOOL)check{
+    [_addImpedanceBtn setEnabled:check];
+}
+
+#pragma mark - Private Methods
+
+-(void)initView{
+    // [self addImpedances];
+    if (_transformerRateCalcV == nil) {
+        
+        NSData *t =[UICKeyChainStore dataForKey:@"SystemDefaultsArrayImpedance"];
+        
+        _transformerRateCalcV = [[ TransformerRatingCalcVariables alloc ]init];
+        
+        if (t.length == 0 ) {
+            [self addImpedances];
+            
+            [_impedanceTV setDataSource:self];
+            [_impedanceTV setDelegate:self];
+            
+            [UICKeyChainStore setString:@"NO" forKey:@"FormulaConfiguration"];
+            
+        }else{
+            NSData* myDataArrayImpedance = [UICKeyChainStore dataForKey:@"SystemDefaultsArrayImpedance"];
+            NSMutableArray* defaultImpedance = [NSKeyedUnarchiver unarchiveObjectWithData:myDataArrayImpedance];
+            
+            [_transformerRateCalcV setDefaultsTRCImpedances:defaultImpedance];
+            
+            [_impedanceTV setDataSource:self];
+            [_impedanceTV setDelegate:self];
+            
+            [_impedanceTV deselectRowAtIndexPath:[_impedanceTV indexPathForSelectedRow] animated:YES];
+            
+            [_secVoltTxt setText:@""];
+            [_priVoltTxt setText:@""];
+            
+            [_impedancePerLbl setText:[self roundingUp:0.00 andDecimalPlace:0]];
+            [_priFLALbl setText:[self roundingUp:0.00 andDecimalPlace:0]];
+            [_secFLALbl setText:[self roundingUp:0.00 andDecimalPlace:0]];
+            [_priMaxLbl setText:[self roundingUp:0.00 andDecimalPlace:0]];
+            [_priMinLbl setText:[self roundingUp:0.00 andDecimalPlace:0]];
+            [_secBreakerLbl setText:[self roundingUp:0.00 andDecimalPlace:0]];
+            [_faultPriLbl setText:[self roundingUp:0.00 andDecimalPlace:0]];
+            [_faultSecLbl setText:[self roundingUp:0.00 andDecimalPlace:0]];
+            
+        }
+        
+    }
+    if (UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPad){
+        UITapGestureRecognizer *tapper = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleSingleTap:)];
+        tapper.cancelsTouchesInView = NO;
+        [self.view addGestureRecognizer:tapper];
+    }
+    
+    [_impedancePerLbl setText:[self roundingUp:0.00 andDecimalPlace:0]];
+    [_priFLALbl setText:[self roundingUp:0.00 andDecimalPlace:0]];
+    [_secFLALbl setText:[self roundingUp:0.00 andDecimalPlace:0]];
+    [_priMaxLbl setText:[self roundingUp:0.00 andDecimalPlace:0]];
+    [_priMinLbl setText:[self roundingUp:0.00 andDecimalPlace:0]];
+    [_secBreakerLbl setText:[self roundingUp:0.00 andDecimalPlace:0]];
+    [_faultPriLbl setText:[self roundingUp:0.00 andDecimalPlace:0]];
+    [_faultSecLbl setText:[self roundingUp:0.00 andDecimalPlace:0]];
+}
+
+- (void)handleSingleTap:(UITapGestureRecognizer *) sender
+{
+    [self.view endEditing:YES];
+}
+
+-(void)calulateTotal{
+    [_impedancePerLbl setText:[self roundingUp:[_transformerRateCalcV calulateSNLSImpedance] andDecimalPlace:2]];
+    [_priFLALbl setText:[self roundingUp:[_transformerRateCalcV calulatePriCurFLA] andDecimalPlace:0]];
+    [_secFLALbl setText:[self roundingUp:[_transformerRateCalcV calulateSecCurFLA]andDecimalPlace:0]];
+    [_priMaxLbl setText:[self roundingUp:[_transformerRateCalcV calulatePriFuseMax]andDecimalPlace:0]];
+    [_priMinLbl setText:[self roundingUp:[_transformerRateCalcV calulatePriFuseMin]andDecimalPlace:0]];
+    [_secBreakerLbl setText:[self roundingUp:[_transformerRateCalcV calulateSecBreaker]andDecimalPlace:0]];
+    [_faultPriLbl setText:[self roundingUp:[_transformerRateCalcV calulateFaultDutyPri]andDecimalPlace:0]];
+    [_faultSecLbl setText:[self roundingUp:[_transformerRateCalcV calulateFaultDutySec]andDecimalPlace:0]];
+    
+}
+
+-(NSString *)roundingUp:(float)num andDecimalPlace:(int)place{
+    
+    NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
+    
+    [formatter setNumberStyle:NSNumberFormatterDecimalStyle];
+    [formatter setMaximumFractionDigits:place];
+    [formatter setRoundingMode: NSNumberFormatterRoundHalfUp];
+    
+    return [formatter stringFromNumber:[NSNumber numberWithFloat:num]];
+}
+
+-(void)addImpedances{
+    
+    TRCImpedance * impedance = [[TRCImpedance alloc]init];
+    
+    NSMutableArray *defaultimpedances = [[NSMutableArray alloc]init];
+    [impedance setKVA :50];
+    [impedance setV208:2.90];
+    [impedance setV480:2.60];
+    [_transformerRateCalcV addTRCImpedances:impedance];
+    [defaultimpedances addObject:impedance];
+    
+    TRCImpedance * impedance2 = [[TRCImpedance alloc]init];
+    [impedance2 setKVA :75];
+    [impedance2 setV208:2.90];
+    [impedance2 setV480:2.60];
+    [_transformerRateCalcV addTRCImpedances:impedance2];
+    [defaultimpedances addObject:impedance2];
+    
+    TRCImpedance * impedance3 = [[TRCImpedance alloc]init];
+    [impedance3 setKVA :112.5];
+    [impedance3 setV208:3.00];
+    [impedance3 setV480:2.60];
+    [_transformerRateCalcV addTRCImpedances:impedance3];
+    [defaultimpedances addObject:impedance3];
+    
+    
+    TRCImpedance * impedance4 = [[TRCImpedance alloc]init];
+    [impedance4 setKVA :150];
+    [impedance4 setV208:3.00];
+    [impedance4 setV480:2.60];
+    [_transformerRateCalcV addTRCImpedances:impedance4];
+    [defaultimpedances addObject:impedance4];
+    
+    TRCImpedance * impedance5 = [[TRCImpedance alloc]init];
+    [impedance5 setKVA :300];
+    [impedance5 setV208:4.70];
+    [impedance5 setV480:2.60];
+    [_transformerRateCalcV addTRCImpedances:impedance5];
+    [defaultimpedances addObject:impedance5];
+    
+    TRCImpedance * impedance6 = [[TRCImpedance alloc]init];
+    [impedance6 setKVA :500];
+    [impedance6 setV208:4.70];
+    [impedance6 setV480:4.30];
+    [_transformerRateCalcV addTRCImpedances:impedance6];
+    [defaultimpedances addObject:impedance6];
+    
+    TRCImpedance * impedance7 = [[TRCImpedance alloc]init];
+    [impedance7 setKVA :750];
+    [impedance7 setV208:5.75];
+    [impedance7 setV480:5.75];
+    [_transformerRateCalcV addTRCImpedances:impedance7];
+    [defaultimpedances addObject:impedance7];
+    
+    TRCImpedance * impedance8 = [[TRCImpedance alloc]init];
+    [impedance8 setKVA :1000];
+    [impedance8 setV208:5.75];
+    [impedance8 setV480:5.75];
+    [_transformerRateCalcV addTRCImpedances:impedance8];
+    [defaultimpedances addObject:impedance8];
+    
+    TRCImpedance * impedance9 = [[TRCImpedance alloc]init];
+    [impedance9 setKVA :1500];
+    [impedance9 setV208:5.75];
+    [impedance9 setV480:5.75];
+    [_transformerRateCalcV addTRCImpedances:impedance9];
+    [defaultimpedances addObject:impedance9];
+    
+    TRCImpedance * impedance11 = [[TRCImpedance alloc]init];
+    [impedance11 setKVA :2000];
+    [impedance11 setV208:5.75];
+    [impedance11 setV480:5.75];
+    [_transformerRateCalcV addTRCImpedances:impedance11];
+    [defaultimpedances addObject:impedance11];
+    
+    TRCImpedance * impedance12 = [[TRCImpedance alloc]init];
+    [impedance12 setKVA :2500];
+    [impedance12 setV208:5.75];
+    [impedance12 setV480:5.75];
+    [_transformerRateCalcV addTRCImpedances:impedance12];
+    [defaultimpedances addObject:impedance12];
+    
+    NSData* myDataArrayPhase = [NSKeyedArchiver archivedDataWithRootObject:defaultimpedances];
+    
+    [UICKeyChainStore setData:myDataArrayPhase forKey:@"SystemDefaultsArrayImpedance"];
+}
+
+@end
+
+#pragma mark - TransformerRatingImpedanceCell
+
+@implementation TransformerRatingImpedanceCell
+
+@end
+
+#pragma mark - TransformerRatingEditImpedanceCell
+
+@implementation TransformerRatingEditImpedanceCell
+
+@end

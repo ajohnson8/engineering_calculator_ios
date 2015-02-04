@@ -20,67 +20,7 @@
 
 #pragma mark - Life cycle
 
--(void)initView{
-    
-    if (subDivLoadVar == nil) {
-        
-        if ([UICKeyChainStore dataForKey:@"SystemDefaultsXFRMR"] &&
-            [UICKeyChainStore dataForKey:@"SystemDefaultsVolts"] &&
-            [UICKeyChainStore dataForKey:@"SystemDefaultsKilovolt_Amps"]) {
-            
-            
-            subDivLoadVar = [[ SubdivisionLoadVariables alloc ]init];
-            
-            NSData* myDataXFRMR = [UICKeyChainStore dataForKey:@"SystemDefaultsXFRMR"];
-            NSMutableArray* defaultSize = [NSKeyedUnarchiver unarchiveObjectWithData:myDataXFRMR];
-            
-            NSData* myDataVolts = [UICKeyChainStore dataForKey:@"SystemDefaultsVolts"];
-            NSNumber* volts = [NSKeyedUnarchiver unarchiveObjectWithData:myDataVolts];
-            
-            NSData* myDataKilovolt_Amps = [UICKeyChainStore dataForKey:@"SystemDefaultsKilovolt_Amps"];
-            NSNumber* kilovolt_Amps = [NSKeyedUnarchiver unarchiveObjectWithData:myDataKilovolt_Amps];
-            
-            [subDivLoadVar setDefaultVolts:volts];
-            [subDivLoadVar setDefaultKilovolt_Amps:kilovolt_Amps];
-            [subDivLoadVar setDefaultXFRMR:defaultSize];
-            
-            [_xfrmrTVC setDataSource:self];
-            [_xfrmrTVC setDelegate:self];
-            
-            
-        } else {
-            subDivLoadVar = [[ SubdivisionLoadVariables alloc ]init];
-            NSMutableArray *defaultSize = [[NSMutableArray alloc]init];
-            [defaultSize addObject:[NSNumber numberWithInt:5]];
-            [defaultSize addObject:[NSNumber numberWithInt:10]];
-            [defaultSize addObject:[NSNumber numberWithInt:15]];
-            [defaultSize addObject:[NSNumber numberWithInt:25]];
-            [defaultSize addObject:[NSNumber numberWithInt:75]];
-            [defaultSize addObject:[NSNumber numberWithInt:100]];
-            
-            [subDivLoadVar setDefaultVolts:[NSNumber numberWithInt:7200]];
-            [subDivLoadVar setDefaultKilovolt_Amps:[NSNumber numberWithInt:1000]];
-            [subDivLoadVar setDefaultXFRMR:defaultSize];
-            
-            [_xfrmrTVC setDataSource:self];
-            [_xfrmrTVC setDelegate:self];
-            
-            NSData* myDataXFRMR = [NSKeyedArchiver archivedDataWithRootObject:defaultSize];
-            [UICKeyChainStore setData:myDataXFRMR forKey:@"SystemDefaultsXFRMR"];
-            
-            NSData* myDataVolts = [NSKeyedArchiver archivedDataWithRootObject:[NSNumber numberWithInt:7200]];
-            [UICKeyChainStore setData:myDataVolts forKey:@"SystemDefaultsVolts"];
-            
-            NSData* myDataKilovolt_Amps = [NSKeyedArchiver archivedDataWithRootObject:[NSNumber numberWithInt:1000]];
-            [UICKeyChainStore setData:myDataKilovolt_Amps forKey:@"SystemDefaultsKilovolt_Amps"];
-        }
-    }
-    if (UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPad){
-        UITapGestureRecognizer *tapper = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleSingleTap:)];
-        tapper.cancelsTouchesInView = NO;
-        [self.view addGestureRecognizer:tapper];
-    }
-}
+
 
 -(void)viewDidLoad{
     [super viewDidLoad];
@@ -102,21 +42,24 @@
     [_kilaVoltAmpsTxt setDelegate:self];
     [_voltTxt setDelegate:self];
     
-    BOOL boolValue = [[UICKeyChainStore stringForKey:@"SubdivisionLoadFormulaConfig"] boolValue];
+    BOOL boolValue = [[UICKeyChainStore stringForKey:@"FormulaConfiguration"] boolValue];
     if (!boolValue) {
         _config = NO;
         [_kilaVoltAmpsTxt setEnabled:NO];
         [_voltTxt setEnabled:NO];
         [_defaultBtn setTitle:@"Default" forState:UIControlStateNormal];[_defaultBtn setNeedsLayout];
         [_addSizeBtn setHidden:YES];
+        [self.navigationController.viewControllers.lastObject setTitle:@"Subdivision Load"];
     }else {
         _config = YES;
         [_kilaVoltAmpsTxt setEnabled:YES];
         [_voltTxt setEnabled:YES];
         [_defaultBtn setTitle:@"Set Default" forState:UIControlStateNormal];[_defaultBtn setNeedsLayout];
         [_addSizeBtn setHidden:NO];
+        [self.navigationController.viewControllers.lastObject  setTitle:@"Subdivision Load Configuration"];
     }
 }
+
 
 #pragma mark - IBActions
 
@@ -128,21 +71,23 @@
                     animations:^{ }
                     completion:NULL];
     
-    BOOL boolValue = [[UICKeyChainStore stringForKey:@"SubdivisionLoadFormulaConfig"] boolValue];
+    BOOL boolValue = [[UICKeyChainStore stringForKey:@"FormulaConfiguration"] boolValue];
     [self resignFirstResponder];
     if (boolValue) {
         _config = NO;
         [_kilaVoltAmpsTxt setEnabled:NO];
         [_voltTxt setEnabled:NO];
         [_defaultBtn setTitle:@"Default" forState:UIControlStateNormal];[_defaultBtn setNeedsLayout];
-        [UICKeyChainStore setString:@"NO" forKey:@"SubdivisionLoadFormulaConfig"];
+        [UICKeyChainStore setString:@"NO" forKey:@"FormulaConfiguration"];
+        [self.navigationController.viewControllers.lastObject  setTitle:@"Subdivision Load"];
         [_addSizeBtn setHidden:YES];
     }else {
         _config = YES;
         [_kilaVoltAmpsTxt setEnabled:YES];
         [_voltTxt setEnabled:YES];
         [_defaultBtn setTitle:@"Set Default" forState:UIControlStateNormal];[_defaultBtn setNeedsLayout];
-        [UICKeyChainStore setString:@"YES" forKey:@"SubdivisionLoadFormulaConfig"];
+        [UICKeyChainStore setString:@"YES" forKey:@"FormulaConfiguration"];
+        [self.navigationController.viewControllers.lastObject  setTitle:@"Subdivision Load Configuration"];
         [_addSizeBtn setHidden:NO];
     }
     [_calulationTotal setText:[NSString stringWithFormat:@"Full Load is : %i",0]];
@@ -206,18 +151,28 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return subDivLoadVar.xfrmr.count;
+    if (subDivLoadVar.xfrmr.count>0)
+        return subDivLoadVar.xfrmr.count+1;
+    return 0;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (_config) {
-        return 60;
-    } else {
-        return 60;
-    }
+    return 44;
 }
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (indexPath.row == 0) {
+        static NSString *simpleTableIdentifier = @"SetQuantity";
+        XFRMRQtylCell *cell = (XFRMRQtylCell *)[tableView dequeueReusableCellWithIdentifier:simpleTableIdentifier];
+        if (cell == nil)
+        {
+            NSArray *nib = [[NSBundle mainBundle] loadNibNamed:@"SetQuantity" owner:self options:nil];
+            cell = [nib objectAtIndex:0];
+        }
+        [cell.quantityLbl setHidden:_config];
+        return cell;
+    }
+    
     if (!_config) {
         static NSString *simpleTableIdentifier = @"SetQuantity";
         XFRMRQtylCell *cell = (XFRMRQtylCell *)[tableView dequeueReusableCellWithIdentifier:simpleTableIdentifier];
@@ -227,7 +182,7 @@
             cell = [nib objectAtIndex:0];
         }
         
-        XFRMR *temp = subDivLoadVar.xfrmr[indexPath.row];
+        XFRMR *temp = subDivLoadVar.xfrmr[indexPath.row-1];
         [cell.sizeLbl setText:[NSString stringWithFormat:@"%i",(int)temp.size]];
         [cell.quantityLbl setText:[NSString stringWithFormat:@"%i",(int)temp.qtyl]];
         [cell setDelegate:self];
@@ -238,71 +193,45 @@
     } else {
         static NSString *simpleTableIdentifier = @"SetSize";
         XFRMRSizeCell *cell = (XFRMRSizeCell *)[tableView dequeueReusableCellWithIdentifier:simpleTableIdentifier];
+        
         if (cell == nil)
         {
-            NSArray *nib = [[NSBundle mainBundle] loadNibNamed:@"SetSize" owner:self options:nil];
+            NSArray *nib = [[NSBundle mainBundle] loadNibNamed:simpleTableIdentifier owner:self options:nil];
             cell = [nib objectAtIndex:0];
         }
         
-        XFRMR *temp = subDivLoadVar.xfrmr[indexPath.row];
+        XFRMR *temp = subDivLoadVar.xfrmr[indexPath.row-1];
         NumberPadDoneBtn *doneNumBtn = [[NumberPadDoneBtn alloc]initWithFrame:CGRectMake(0,0,1,1)];
         
-        if (temp.size != 0 ){
-            [cell.SizeTxt setText:[NSString stringWithFormat:@"%i",(int)temp.size]];}
-        else {
-            [cell.SizeTxt setText:@""];
-            [cell OneAtATime];
-        }
-        [cell.SizeTxt setDelegate:cell];
         if (UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPad){
-            [cell.SizeTxt setInputAccessoryView:doneNumBtn];
+            [cell.sizeTxt setInputAccessoryView:doneNumBtn];
         }
-        [cell setDelegate:self];
-        [cell setTag:indexPath.row];
         
+        [cell.sizeTxt setDelegate:cell];
+        [cell setDelegate:self];
+        [cell setTag:indexPath.row-1];
+        [cell.sizeTxt setTag:indexPath.row-1];
+        
+        if (temp.size != 0 ){
+            [cell.sizeTxt setText:[NSString stringWithFormat:@"%i",(int)temp.size]];}
+        else {
+            [cell.sizeTxt setText:@""];
+            [cell.sizeTxt becomeFirstResponder];
+            [cell toggleAddSize];
+        }
         return cell;
     }
 }
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     
-    if (tableView == _xfrmrTVC) {
+    if (tableView == _xfrmrTVC && indexPath.row != 0) {
         if (!_config && (_quantityPickerPopover==nil  ||  ![_quantityPickerPopover isPopoverVisible])) {
             _quantityPickerPopover = nil;
             XFRMRQtylCell *cell =(XFRMRQtylCell *) [tableView cellForRowAtIndexPath:indexPath];
             [self createQuantityPopoverListWithCell:cell];
         }
     }
-}
-
--(void)createQuantityPopoverListWithCell:(XFRMRQtylCell *)cell{
-    
-    
-    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad ){
-        UIViewController *popoverContent=[[UIViewController alloc] init];
-        
-        UITableView *tableView2=[[UITableView alloc] initWithFrame:CGRectMake(265, 680, 0, 0) style:UITableViewStylePlain];
-        
-        popoverContent.preferredContentSize=CGSizeMake(200, 420);
-        popoverContent.view=tableView2; //Adding tableView to popover
-        tableView2.delegate = cell;
-        tableView2.dataSource = cell;
-        
-        _quantityPickerPopover = [[UIPopoverController alloc] initWithContentViewController:popoverContent];
-        [_quantityPickerPopover setDelegate:self];
-        _quantityPickerPopover.contentViewController.preferredContentSize = CGSizeMake(150, 200);
-        [_quantityPickerPopover presentPopoverFromRect:CGRectMake(cell.frame.size.width, cell.frame.size.height/2, 0, 0) inView:cell
-                              permittedArrowDirections:UIPopoverArrowDirectionLeft
-                                              animated:YES];
-        
-    }else {
-        UITableViewController *tableView = [[UITableViewController alloc]init];
-        tableView.tableView.delegate = cell;
-        tableView.tableView.dataSource = cell;
-        
-        [self.navigationController pushViewController:tableView animated:YES];
-    }
-    
 }
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -315,10 +244,10 @@
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
-        XFRMR *temp = subDivLoadVar.xfrmr[indexPath.row];
+        XFRMR *temp = subDivLoadVar.xfrmr[indexPath.row-1];
         [self deleteXFRMR:temp];
         
-        [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section]] withRowAnimation:UITableViewRowAnimationLeft];
+        [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:indexPath.row-1 inSection:indexPath.section]] withRowAnimation:UITableViewRowAnimationLeft];
     }
 }
 
@@ -347,15 +276,7 @@
 
 #pragma  mark - Calulations and Editting
 -(void)calulateXFRMRFULLLOAD{
-    
-    float FULLLOAD = 0.00;
-    for (XFRMR *temp in subDivLoadVar.xfrmr) {
-        float x = ((temp.size * [subDivLoadVar.kilovolt_amps floatValue])/[subDivLoadVar.volts floatValue])*temp.qtyl;
-        FULLLOAD+=x;
-    }
-    NSLog(@"Full Load is : %f",FULLLOAD);
-    [_calulationTotal setText:[NSString stringWithFormat:@"Full Load is : %f",FULLLOAD]];
-    
+    [_calulationTotal setText:[NSString stringWithFormat:@"Full Load is : %f",[subDivLoadVar calulateXFRMRFullLoad]]];
 }
 
 #pragma  mark - XFRMRQtylCellDelegate
@@ -391,13 +312,6 @@
     [_addSizeBtn setEnabled:check];
 }
 
-//-(void)prepareForSegue:(UIStoryboardPopoverSegue *)segue sender:(id)sender{
-//    if([[segue identifier] isEqualToString:@"EditFilterSegue"]){
-//        //editPopover = [(UIStoryboardPopoverSegue *)segue popoverController];
-//        //editPopover.delegate = (id <UIPopoverControllerDelegate>)self;
-//    }
-//}
-
 #pragma  mark - XFRMRVaules
 
 -(void)addXFRMRQuantity:(XFRMR *)xfrmr{
@@ -413,16 +327,111 @@
     }
 }
 
+#pragma mark - Private Mark
+
+-(void)initView{
+    
+    if (subDivLoadVar == nil) {
+        
+        if ([UICKeyChainStore dataForKey:@"SystemDefaultsXFRMR"] &&
+            [UICKeyChainStore dataForKey:@"SystemDefaultsVolts"] &&
+            [UICKeyChainStore dataForKey:@"SystemDefaultsKilovolt_Amps"]) {
+            
+            
+            subDivLoadVar = [[ SubdivisionLoadVariables alloc ]init];
+            
+            NSData* myDataXFRMR = [UICKeyChainStore dataForKey:@"SystemDefaultsXFRMR"];
+            NSMutableArray* defaultSize = [NSKeyedUnarchiver unarchiveObjectWithData:myDataXFRMR];
+            
+            NSData* myDataVolts = [UICKeyChainStore dataForKey:@"SystemDefaultsVolts"];
+            NSNumber* volts = [NSKeyedUnarchiver unarchiveObjectWithData:myDataVolts];
+            
+            NSData* myDataKilovolt_Amps = [UICKeyChainStore dataForKey:@"SystemDefaultsKilovolt_Amps"];
+            NSNumber* kilovolt_Amps = [NSKeyedUnarchiver unarchiveObjectWithData:myDataKilovolt_Amps];
+            
+            [subDivLoadVar setDefaultVolts:volts];
+            [subDivLoadVar setDefaultKilovolt_Amps:kilovolt_Amps];
+            [subDivLoadVar setDefaultXFRMR:defaultSize];
+            
+            [_xfrmrTVC setDataSource:self];
+            [_xfrmrTVC setDelegate:self];
+            
+            
+        } else {
+            subDivLoadVar = [[ SubdivisionLoadVariables alloc ]init];
+            NSMutableArray *defaultSize = [[NSMutableArray alloc]init];
+            [defaultSize addObject:[NSNumber numberWithInt:5]];
+            [defaultSize addObject:[NSNumber numberWithInt:10]];
+            [defaultSize addObject:[NSNumber numberWithInt:15]];
+            [defaultSize addObject:[NSNumber numberWithInt:25]];
+            [defaultSize addObject:[NSNumber numberWithInt:75]];
+            [defaultSize addObject:[NSNumber numberWithInt:100]];
+            
+            [subDivLoadVar setDefaultVolts:[NSNumber numberWithInt:7200]];
+            [subDivLoadVar setDefaultKilovolt_Amps:[NSNumber numberWithInt:1000]];
+            [subDivLoadVar setDefaultXFRMR:defaultSize];
+            
+            [_xfrmrTVC setDataSource:self];
+            [_xfrmrTVC setDelegate:self];
+            
+            NSData* myDataXFRMR = [NSKeyedArchiver archivedDataWithRootObject:defaultSize];
+            [UICKeyChainStore setData:myDataXFRMR forKey:@"SystemDefaultsXFRMR"];
+            
+            NSData* myDataVolts = [NSKeyedArchiver archivedDataWithRootObject:[NSNumber numberWithInt:7200]];
+            [UICKeyChainStore setData:myDataVolts forKey:@"SystemDefaultsVolts"];
+            
+            NSData* myDataKilovolt_Amps = [NSKeyedArchiver archivedDataWithRootObject:[NSNumber numberWithInt:1000]];
+            [UICKeyChainStore setData:myDataKilovolt_Amps forKey:@"SystemDefaultsKilovolt_Amps"];
+        }
+    }
+    if (UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPad){
+        UITapGestureRecognizer *tapper = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleSingleTap:)];
+        tapper.cancelsTouchesInView = NO;
+        [self.view addGestureRecognizer:tapper];
+    }
+}
+
+-(void)createQuantityPopoverListWithCell:(XFRMRQtylCell *)cell{
+    
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad ){
+        UIViewController *popoverContent=[[UIViewController alloc] init];
+        
+        UITableView *tableView2=[[UITableView alloc] initWithFrame:CGRectMake(265, 680, 0, 0) style:UITableViewStylePlain];
+        
+        popoverContent.preferredContentSize=CGSizeMake(200, 420);
+        popoverContent.view=tableView2; //Adding tableView to popover
+        tableView2.delegate = cell;
+        tableView2.dataSource = cell;
+        
+        _quantityPickerPopover = [[UIPopoverController alloc] initWithContentViewController:popoverContent];
+        [_quantityPickerPopover setDelegate:self];
+        _quantityPickerPopover.contentViewController.preferredContentSize = CGSizeMake(150, 200);
+        [_quantityPickerPopover presentPopoverFromRect:CGRectMake(cell.frame.size.width, cell.frame.size.height/2, 0, 0) inView:cell
+                              permittedArrowDirections:UIPopoverArrowDirectionLeft
+                                              animated:YES];
+        
+    }else {
+        UITableViewController *tableView = [[UITableViewController alloc]init];
+        tableView.tableView.delegate = cell;
+        tableView.tableView.dataSource = cell;
+        
+        [self.navigationController pushViewController:tableView animated:YES];
+    }
+    
+}
+
 @end
 
+#pragma mark - Implementation XFRMRSizeCell
 @implementation XFRMRSizeCell
-@synthesize SizeTxt;
+@synthesize sizeTxt;
 
+#pragma mark - UITextField
 - (void)textFieldDidEndEditing:(UITextField *)textField{
     XFRMR * updated = [[ XFRMR alloc]init];
     [updated setQtyl:0];
     [updated setSize:[textField.text floatValue]];
-    [[self delegate]updateXFRMR:updated andIndexPath:self.tag];
+    [[self delegate]updateXFRMR:updated andIndexPath:(int)self.tag];
 }
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
@@ -433,15 +442,19 @@
     [[self delegate]canAddAnother:(x && string.length>0)];
     return x;
 }
--(void)OneAtATime{
+
+#pragma mark - Private Method
+-(void)toggleAddSize{
     [[self delegate]canAddAnother:NO];
 }
 
 @end
 
+#pragma mark - Implementation XFRMRQtylCell
 @implementation XFRMRQtylCell
 @synthesize quantityLbl;
 
+#pragma mark - UITableView Delegate
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     return 1;
 }
@@ -466,7 +479,5 @@
     [updated setQtyl:(int)indexPath.row];
     [[self delegate] updateXFRMRQuantity:updated];
 }
-
-
 
 @end
