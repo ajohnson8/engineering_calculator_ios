@@ -10,7 +10,6 @@
 #import <UICKeyChainStore/UICKeyChainStore.h>
 #import <TSMessages/TSMessage.h>
 #import "TransformerCalcVariables.h"
-#import "NumberPadDoneBtn.h"
 
 @protocol TransformerPhaseCellDelegate <NSObject>
 

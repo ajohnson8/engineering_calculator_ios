@@ -86,6 +86,9 @@
             NSArray *nib = [[NSBundle mainBundle] loadNibNamed:@"ImpedanceCell" owner:self options:nil];
             cell = [nib objectAtIndex:0];
         }
+        [cell.KVALbl setText:@"kVA"];
+        [cell.V208Lbl setText:@"208v"];
+        [cell.V480Lbl setText:@"480v"];
         
         return cell;
     }else {

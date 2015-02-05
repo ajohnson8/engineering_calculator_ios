@@ -179,6 +179,7 @@
             cell = [nib objectAtIndex:0];
         }
         [cell.quantityLbl setHidden:_config];
+        [cell.sizeLbl setText:@"Size"];
         return cell;
     }
     
@@ -252,6 +253,7 @@
         [self deleteXFRMR:temp];
         
         [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:indexPath.row-1 inSection:indexPath.section]] withRowAnimation:UITableViewRowAnimationLeft];
+        [self.xfrmrTVC reloadData];
     }
 }
 

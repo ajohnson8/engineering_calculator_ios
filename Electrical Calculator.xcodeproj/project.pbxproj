@@ -23,6 +23,8 @@
 		E54A66691A811D440044C488 /* Celldivider.png in Resources */ = {isa = PBXBuildFile; fileRef = E54A66681A811D440044C488 /* Celldivider.png */; };
 		E54A666D1A812B210044C488 /* TransformerRatingCalcFormula.m in Sources */ = {isa = PBXBuildFile; fileRef = E54A666C1A812B210044C488 /* TransformerRatingCalcFormula.m */; };
 		E55BD2131A7FD20B00F4230E /* TransformerRatingCalcVariables.m in Sources */ = {isa = PBXBuildFile; fileRef = E55BD2121A7FD20B00F4230E /* TransformerRatingCalcVariables.m */; };
+		E5BD39A61A83BE3F00CFFD8B /* TransformerFuseCalcVariables.m in Sources */ = {isa = PBXBuildFile; fileRef = E5BD39A51A83BE3F00CFFD8B /* TransformerFuseCalcVariables.m */; };
+		E5BD39A91A83BE7C00CFFD8B /* TransformerFuseCalcFormula.m in Sources */ = {isa = PBXBuildFile; fileRef = E5BD39A81A83BE7C00CFFD8B /* TransformerFuseCalcFormula.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -67,6 +69,10 @@
 		E54A666C1A812B210044C488 /* TransformerRatingCalcFormula.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransformerRatingCalcFormula.m; sourceTree = "<group>"; };
 		E55BD2111A7FD20B00F4230E /* TransformerRatingCalcVariables.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TransformerRatingCalcVariables.h; sourceTree = "<group>"; };
 		E55BD2121A7FD20B00F4230E /* TransformerRatingCalcVariables.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransformerRatingCalcVariables.m; sourceTree = "<group>"; };
+		E5BD39A41A83BE3F00CFFD8B /* TransformerFuseCalcVariables.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TransformerFuseCalcVariables.h; sourceTree = "<group>"; };
+		E5BD39A51A83BE3F00CFFD8B /* TransformerFuseCalcVariables.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransformerFuseCalcVariables.m; sourceTree = "<group>"; };
+		E5BD39A71A83BE7C00CFFD8B /* TransformerFuseCalcFormula.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TransformerFuseCalcFormula.h; sourceTree = "<group>"; };
+		E5BD39A81A83BE7C00CFFD8B /* TransformerFuseCalcFormula.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransformerFuseCalcFormula.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -221,6 +227,7 @@
 				E52807DE1A76A7EB00AF1A17 /* VSubdivisionLoad */,
 				E52807E31A76CE9B00AF1A17 /* VTransformerCalcs */,
 				E55BD2141A7FD22E00F4230E /* VTransformerRatingCalc */,
+				E5BD39A21A83BDAF00CFFD8B /* VTransformerFuseCalc */,
 			);
 			name = Variables;
 			sourceTree = "<group>";
@@ -231,6 +238,7 @@
 				E52807DF1A76A7F300AF1A17 /* FSubdivisionLoad */,
 				E52807E41A76CECC00AF1A17 /* FTransformerCalc */,
 				E54A666A1A812ADF0044C488 /* FTransformerRatingCalc */,
+				E5BD39A31A83BDE100CFFD8B /* FTransformerFuseCalc */,
 			);
 			name = Formulas;
 			sourceTree = "<group>";
@@ -251,6 +259,24 @@
 				E55BD2121A7FD20B00F4230E /* TransformerRatingCalcVariables.m */,
 			);
 			name = VTransformerRatingCalc;
+			sourceTree = "<group>";
+		};
+		E5BD39A21A83BDAF00CFFD8B /* VTransformerFuseCalc */ = {
+			isa = PBXGroup;
+			children = (
+				E5BD39A41A83BE3F00CFFD8B /* TransformerFuseCalcVariables.h */,
+				E5BD39A51A83BE3F00CFFD8B /* TransformerFuseCalcVariables.m */,
+			);
+			name = VTransformerFuseCalc;
+			sourceTree = "<group>";
+		};
+		E5BD39A31A83BDE100CFFD8B /* FTransformerFuseCalc */ = {
+			isa = PBXGroup;
+			children = (
+				E5BD39A71A83BE7C00CFFD8B /* TransformerFuseCalcFormula.h */,
+				E5BD39A81A83BE7C00CFFD8B /* TransformerFuseCalcFormula.m */,
+			);
+			name = FTransformerFuseCalc;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -392,8 +418,10 @@
 				E53D09BC1A704B1500A101E8 /* SubdivisionLoadFormula.m in Sources */,
 				E54A666D1A812B210044C488 /* TransformerRatingCalcFormula.m in Sources */,
 				E53D09BF1A704B5A00A101E8 /* SubdivisionLoadVariables.m in Sources */,
+				E5BD39A61A83BE3F00CFFD8B /* TransformerFuseCalcVariables.m in Sources */,
 				E52807DD1A7692B600AF1A17 /* DetailViewController.m in Sources */,
 				E52807E71A76CF0300AF1A17 /* TransformerCalcFormula.m in Sources */,
+				E5BD39A91A83BE7C00CFFD8B /* TransformerFuseCalcFormula.m in Sources */,
 				E52807E21A76CE9700AF1A17 /* TransformerCalcVariables.m in Sources */,
 				E55BD2131A7FD20B00F4230E /* TransformerRatingCalcVariables.m in Sources */,
 				E53D09831A6FE82F00A101E8 /* AppDelegate.m in Sources */,
