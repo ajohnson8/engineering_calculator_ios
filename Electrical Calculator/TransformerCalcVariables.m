@@ -58,7 +58,12 @@
 }
 
 -(void) deleteTCLLSec:(TCLLSec *)llsec{
-    [llSecs removeObject:llsec];
+    for (int x = 0; x < self.llSecs.count; x++) {
+        TCLLSec *temp = self.llSecs[x];
+        if (temp.llSecVaule == llsec.llSecVaule){
+            [self.llSecs removeObjectAtIndex: x];
+        }
+    }
     [self filterSecLLs];
 }
 
@@ -97,7 +102,7 @@
     NSMutableSet *processedXFRMR = [NSMutableSet set];
     
     for (TCLLSec *wo in llSecs) {
-        if (!([processedXFRMR containsObject:[NSNumber numberWithFloat:wo.llSecVaule]]) && wo.llSecVaule > 0){
+        if (!([processedXFRMR containsObject:[NSNumber numberWithFloat:wo.llSecVaule]])){
             [unique addObject:wo];
             [processedXFRMR addObject:[NSNumber numberWithFloat:wo.llSecVaule]];
         }

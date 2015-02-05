@@ -42,6 +42,8 @@
     [_kilaVoltAmpsTxt setDelegate:self];
     [_voltTxt setDelegate:self];
     
+    UIBarButtonItem * configure = [[UIBarButtonItem alloc]initWithTitle:@"Configure" style:UIBarButtonItemStylePlain target:self action:@selector(pressedConfig:)];
+    
     BOOL boolValue = [[UICKeyChainStore stringForKey:@"FormulaConfiguration"] boolValue];
     if (!boolValue) {
         _config = NO;
@@ -49,6 +51,8 @@
         [_voltTxt setEnabled:NO];
         [_defaultBtn setTitle:@"Default" forState:UIControlStateNormal];[_defaultBtn setNeedsLayout];
         [_addSizeBtn setHidden:YES];
+        [configure setTitle:@"Configure"];
+        [[self.navigationController.viewControllers.lastObject navigationItem] setRightBarButtonItem:configure];
         [self.navigationController.viewControllers.lastObject setTitle:@"Subdivision Load"];
     }else {
         _config = YES;
@@ -56,7 +60,10 @@
         [_voltTxt setEnabled:YES];
         [_defaultBtn setTitle:@"Set Default" forState:UIControlStateNormal];[_defaultBtn setNeedsLayout];
         [_addSizeBtn setHidden:NO];
+        [configure setTitle:@"Done"];
+        [[self.navigationController.viewControllers.lastObject navigationItem] setRightBarButtonItem:configure];
         [self.navigationController.viewControllers.lastObject  setTitle:@"Subdivision Load Configuration"];
+
     }
 }
 
@@ -79,16 +86,18 @@
         [_voltTxt setEnabled:NO];
         [_defaultBtn setTitle:@"Default" forState:UIControlStateNormal];[_defaultBtn setNeedsLayout];
         [UICKeyChainStore setString:@"NO" forKey:@"FormulaConfiguration"];
-        [self.navigationController.viewControllers.lastObject  setTitle:@"Subdivision Load"];
         [_addSizeBtn setHidden:YES];
+        [self.navigationController.viewControllers.lastObject  setTitle:@"Subdivision Load"];
+        [[[self.navigationController.viewControllers.lastObject navigationItem] rightBarButtonItem]setTitle:@"Configure"];
     }else {
         _config = YES;
         [_kilaVoltAmpsTxt setEnabled:YES];
         [_voltTxt setEnabled:YES];
         [_defaultBtn setTitle:@"Set Default" forState:UIControlStateNormal];[_defaultBtn setNeedsLayout];
         [UICKeyChainStore setString:@"YES" forKey:@"FormulaConfiguration"];
-        [self.navigationController.viewControllers.lastObject  setTitle:@"Subdivision Load Configuration"];
         [_addSizeBtn setHidden:NO];
+        [self.navigationController.viewControllers.lastObject  setTitle:@"Subdivision Load Configuration"];
+        [[[self.navigationController.viewControllers.lastObject navigationItem] rightBarButtonItem]setTitle:@"Done"];
     }
     [_calulationTotal setText:[NSString stringWithFormat:@"Full Load is : %i",0]];
     [_xfrmrTVC reloadData];
@@ -107,10 +116,10 @@
         NSData* myDataXFRMR = [NSKeyedArchiver archivedDataWithRootObject:[subDivLoadVar xfrmr]];
         [UICKeyChainStore setData:myDataXFRMR forKey:@"SystemDefaultsXFRMR"];
         
-        NSData* myDataVolts = [NSKeyedArchiver archivedDataWithRootObject:[NSNumber numberWithInt:[_voltTxt.text integerValue]]];
+        NSData* myDataVolts = [NSKeyedArchiver archivedDataWithRootObject:[NSNumber numberWithInt:(int)[_voltTxt.text integerValue]]];
         [UICKeyChainStore setData:myDataVolts forKey:@"SystemDefaultsVolts"];
         
-        NSData* myDataKilovolt_Amps = [NSKeyedArchiver archivedDataWithRootObject:[NSNumber numberWithInt:[_kilaVoltAmpsTxt.text integerValue]]];
+        NSData* myDataKilovolt_Amps = [NSKeyedArchiver archivedDataWithRootObject:[NSNumber numberWithInt:(int)[_kilaVoltAmpsTxt.text integerValue]]];
         [UICKeyChainStore setData:myDataKilovolt_Amps forKey:@"SystemDefaultsKilovolt_Amps"];
         
         [TSMessage showNotificationInViewController:self.navigationController.viewControllers.lastObject title:@"SubdivisionLoadFormula" subtitle:@"Defaults has been set." type:TSMessageNotificationTypeSuccess duration:1.5];
@@ -201,11 +210,6 @@
         }
         
         XFRMR *temp = subDivLoadVar.xfrmr[indexPath.row-1];
-        NumberPadDoneBtn *doneNumBtn = [[NumberPadDoneBtn alloc]initWithFrame:CGRectMake(0,0,1,1)];
-        
-        if (UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPad){
-            [cell.sizeTxt setInputAccessoryView:doneNumBtn];
-        }
         
         [cell.sizeTxt setDelegate:cell];
         [cell setDelegate:self];
@@ -254,9 +258,9 @@
 
 - (void)textFieldDidEndEditing:(UITextField *)textField{
     if (textField.tag == 0) {
-        [subDivLoadVar setDefaultKilovolt_Amps:[NSNumber numberWithInt:[textField.text integerValue]]];
+        [subDivLoadVar setDefaultKilovolt_Amps:[NSNumber numberWithInt:(int)[textField.text integerValue]]];
     }else {
-        [subDivLoadVar setDefaultVolts:[NSNumber numberWithInt:[textField.text integerValue]]];
+        [subDivLoadVar setDefaultVolts:[NSNumber numberWithInt:(int)[textField.text integerValue]]];
     }
 }
 
@@ -284,7 +288,7 @@
 -(void)updateXFRMRQuantity:(XFRMR *)xfrmr{
     
     if (UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPad){
-            [[self navigationController] popViewControllerAnimated:YES];
+        [[self navigationController] popViewControllerAnimated:YES];
     }else{
         [_quantityPickerPopover dismissPopoverAnimated:NO];
         _quantityPickerPopover = nil;

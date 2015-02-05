@@ -55,13 +55,12 @@
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if ([[segue identifier] isEqualToString:@"showDetail"]) {
         NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
-        NSDate *object = self.objects[indexPath.row];
+        Forumal *object = self.objects[indexPath.row];
+        
         controller = (DetailViewController *)[[segue destinationViewController] topViewController];
-        [controller setDetailItem:object];
-        if (_trans > _preTrans)
-            [controller setTransition:0];
-        else
-            [controller setTransition:1];
+        [controller setDetailItem:object.storyboardName];
+
+        [controller setTransition:1];
         controller.navigationItem.leftBarButtonItem = self.splitViewController.displayModeButtonItem;
         controller.navigationItem.leftItemsSupplementBackButton = YES;
     }
@@ -97,10 +96,9 @@
 
 -(void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     Forumal *object = self.objects[indexPath.row];
-    NSLog(@"%ld > %ld",(long)indexPath.row ,(long)_trans);
-    if (_trans != indexPath.row) {
-        if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad){
-            
+
+        if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad && _trans != indexPath.row){
+            NSLog(@"%ld > %ld",(long)indexPath.row ,(long)_trans);
             if (indexPath.row > _trans)
                 [self.detailViewController setTransition:1];
             else
@@ -110,10 +108,11 @@
             
             [self.detailViewController setDetailItem:object.storyboardName];
             
-        }else {
+        }else if (UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPad) {
+            NSLog(@"Show %@",object.name);
+            _trans = (int)indexPath.row;
             [self performSegueWithIdentifier:@"showDetail" sender:self];
         }
-    }
 }
 
 -(void)addViews{

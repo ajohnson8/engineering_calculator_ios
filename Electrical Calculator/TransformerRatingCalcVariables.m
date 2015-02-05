@@ -69,7 +69,7 @@
     }
     _impedances = unique;
     
-    NSSortDescriptor *sort=[NSSortDescriptor sortDescriptorWithKey:@"VKA" ascending:YES];
+    NSSortDescriptor *sort=[NSSortDescriptor sortDescriptorWithKey:@"KVA" ascending:YES];
     [_impedances sortUsingDescriptors:[NSArray arrayWithObject:sort]];
 }
 

@@ -29,6 +29,8 @@
     [_kilaVoltAmpsTxt setDelegate:self];
     [_ampsTxt setDelegate:self];
     
+    UIBarButtonItem * configure = [[UIBarButtonItem alloc]initWithTitle:@"Configure" style:UIBarButtonItemStylePlain target:self action:@selector(pressedConfig:)];
+    
     BOOL boolValue = [[UICKeyChainStore stringForKey:@"FormulaConfiguration"] boolValue];
     if (!boolValue) {
         _config = NO;
@@ -36,13 +38,18 @@
         [_addLLVoltsBtn setHidden:YES];
         [_addLLVoltsBtn setEnabled:NO];
         [self.navigationController.viewControllers.lastObject setTitle:@"Transformer"];
+        [configure setTitle:@"Configure"];
+        [[self.navigationController.viewControllers.lastObject navigationItem] setRightBarButtonItem:configure];
     }else {
         _config = YES;
         [_defaultBtn setTitle:@"Set Default" forState:UIControlStateNormal];[_defaultBtn setNeedsLayout];
         [_addLLVoltsBtn setHidden:NO];
         [_addLLVoltsBtn setEnabled:YES];
         [self.navigationController.viewControllers.lastObject setTitle:@"Transformer Configuration"];
+        [configure setTitle:@"Done"];
+        [[self.navigationController.viewControllers.lastObject navigationItem] setRightBarButtonItem:configure];
     }
+    
 }
 
 - (void)didReceiveMemoryWarning {
@@ -70,6 +77,7 @@
         [_addLLVoltsBtn setHidden:YES];
         [_addLLVoltsBtn setEnabled:NO];
         [self.navigationController.viewControllers.lastObject setTitle:@"Transformer"];
+        [[[self.navigationController.viewControllers.lastObject navigationItem] rightBarButtonItem]setTitle:@"Configure"];
     }else {
         _config = YES;
         [UICKeyChainStore setString:@"YES" forKey:@"FormulaConfiguration"];
@@ -77,6 +85,7 @@
         [_addLLVoltsBtn setHidden:NO];
         [_addLLVoltsBtn setEnabled:YES];
         [self.navigationController.viewControllers.lastObject setTitle:@"Transformer Configuration"];
+        [[[self.navigationController.viewControllers.lastObject navigationItem] rightBarButtonItem]setTitle:@"Done"];
     }
     
     [_phaseTV deselectRowAtIndexPath:[_phaseTV indexPathForSelectedRow] animated:YES];
