@@ -41,9 +41,12 @@
     [self filterOH_UG_SUBD:TFCOH];
 }
 
--(void) addTFCUG:(TFCUG *)TFCUG{
-    [_ugs addObject:TFCUG];
-    [self filterOH_UG_SUBD:TFCUG];
+-(void) addTFCUG:(TFCUG *)tfcug{
+    [tfcug setKVA:@"0"];
+    [tfcug setSnCSM:@"0"];
+    [tfcug setNX:@"0"];
+    [_ugs addObject:tfcug];
+    [self filterOH_UG_SUBD:tfcug];
 }
 
 -(void) addTFCSUBD:(TFCSUBD *)TFCSUBD{
@@ -67,17 +70,17 @@
 }
 #pragma mark - Update
 -(void) updateTFCOH:(TFCOH *)TFCOH andIndex:(int)index{
-    [_ohs replaceObjectAtIndex:index withObject:TFCOH];
+    _ohs[index]=TFCOH;
     [self filterOH_UG_SUBD:TFCOH];
 }
 
 -(void) updateTFCUGs:(TFCUG *)TFCUG andIndex:(int)index{
-    [_ugs replaceObjectAtIndex:index withObject:TFCUG];
+    _ugs[index]=TFCUG;
     [self filterOH_UG_SUBD:TFCUG];
 }
 
 -(void) updateTFCSUBD:(TFCSUBD *)TFCSUBD andIndex:(int)index{
-    [_subds replaceObjectAtIndex:index withObject:TFCSUBD];
+    _subds[index]=TFCSUBD;
     [self filterOH_UG_SUBD:TFCSUBD];
 }
 
@@ -109,20 +112,27 @@
             }
         }
         _ohs = unique;
-        
         NSSortDescriptor *sort=[NSSortDescriptor sortDescriptorWithKey:@"KVA" ascending:YES];
         [_ohs sortUsingDescriptors:[NSArray arrayWithObject:sort]];
+        
     } else if ([object isKindOfClass:[TFCUG class]]){
         for (TFCUG *wo in _ugs) {
-            if (!([processedXFRMR containsObject:[NSNumber numberWithFloat:wo.KVA]])){
+            if (!([processedXFRMR containsObject:wo.KVA])){
                 [unique addObject:wo];
-                [processedXFRMR addObject:[NSNumber numberWithFloat:wo.KVA]];
+                [processedXFRMR addObject:wo.KVA];
             }
         }
         _ugs = unique;
         
-        NSSortDescriptor *sort=[NSSortDescriptor sortDescriptorWithKey:@"KVA" ascending:YES];
-        [_ugs sortUsingDescriptors:[NSArray arrayWithObject:sort]];
+        _ugs =[[_ugs sortedArrayUsingComparator:^NSComparisonResult(TFCUG *obj1, TFCUG *obj2) {
+            if ([obj1.KVA intValue]==[obj2.KVA intValue])
+                return NSOrderedSame;
+            else if ([obj1.KVA intValue]<[obj2.KVA intValue])
+                return NSOrderedAscending;
+            else
+                return NSOrderedDescending;
+        }] mutableCopy];
+        
     } else if ([object isKindOfClass:[TFCSUBD class]]) {
         for (TFCSUBD *wo in _subds) {
             if (!([processedXFRMR containsObject:wo.CKVAnPhase])){
@@ -186,7 +196,7 @@
 
 -(void) encodeWithCoder: (NSCoder *) encoder
 {
-    [encoder encodeObject:[NSNumber numberWithFloat:KVA] forKey:@"KVA"];
+    [encoder encodeObject:KVA forKey:@"KVA"];
     [encoder encodeObject:[NSNumber numberWithFloat:Bayonet] forKey:@"Bayonet"];
     [encoder encodeObject:NX forKey:@"NX"];
     [encoder encodeObject:SnCSM forKey:@"SnCSM"];
@@ -194,7 +204,7 @@
 
 -(id) initWithCoder: (NSCoder *) decoder
 {
-    KVA = [[decoder decodeObjectForKey :@"KVA"] floatValue];
+    KVA = [decoder decodeObjectForKey :@"KVA"];
     Bayonet = [[decoder decodeObjectForKey :@"Bayonet"] floatValue];
     NX = [decoder decodeObjectForKey :@"NX"];
     SnCSM = [decoder decodeObjectForKey :@"SnCSM"];
@@ -204,7 +214,7 @@
 +(TFCUG *)lookupCUG:(NSMutableArray *)CUGList andKiloVoltAmps:(float)kva{
     TFCUG *ug = [[TFCUG alloc]init];
     for (TFCUG *temp in CUGList) {
-        if (temp.KVA == kva) {
+        if ([temp.KVA isEqualToString:[NSString stringWithFormat:@"%f",kva]]) {
             return temp;
         }
     }

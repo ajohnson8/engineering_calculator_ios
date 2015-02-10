@@ -132,6 +132,11 @@
     [Forumal3 setName:@"Transformer Rating"];
     [self.objects addObject:Forumal3];
     
+    Forumal *Forumal4 = [[Forumal alloc]init];
+    [Forumal4 setStoryboardName:@"TransformerFuseCalcFormula"];
+    [Forumal4 setName:@"Transformer Fuse"];
+    [self.objects addObject:Forumal4];
+    //Fuse
 }
 
 @end

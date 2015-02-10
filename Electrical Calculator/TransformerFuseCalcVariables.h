@@ -21,7 +21,7 @@
 
 @interface TFCUG : NSObject
 
-@property float KVA;
+@property (nonatomic) NSString *KVA;
 @property float Bayonet;
 @property (nonatomic) NSString *NX;
 @property (nonatomic) NSString *SnCSM;
@@ -53,7 +53,7 @@
 -(void) deleteTFCOHs:               (TFCOH *)TFCOH;
 -(void) updateTFCOH:                (TFCOH *)TFCOH andIndex:(int)index;
 
--(void) addTFCUG:                   (TFCUG *)TFCUG;
+-(void) addTFCUG:                   (TFCUG *)tfcug;
 -(void) deleteTFCUGs:               (TFCUG *)TFCUG;
 -(void) updateTFCUGs:               (TFCUG *)TFCUG andIndex:(int)index;
 

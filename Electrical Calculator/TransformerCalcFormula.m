@@ -302,6 +302,9 @@
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
     if (tableView == _secLLVoltTV) {
+        if (indexPath.row == 0) {
+            return NO;
+        }
         return _config;
     }else {
         return NO;
@@ -532,7 +535,7 @@
     NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"^\\d{0,9}$" options:0 error:nil];
     NSTextCheckingResult *match = [regex firstMatchInString:s options:0 range:NSMakeRange(0, [s length])];
     BOOL x = (match != nil);
-    [[self delegate]canAddAnotherLLSec:(x && string.length>0)];
+    [[self delegate]canAddAnotherLLSec:(x && s.length>0)];
     return x;
 }
 -(void)OneAtATime{
