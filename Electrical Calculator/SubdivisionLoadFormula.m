@@ -165,6 +165,10 @@
     return 0;
 }
 
+-(NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section{
+    return @"Transformer Sizes";
+}
+
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     return 44;
@@ -179,6 +183,7 @@
             cell = [nib objectAtIndex:0];
         }
         [cell.quantityLbl setHidden:_config];
+        [cell.sizeLbl setText:@"Size"];
         return cell;
     }
     
@@ -239,6 +244,9 @@
 }
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (indexPath.row == 0) {
+        return NO;
+    }
     return _config;
 }
 
@@ -252,6 +260,7 @@
         [self deleteXFRMR:temp];
         
         [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:indexPath.row-1 inSection:indexPath.section]] withRowAnimation:UITableViewRowAnimationLeft];
+        [self.xfrmrTVC reloadData];
     }
 }
 
@@ -459,6 +468,8 @@
 @synthesize quantityLbl;
 
 #pragma mark - UITableView Delegate
+
+
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     return 1;
 }

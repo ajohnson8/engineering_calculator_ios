@@ -86,6 +86,9 @@
             NSArray *nib = [[NSBundle mainBundle] loadNibNamed:@"ImpedanceCell" owner:self options:nil];
             cell = [nib objectAtIndex:0];
         }
+        [cell.KVALbl setText:@"kVA"];
+        [cell.V208Lbl setText:@"208v"];
+        [cell.V480Lbl setText:@"480v"];
         
         return cell;
     }else {
@@ -137,6 +140,9 @@
 }
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (indexPath.row == 0) {
+        return NO;
+    }
     return _config;
 }
 
@@ -275,7 +281,8 @@
 #pragma mark -  TransformerRatingEditImpedanceCellDelegate
 
 -(void)updateTransformerImpedance:(TRCImpedance *)impedance andIndexPath:(int)row{
-    
+    [_transformerRateCalcV updateTRCImpedances:impedance andIndex:row];
+    [_impedanceTV reloadData];
 }
 -(void)canAddAnotherImpedance:(BOOL)check{
     [_addImpedanceBtn setEnabled:check];
@@ -462,10 +469,51 @@
 
 @implementation TransformerRatingImpedanceCell
 
+
 @end
 
 #pragma mark - TransformerRatingEditImpedanceCell
 
 @implementation TransformerRatingEditImpedanceCell
+
+- (void)textFieldDidEndEditing:(UITextField *)textField{
+    
+    TRCImpedance * updated = [[ TRCImpedance alloc]init];
+    if (textField == self.KVATxt)
+        [updated setKVA:[textField.text floatValue]];
+    else
+        [updated setKVA:[self.KVATxt.text floatValue]];
+    
+    if (textField == self.V208Txt)
+        [updated setV208:[textField.text floatValue]];
+    else
+        [updated setV208:[self.V208Txt.text floatValue]];
+    if (textField == self.V480Txt)
+        [updated setV480:[textField.text floatValue]];
+    else
+        [updated setV480:[self.V480Txt.text floatValue]];
+    
+    [[self delegate]updateTransformerImpedance:updated andIndexPath:(int)self.tag];
+}
+
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
+    NSString *s = [textField.text stringByReplacingCharactersInRange:range withString:string];
+    if (textField == self.V480Txt || textField == self.V208Txt ){
+        NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"^(\\d{0,9})?(\\.\\d{0,9})?$" options:0 error:nil];
+        NSTextCheckingResult *match = [regex firstMatchInString:s options:0 range:NSMakeRange(0, [s length])];
+        BOOL x = (match != nil);
+        [[self delegate]canAddAnotherImpedance:(x && s.length>0)];
+        return x;
+    }else {
+        NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"^\\d{0,9}$" options:0 error:nil];
+        NSTextCheckingResult *match = [regex firstMatchInString:s options:0 range:NSMakeRange(0, [s length])];
+        BOOL x = (match != nil);
+        [[self delegate]canAddAnotherImpedance:(x && s.length>0)];
+        return x;
+    }
+}
+-(void)OneAtATime{
+    [[self delegate]canAddAnotherImpedance:NO];
+}
 
 @end
