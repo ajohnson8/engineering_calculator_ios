@@ -26,7 +26,7 @@
 		E5AEE6C81A8AC236002E3BB7 /* AluminumACVoltDropVariables.m in Sources */ = {isa = PBXBuildFile; fileRef = E5AEE6C71A8AC236002E3BB7 /* AluminumACVoltDropVariables.m */; };
 		E5AEE6CB1A8AC267002E3BB7 /* AluminumACVoltDropFormula.m in Sources */ = {isa = PBXBuildFile; fileRef = E5AEE6CA1A8AC267002E3BB7 /* AluminumACVoltDropFormula.m */; };
 		E5AEE6CF1A8AC2DC002E3BB7 /* WireSizeVoltageDropVariables.m in Sources */ = {isa = PBXBuildFile; fileRef = E5AEE6CE1A8AC2DC002E3BB7 /* WireSizeVoltageDropVariables.m */; };
-		E5AEE6D31A8AC388002E3BB7 /* WireSizeVoltageDropFormula.m in Sources */ = {isa = PBXBuildFile; fileRef = E5AEE6D21A8AC388002E3BB7 /* WireSizeVoltageDropFormula.m */; };
+		E5AEE6D61A8BBC1E002E3BB7 /* WireSizeVoltageDropFormula.m in Sources */ = {isa = PBXBuildFile; fileRef = E5AEE6D51A8BBC1E002E3BB7 /* WireSizeVoltageDropFormula.m */; };
 		E5BD39A61A83BE3F00CFFD8B /* TransformerFuseCalcVariables.m in Sources */ = {isa = PBXBuildFile; fileRef = E5BD39A51A83BE3F00CFFD8B /* TransformerFuseCalcVariables.m */; };
 		E5BD39A91A83BE7C00CFFD8B /* TransformerFuseCalcFormula.m in Sources */ = {isa = PBXBuildFile; fileRef = E5BD39A81A83BE7C00CFFD8B /* TransformerFuseCalcFormula.m */; };
 /* End PBXBuildFile section */
@@ -79,8 +79,8 @@
 		E5AEE6CA1A8AC267002E3BB7 /* AluminumACVoltDropFormula.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AluminumACVoltDropFormula.m; sourceTree = "<group>"; };
 		E5AEE6CD1A8AC2DC002E3BB7 /* WireSizeVoltageDropVariables.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WireSizeVoltageDropVariables.h; sourceTree = "<group>"; };
 		E5AEE6CE1A8AC2DC002E3BB7 /* WireSizeVoltageDropVariables.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WireSizeVoltageDropVariables.m; sourceTree = "<group>"; };
-		E5AEE6D11A8AC388002E3BB7 /* WireSizeVoltageDropFormula.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WireSizeVoltageDropFormula.h; sourceTree = "<group>"; };
-		E5AEE6D21A8AC388002E3BB7 /* WireSizeVoltageDropFormula.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WireSizeVoltageDropFormula.m; sourceTree = "<group>"; };
+		E5AEE6D41A8BBC1E002E3BB7 /* WireSizeVoltageDropFormula.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WireSizeVoltageDropFormula.h; sourceTree = "<group>"; };
+		E5AEE6D51A8BBC1E002E3BB7 /* WireSizeVoltageDropFormula.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WireSizeVoltageDropFormula.m; sourceTree = "<group>"; };
 		E5BD39A41A83BE3F00CFFD8B /* TransformerFuseCalcVariables.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TransformerFuseCalcVariables.h; sourceTree = "<group>"; };
 		E5BD39A51A83BE3F00CFFD8B /* TransformerFuseCalcVariables.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransformerFuseCalcVariables.m; sourceTree = "<group>"; };
 		E5BD39A71A83BE7C00CFFD8B /* TransformerFuseCalcFormula.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TransformerFuseCalcFormula.h; sourceTree = "<group>"; };
@@ -307,8 +307,8 @@
 		E5AEE6D01A8AC356002E3BB7 /* FWireSizeVoltageDrop */ = {
 			isa = PBXGroup;
 			children = (
-				E5AEE6D11A8AC388002E3BB7 /* WireSizeVoltageDropFormula.h */,
-				E5AEE6D21A8AC388002E3BB7 /* WireSizeVoltageDropFormula.m */,
+				E5AEE6D41A8BBC1E002E3BB7 /* WireSizeVoltageDropFormula.h */,
+				E5AEE6D51A8BBC1E002E3BB7 /* WireSizeVoltageDropFormula.m */,
 			);
 			name = FWireSizeVoltageDrop;
 			sourceTree = "<group>";
@@ -473,7 +473,7 @@
 				E53D09BF1A704B5A00A101E8 /* SubdivisionLoadVariables.m in Sources */,
 				E5BD39A61A83BE3F00CFFD8B /* TransformerFuseCalcVariables.m in Sources */,
 				E52807DD1A7692B600AF1A17 /* DetailViewController.m in Sources */,
-				E5AEE6D31A8AC388002E3BB7 /* WireSizeVoltageDropFormula.m in Sources */,
+				E5AEE6D61A8BBC1E002E3BB7 /* WireSizeVoltageDropFormula.m in Sources */,
 				E5AEE6CF1A8AC2DC002E3BB7 /* WireSizeVoltageDropVariables.m in Sources */,
 				E52807E71A76CF0300AF1A17 /* TransformerCalcFormula.m in Sources */,
 				E5BD39A91A83BE7C00CFFD8B /* TransformerFuseCalcFormula.m in Sources */,

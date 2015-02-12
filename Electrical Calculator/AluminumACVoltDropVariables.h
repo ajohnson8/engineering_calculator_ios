@@ -7,17 +7,45 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "WireSizeVoltageDropVariables.h"
+#import "TransformerCalcVariables.h"
 
 @interface AluminumACVoltDropVariables : NSObject
 
+@property (strong,nonatomic) WSVDWire       *selectWire;
+@property (strong,nonatomic) TCPhase        *selectPhase;
+@property (strong, nonatomic)NSMutableArray *wires;
+@property (strong, nonatomic)NSMutableArray *phases;
+@property (strong,nonatomic) NSNumber       *oneWayLength;
+@property (strong,nonatomic) NSNumber       *current;
+@property (strong,nonatomic) NSNumber       *cirtVoltage;
+@property (strong,nonatomic) NSNumber       *resistivity;
+
+-(void) setDefaultsOneWayLength:    (float)oneWayLength;
+-(void) setDefaultsCurrent:         (float)current;
+-(void) setDefaultsCircuitVoltage:  (float)cirtVoltage;
+-(void) setDefaultsResistivity:     (float)resistivity;
+-(void) setDefaultsWSVDWire:        (NSMutableArray *)wires;
+-(void) setDefaultsAVDPhases:       (NSMutableArray *)phases;
+
+-(void) addWSVDWire:                (WSVDWire *)wire;
+-(void) deleteWSVDWire:             (WSVDWire *)wire;
+-(void) updateWSVDWire:             (WSVDWire *)wire andIndex:(int)index;
+-(void) updateAVDPhases:            (TCPhase *)phase andIndex:(int)index;
+
+-(float)calulate1PhaseThree;
+-(float)calulate2PhaseOne;
+
 @end
+
+
 
 /*
 
 Two phases 
  -Three Phase mult wire
     calc = ((2*K)*L*I*.8661)/CM
- default = K, CM
+ default = K,CM
            K = is the wire resistivity 
            CM= is Base on the wire size 
  
@@ -31,5 +59,4 @@ Two phases
  
  Inputs = L,I,WireSize
  
-
 */
