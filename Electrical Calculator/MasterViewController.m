@@ -132,6 +132,21 @@
     [Forumal3 setName:@"Transformer Rating"];
     [self.objects addObject:Forumal3];
     
+    Forumal *Forumal4 = [[Forumal alloc]init];
+    [Forumal4 setStoryboardName:@"TransformerFuseCalcFormula"];
+    [Forumal4 setName:@"Transformer Fuse"];
+    [self.objects addObject:Forumal4];
+    
+    Forumal *Forumal5 = [[Forumal alloc]init];
+    [Forumal5 setStoryboardName:@"AluminumACVoltDropFormula"];
+    [Forumal5 setName:@"Aluminum AC Volt Drop"];
+    [self.objects addObject:Forumal5];
+    
+    Forumal *Forumal6 = [[Forumal alloc]init];
+    [Forumal6 setStoryboardName:@"WireSizeVoltageDropFormula"];
+    [Forumal6 setName:@"Wire Size Voltage Drop"];
+    [self.objects addObject:Forumal6];
+    //Fuse
 }
 
 @end

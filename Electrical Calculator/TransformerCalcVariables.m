@@ -125,6 +125,8 @@
     [encoder encodeObject:[NSNumber numberWithInteger:phaseID] forKey:@"phaseID"];
     [encoder encodeObject:[NSNumber numberWithFloat:phasevalue] forKey:@"phasevalue"];
     [encoder encodeObject:[NSNumber numberWithFloat:phaseLL] forKey:@"phaseLL"];
+
+    
 }
 
 -(id) initWithCoder: (NSCoder *) decoder
@@ -132,6 +134,8 @@
     phaseID = [[decoder decodeObjectForKey :@"phaseID"] intValue];
     phasevalue = [[decoder decodeObjectForKey :@"phasevalue"] floatValue];
     phaseLL = [[decoder decodeObjectForKey :@"phaseLL"] floatValue];
+
+
     return self;
 }
 

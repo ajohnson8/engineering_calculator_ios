@@ -19,7 +19,7 @@
 
 @end
 
-@interface TransformerRatingCalcFormula : UIViewController <UITextViewDelegate,UITableViewDataSource,UITableViewDelegate,TransformerRatingEditImpedanceCellDelegate>
+@interface TransformerRatingCalcFormula : UIViewController <UITextFieldDelegate,UITableViewDataSource,UITableViewDelegate,TransformerRatingEditImpedanceCellDelegate>
 
 @property (strong, nonatomic) IBOutlet UITableView *impedanceTV;
 @property (strong, nonatomic) IBOutlet UITextField *secVoltTxt;
