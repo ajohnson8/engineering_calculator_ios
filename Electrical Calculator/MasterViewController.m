@@ -45,6 +45,14 @@
     
 }
 
+-(void)viewDidAppear:(BOOL)animated{
+    [self setNavbarImage];
+    
+    [self.navigationController setToolbarHidden:NO];
+    UIBarButtonItem *temp = [[UIBarButtonItem alloc]initWithTitle:@"E-mail" style:UIBarButtonItemStylePlain target:self action:@selector(sendEmail:)];
+    [self.navigationController.toolbar setItems:[ NSArray arrayWithObject: temp ]];
+}
+
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
@@ -59,7 +67,7 @@
         
         controller = (DetailViewController *)[[segue destinationViewController] topViewController];
         [controller setDetailItem:object.storyboardName];
-
+        
         [controller setTransition:1];
         controller.navigationItem.leftBarButtonItem = self.splitViewController.displayModeButtonItem;
         controller.navigationItem.leftItemsSupplementBackButton = YES;
@@ -96,25 +104,68 @@
 
 -(void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     Forumal *object = self.objects[indexPath.row];
-
-        if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad && _trans != indexPath.row){
-            NSLog(@"%ld > %ld",(long)indexPath.row ,(long)_trans);
-            if (indexPath.row > _trans)
-                [self.detailViewController setTransition:1];
-            else
-                [self.detailViewController setTransition:0];
-            _trans = (int)indexPath.row;
-            _preTrans = (int)indexPath.row;
-            
-            [self.detailViewController setDetailItem:object.storyboardName];
-            
-        }else if (UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPad) {
-            NSLog(@"Show %@",object.name);
-            _trans = (int)indexPath.row;
-            [self performSegueWithIdentifier:@"showDetail" sender:self];
-        }
+    
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad && _trans != indexPath.row){
+        NSLog(@"%ld > %ld",(long)indexPath.row ,(long)_trans);
+        if (indexPath.row > _trans)
+            [self.detailViewController setTransition:1];
+        else
+            [self.detailViewController setTransition:0];
+        _trans = (int)indexPath.row;
+        _preTrans = (int)indexPath.row;
+        
+        [self.detailViewController setDetailItem:object.storyboardName];
+        
+    }else if (UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPad) {
+        NSLog(@"Show %@",object.name);
+        _trans = (int)indexPath.row;
+        [self performSegueWithIdentifier:@"showDetail" sender:self];
+    }
 }
 
+
+#pragma mark - MFMailComposeViewControllerDelegate
+- (void)mailComposeController:(MFMailComposeViewController*)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError*)error
+{
+    switch (result)
+    {
+        case MFMailComposeResultCancelled:
+            NSLog(@"Result: canceled");
+            break;
+        case MFMailComposeResultSaved:
+            NSLog(@"Result: saved");
+            break;
+        case MFMailComposeResultSent:
+        {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Result" message:@"Mail Sent Successfully" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+            [alert show];
+        }
+            break;
+        case MFMailComposeResultFailed:
+            NSLog(@"Result: failed");
+            break;
+        default:
+            NSLog(@"Result: not sent");
+            break;
+    }
+    
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+#pragma mark - UIImagePickerControllerDelegate
+-(void)imagePickerController:(UIImagePickerController *)picker didFinishPickingImage:(UIImage *)img editingInfo:(NSDictionary *)editInfo {
+    
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask, YES);
+    NSString *documentsDirectory = [paths objectAtIndex:0];
+    NSString *savedImagePath = [documentsDirectory stringByAppendingPathComponent:@"image.png"];
+    NSData *imageData = UIImagePNGRepresentation(img);
+    [imageData writeToFile:savedImagePath atomically:NO];
+    
+    [self setNavbarImage];
+    [picker dismissModalViewControllerAnimated:YES];
+}
+
+#pragma mark - private methods
 -(void)addViews{
     
     Forumal *Forumal1 = [[Forumal alloc]init];
@@ -148,6 +199,75 @@
     [self.objects addObject:Forumal6];
     //Fuse
 }
+
+-(void)setNavbarImage{
+    
+    UIImageView *imgView = [self returnStoredImage];
+    UIView *headerView = [[UIView alloc] init];
+    headerView.frame = CGRectMake(0, 0, 320, 44);
+    imgView.frame = CGRectMake(75, 0, 150, 44);
+    imgView.contentMode = UIViewContentModeScaleAspectFit;
+    [headerView addSubview:imgView];
+    self.navigationController.navigationBar.topItem.titleView = headerView;
+    UITapGestureRecognizer *tapGesture1 = [[UITapGestureRecognizer alloc] initWithTarget:self  action:@selector(tapGesture:)];
+    tapGesture1.numberOfTapsRequired = 1;
+    [tapGesture1 setDelegate:self];
+    [self.navigationController.navigationBar.topItem.titleView addGestureRecognizer:tapGesture1];
+}
+
+-(UIImageView *) returnStoredImage{
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *documentsPath = [paths objectAtIndex:0];
+    NSString *filePath = [documentsPath stringByAppendingPathComponent:@"image.png"];
+    NSData *pngData = [NSData dataWithContentsOfFile:filePath];
+    
+    UIImageView *imgView;
+    if (pngData.length == 0)
+        imgView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"image.png"]];
+    else
+        imgView = [[UIImageView alloc] initWithImage:[UIImage imageWithData:pngData]];
+
+    return imgView;
+}
+#pragma marks - Sender
+- (void) tapGesture: (id)sender
+{
+    UIImagePickerController *cardPicker = [[UIImagePickerController alloc]init];
+    cardPicker.allowsEditing=YES;
+    cardPicker.delegate=self;
+    cardPicker.sourceType = UIImagePickerControllerSourceTypeSavedPhotosAlbum;
+    
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
+        [cardPicker setModalPresentationStyle:UIModalPresentationFormSheet];
+    else
+        [cardPicker setModalPresentationStyle:UIModalPresentationCurrentContext];
+    
+    [self presentViewController:cardPicker animated:YES completion:nil];
+}
+
+- (void) sendEmail: (id)sender
+{
+    if ([MFMailComposeViewController canSendMail]) {
+        MFMailComposeViewController *composeViewController = [[MFMailComposeViewController alloc] initWithNibName:nil bundle:nil];
+        [composeViewController setMailComposeDelegate:self];
+        [composeViewController setToRecipients:@[@"example@email.com"]];
+        [composeViewController setSubject:@"example subject"];
+        
+        UIImageView *imgView = [self returnStoredImage];
+        UIImage *myImage = imgView.image;
+        NSData *imageData = UIImagePNGRepresentation(myImage);
+        [composeViewController addAttachmentData:imageData mimeType:@"image/png" fileName:@"image.png"];
+        
+//        NSString *emailBody = @"Have you seen the MobileTuts+ web site?";
+//        [composeViewController setMessageBody:emailBody isHTML:NO];
+//        
+        
+        [self presentViewController:composeViewController animated:YES completion:nil];
+    }
+}
+
+
+
 
 @end
 

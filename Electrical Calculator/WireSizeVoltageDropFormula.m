@@ -342,7 +342,7 @@
 }
 
 -(void)calulateTotal{
-    
+    [_wireSizeLbl setText:[NSString stringWithFormat:@"Wire Size, %@",_wireSizeVoltageDropV.selectWire.wireSize]];
     [_attribute1Lbl setText:[self roundingUp:[_wireSizeVoltageDropV calulate1NECAmpacity] andDecimalPlace:2]];
     [_attribute2Lbl setText:[self roundingUp:[_wireSizeVoltageDropV calulate2Insulation] andDecimalPlace:2]];
     [_attribute3Lbl setText:[self roundingUp:[_wireSizeVoltageDropV calulate3FullLoadRate] andDecimalPlace:2]];
@@ -415,9 +415,14 @@
         [updated setWireSize:self.wireSize.text ];
     
     if (textField == self.ampacity)
-        [updated setCirc:[[textField.text stringByReplacingOccurrencesOfString:@"," withString:@""] floatValue]];
+        [updated setAmpacity:[[textField.text stringByReplacingOccurrencesOfString:@"," withString:@""] floatValue]];
     else
-        [updated setCirc:[[self.ampacity.text stringByReplacingOccurrencesOfString:@"," withString:@""] floatValue]];
+        [updated setAmpacity:[[self.ampacity.text stringByReplacingOccurrencesOfString:@"," withString:@""] floatValue]];
+    
+    if (textField == self.ohms)
+        [updated setOhms:[[textField.text stringByReplacingOccurrencesOfString:@"," withString:@""] floatValue]];
+    else
+        [updated setOhms:[[self.ohms.text stringByReplacingOccurrencesOfString:@"," withString:@""] floatValue]];
     
     [[self delegate]updateWire:updated andIndexPath:(int)self.tag];
 }
