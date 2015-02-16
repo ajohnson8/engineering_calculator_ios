@@ -45,6 +45,12 @@
     }
 }
 
+- (void) removeValues {
+    for (XFRMR *wo in _xfrmr) {
+        wo.qtyl = 0;
+    }
+}
+
 -(void)addXFRMR:(XFRMR *)xfrmr{
     NSMutableArray *temp = [NSMutableArray arrayWithObject:xfrmr];
     [temp addObjectsFromArray:_xfrmr];

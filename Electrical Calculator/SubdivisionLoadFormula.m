@@ -145,10 +145,12 @@
         }
         [cell.quantityLbl setHidden:_config];
         [cell.sizeLbl setText:@"Size"];
+        [cell.quantityLbl setText:@"Qty"];
         return cell;
     }
     
     if (!_config) {
+       
         static NSString *simpleTableIdentifier = @"SetQuantity";
         XFRMRQtylCell *cell = (XFRMRQtylCell *)[tableView dequeueReusableCellWithIdentifier:simpleTableIdentifier];
         if (cell == nil)
@@ -160,6 +162,7 @@
         XFRMR *temp = subDivLoadVar.xfrmr[indexPath.row-1];
         [cell.sizeLbl setText:[NSString stringWithFormat:@"%i",(int)temp.size]];
         [cell.quantityLbl setText:[NSString stringWithFormat:@"%i",(int)temp.qtyl]];
+        [cell.quantityLbl setHidden:_config];
         [cell setDelegate:self];
         
         [self calulateXFRMRFULLLOAD];
