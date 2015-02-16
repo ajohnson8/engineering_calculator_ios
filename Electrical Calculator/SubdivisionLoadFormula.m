@@ -63,7 +63,7 @@
         [configure setTitle:@"Done"];
         [[self.navigationController.viewControllers.lastObject navigationItem] setRightBarButtonItem:configure];
         [self.navigationController.viewControllers.lastObject  setTitle:@"Subdivision Load Configuration"];
-
+        
     }
 }
 
@@ -346,56 +346,23 @@
     
     if (subDivLoadVar == nil) {
         
-        if ([UICKeyChainStore dataForKey:@"SystemDefaultsXFRMR"] &&
-            [UICKeyChainStore dataForKey:@"SystemDefaultsVolts"] &&
-            [UICKeyChainStore dataForKey:@"SystemDefaultsKilovolt_Amps"]) {
-            
-            
-            subDivLoadVar = [[ SubdivisionLoadVariables alloc ]init];
-            
-            NSData* myDataXFRMR = [UICKeyChainStore dataForKey:@"SystemDefaultsXFRMR"];
-            NSMutableArray* defaultSize = [NSKeyedUnarchiver unarchiveObjectWithData:myDataXFRMR];
-            
-            NSData* myDataVolts = [UICKeyChainStore dataForKey:@"SystemDefaultsVolts"];
-            NSNumber* volts = [NSKeyedUnarchiver unarchiveObjectWithData:myDataVolts];
-            
-            NSData* myDataKilovolt_Amps = [UICKeyChainStore dataForKey:@"SystemDefaultsKilovolt_Amps"];
-            NSNumber* kilovolt_Amps = [NSKeyedUnarchiver unarchiveObjectWithData:myDataKilovolt_Amps];
-            
-            [subDivLoadVar setDefaultVolts:volts];
-            [subDivLoadVar setDefaultKilovolt_Amps:kilovolt_Amps];
-            [subDivLoadVar setDefaultXFRMR:defaultSize];
-            
-            [_xfrmrTVC setDataSource:self];
-            [_xfrmrTVC setDelegate:self];
-            
-            
-        } else {
-            subDivLoadVar = [[ SubdivisionLoadVariables alloc ]init];
-            NSMutableArray *defaultSize = [[NSMutableArray alloc]init];
-            [defaultSize addObject:[NSNumber numberWithInt:5]];
-            [defaultSize addObject:[NSNumber numberWithInt:10]];
-            [defaultSize addObject:[NSNumber numberWithInt:15]];
-            [defaultSize addObject:[NSNumber numberWithInt:25]];
-            [defaultSize addObject:[NSNumber numberWithInt:75]];
-            [defaultSize addObject:[NSNumber numberWithInt:100]];
-            
-            [subDivLoadVar setDefaultVolts:[NSNumber numberWithInt:7200]];
-            [subDivLoadVar setDefaultKilovolt_Amps:[NSNumber numberWithInt:1000]];
-            [subDivLoadVar setDefaultXFRMR:defaultSize];
-            
-            [_xfrmrTVC setDataSource:self];
-            [_xfrmrTVC setDelegate:self];
-            
-            NSData* myDataXFRMR = [NSKeyedArchiver archivedDataWithRootObject:defaultSize];
-            [UICKeyChainStore setData:myDataXFRMR forKey:@"SystemDefaultsXFRMR"];
-            
-            NSData* myDataVolts = [NSKeyedArchiver archivedDataWithRootObject:[NSNumber numberWithInt:7200]];
-            [UICKeyChainStore setData:myDataVolts forKey:@"SystemDefaultsVolts"];
-            
-            NSData* myDataKilovolt_Amps = [NSKeyedArchiver archivedDataWithRootObject:[NSNumber numberWithInt:1000]];
-            [UICKeyChainStore setData:myDataKilovolt_Amps forKey:@"SystemDefaultsKilovolt_Amps"];
-        }
+        subDivLoadVar = [[ SubdivisionLoadVariables alloc ]init];
+        [_xfrmrTVC setDataSource:self];
+        [_xfrmrTVC setDelegate:self];
+        
+        NSData* myDataXFRMR = [UICKeyChainStore dataForKey:@"SystemDefaultsXFRMR"];
+        NSMutableArray* defaultSize = [NSKeyedUnarchiver unarchiveObjectWithData:myDataXFRMR];
+        
+        NSData* myDataVolts = [UICKeyChainStore dataForKey:@"SystemDefaultsVolts"];
+        NSNumber* volts = [NSKeyedUnarchiver unarchiveObjectWithData:myDataVolts];
+        
+        NSData* myDataKilovolt_Amps = [UICKeyChainStore dataForKey:@"SystemDefaultsKilovolt_Amps"];
+        NSNumber* kilovolt_Amps = [NSKeyedUnarchiver unarchiveObjectWithData:myDataKilovolt_Amps];
+        
+        [subDivLoadVar setDefaultVolts:volts];
+        [subDivLoadVar setDefaultKilovolt_Amps:kilovolt_Amps];
+        [subDivLoadVar setDefaultXFRMR:defaultSize];
+        
     }
     if (UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPad){
         UITapGestureRecognizer *tapper = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleSingleTap:)];

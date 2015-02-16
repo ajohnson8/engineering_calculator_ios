@@ -53,8 +53,9 @@
 
 #pragma mark - Add
 -(void)addTCLLSec:(TCLLSec *)newLLSec {
-    [llSecs addObject:newLLSec];
-    [self filterSecLLs];
+    NSMutableArray *temp = [NSMutableArray arrayWithObject:newLLSec];
+    [temp addObjectsFromArray:self.llSecs];
+    self.llSecs = temp;
 }
 
 -(void) deleteTCLLSec:(TCLLSec *)llsec{

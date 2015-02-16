@@ -21,12 +21,7 @@
 
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    // Override point for customization after application launch.
-    //    UISplitViewController *splitViewController = (UISplitViewController *)_window.rootViewController;
-    //    UINavigationController *navigationController = [splitViewController.viewControllers lastObject];
-    //    navigationController.topViewController.navigationItem.leftBarButtonItem = splitViewController.displayModeButtonItem;
-    //    splitViewController.delegate = self;
-    //
+    
     
     
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad){
@@ -50,6 +45,11 @@
     _rotate = false;
     _dismissKeyCount = 0;
     
+    
+    if (![UICKeyChainStore stringForKey:@"FirstLoad"]) {
+        [UICKeyChainStore setString:@"Yes" forKey:@"FirstLoad"];
+        [ElectricalEnvCal setAllDeafults];
+    }
     
     return YES;
     

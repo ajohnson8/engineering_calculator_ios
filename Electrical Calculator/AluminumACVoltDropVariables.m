@@ -30,8 +30,9 @@
 }
 
 -(void) addWSVDWire:(WSVDWire *)wire{
-    [_wires addObject:wire];
-    [self filterWires];
+    NSMutableArray *temp = [NSMutableArray arrayWithObject:wire];
+    [temp addObjectsFromArray:_wires];
+    _wires = temp;
 }
 -(void) deleteWSVDWire:(WSVDWire *)wire{
     [_wires removeObject:wire];
@@ -57,6 +58,13 @@
     
     NSMutableArray *unique = [NSMutableArray array];
     NSMutableSet *processedXFRMR = [NSMutableSet set];
+    
+    for (WSVDWire *wo in _wires) {
+        if (wo.wireSize.length == 0 && wo.circ == 0 && wo.ampacity == 0 && wo.ohms == 0) {
+            [_wires removeObject:wo];
+            break;
+        }
+    }
     
     for (WSVDWire *wo in _wires) {
         if (!([processedXFRMR containsObject:wo.wireSize])){

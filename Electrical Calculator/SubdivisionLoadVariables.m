@@ -46,8 +46,9 @@
 }
 
 -(void)addXFRMR:(XFRMR *)xfrmr{
-    [_xfrmr addObject:xfrmr];
-    [self sortAndRemoveDoubles];
+    NSMutableArray *temp = [NSMutableArray arrayWithObject:xfrmr];
+    [temp addObjectsFromArray:_xfrmr];
+    _xfrmr = temp;
 }
 
 - (void)updateXFRMRSize:(XFRMR *)xfrmr andIndex:(int)index{

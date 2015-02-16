@@ -294,19 +294,8 @@
     // [self addImpedances];
     if (_transformerRateCalcV == nil) {
         
-        NSData *t =[UICKeyChainStore dataForKey:@"SystemDefaultsArrayImpedance"];
-        
         _transformerRateCalcV = [[ TransformerRatingCalcVariables alloc ]init];
         
-        if (t.length == 0 ) {
-            [self addImpedances];
-            
-            [_impedanceTV setDataSource:self];
-            [_impedanceTV setDelegate:self];
-            
-            [UICKeyChainStore setString:@"NO" forKey:@"FormulaConfiguration"];
-            
-        }else{
             NSData* myDataArrayImpedance = [UICKeyChainStore dataForKey:@"SystemDefaultsArrayImpedance"];
             NSMutableArray* defaultImpedance = [NSKeyedUnarchiver unarchiveObjectWithData:myDataArrayImpedance];
             
@@ -314,22 +303,7 @@
             
             [_impedanceTV setDataSource:self];
             [_impedanceTV setDelegate:self];
-            
             [_impedanceTV deselectRowAtIndexPath:[_impedanceTV indexPathForSelectedRow] animated:YES];
-            
-            [_secVoltTxt setText:@""];
-            [_priVoltTxt setText:@""];
-            
-            [_impedancePerLbl setText:[self roundingUp:0.00 andDecimalPlace:0]];
-            [_priFLALbl setText:[self roundingUp:0.00 andDecimalPlace:0]];
-            [_secFLALbl setText:[self roundingUp:0.00 andDecimalPlace:0]];
-            [_priMaxLbl setText:[self roundingUp:0.00 andDecimalPlace:0]];
-            [_priMinLbl setText:[self roundingUp:0.00 andDecimalPlace:0]];
-            [_secBreakerLbl setText:[self roundingUp:0.00 andDecimalPlace:0]];
-            [_faultPriLbl setText:[self roundingUp:0.00 andDecimalPlace:0]];
-            [_faultSecLbl setText:[self roundingUp:0.00 andDecimalPlace:0]];
-            
-        }
         
     }
     if (UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPad){
@@ -338,6 +312,8 @@
         [self.view addGestureRecognizer:tapper];
     }
     
+    [_secVoltTxt setText:@""];
+    [_priVoltTxt setText:@""];
     [_impedancePerLbl setText:[self roundingUp:0.00 andDecimalPlace:0]];
     [_priFLALbl setText:[self roundingUp:0.00 andDecimalPlace:0]];
     [_secFLALbl setText:[self roundingUp:0.00 andDecimalPlace:0]];
@@ -375,94 +351,6 @@
     
     return [formatter stringFromNumber:[NSNumber numberWithFloat:num]];
 }
-
--(void)addImpedances{
-    
-    TRCImpedance * impedance = [[TRCImpedance alloc]init];
-    
-    NSMutableArray *defaultimpedances = [[NSMutableArray alloc]init];
-    [impedance setKVA :50];
-    [impedance setV208:2.90];
-    [impedance setV480:2.60];
-    [_transformerRateCalcV addTRCImpedances:impedance];
-    [defaultimpedances addObject:impedance];
-    
-    TRCImpedance * impedance2 = [[TRCImpedance alloc]init];
-    [impedance2 setKVA :75];
-    [impedance2 setV208:2.90];
-    [impedance2 setV480:2.60];
-    [_transformerRateCalcV addTRCImpedances:impedance2];
-    [defaultimpedances addObject:impedance2];
-    
-    TRCImpedance * impedance3 = [[TRCImpedance alloc]init];
-    [impedance3 setKVA :112.5];
-    [impedance3 setV208:3.00];
-    [impedance3 setV480:2.60];
-    [_transformerRateCalcV addTRCImpedances:impedance3];
-    [defaultimpedances addObject:impedance3];
-    
-    
-    TRCImpedance * impedance4 = [[TRCImpedance alloc]init];
-    [impedance4 setKVA :150];
-    [impedance4 setV208:3.00];
-    [impedance4 setV480:2.60];
-    [_transformerRateCalcV addTRCImpedances:impedance4];
-    [defaultimpedances addObject:impedance4];
-    
-    TRCImpedance * impedance5 = [[TRCImpedance alloc]init];
-    [impedance5 setKVA :300];
-    [impedance5 setV208:4.70];
-    [impedance5 setV480:2.60];
-    [_transformerRateCalcV addTRCImpedances:impedance5];
-    [defaultimpedances addObject:impedance5];
-    
-    TRCImpedance * impedance6 = [[TRCImpedance alloc]init];
-    [impedance6 setKVA :500];
-    [impedance6 setV208:4.70];
-    [impedance6 setV480:4.30];
-    [_transformerRateCalcV addTRCImpedances:impedance6];
-    [defaultimpedances addObject:impedance6];
-    
-    TRCImpedance * impedance7 = [[TRCImpedance alloc]init];
-    [impedance7 setKVA :750];
-    [impedance7 setV208:5.75];
-    [impedance7 setV480:5.75];
-    [_transformerRateCalcV addTRCImpedances:impedance7];
-    [defaultimpedances addObject:impedance7];
-    
-    TRCImpedance * impedance8 = [[TRCImpedance alloc]init];
-    [impedance8 setKVA :1000];
-    [impedance8 setV208:5.75];
-    [impedance8 setV480:5.75];
-    [_transformerRateCalcV addTRCImpedances:impedance8];
-    [defaultimpedances addObject:impedance8];
-    
-    TRCImpedance * impedance9 = [[TRCImpedance alloc]init];
-    [impedance9 setKVA :1500];
-    [impedance9 setV208:5.75];
-    [impedance9 setV480:5.75];
-    [_transformerRateCalcV addTRCImpedances:impedance9];
-    [defaultimpedances addObject:impedance9];
-    
-    TRCImpedance * impedance11 = [[TRCImpedance alloc]init];
-    [impedance11 setKVA :2000];
-    [impedance11 setV208:5.75];
-    [impedance11 setV480:5.75];
-    [_transformerRateCalcV addTRCImpedances:impedance11];
-    [defaultimpedances addObject:impedance11];
-    
-    TRCImpedance * impedance12 = [[TRCImpedance alloc]init];
-    [impedance12 setKVA :2500];
-    [impedance12 setV208:5.75];
-    [impedance12 setV480:5.75];
-    [_transformerRateCalcV addTRCImpedances:impedance12];
-    [defaultimpedances addObject:impedance12];
-    
-    NSData* myDataArrayPhase = [NSKeyedArchiver archivedDataWithRootObject:defaultimpedances];
-    
-    [UICKeyChainStore setData:myDataArrayPhase forKey:@"SystemDefaultsArrayImpedance"];
-}
-
 @end
 
 #pragma mark - TransformerRatingImpedanceCell

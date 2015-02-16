@@ -29,6 +29,7 @@
 		E5AEE6D61A8BBC1E002E3BB7 /* WireSizeVoltageDropFormula.m in Sources */ = {isa = PBXBuildFile; fileRef = E5AEE6D51A8BBC1E002E3BB7 /* WireSizeVoltageDropFormula.m */; };
 		E5BD39A61A83BE3F00CFFD8B /* TransformerFuseCalcVariables.m in Sources */ = {isa = PBXBuildFile; fileRef = E5BD39A51A83BE3F00CFFD8B /* TransformerFuseCalcVariables.m */; };
 		E5BD39A91A83BE7C00CFFD8B /* TransformerFuseCalcFormula.m in Sources */ = {isa = PBXBuildFile; fileRef = E5BD39A81A83BE7C00CFFD8B /* TransformerFuseCalcFormula.m */; };
+		E5F3C0291A8E5A0800B0196C /* ElectricalEnvCal.m in Sources */ = {isa = PBXBuildFile; fileRef = E5F3C0281A8E5A0800B0196C /* ElectricalEnvCal.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -85,6 +86,8 @@
 		E5BD39A51A83BE3F00CFFD8B /* TransformerFuseCalcVariables.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransformerFuseCalcVariables.m; sourceTree = "<group>"; };
 		E5BD39A71A83BE7C00CFFD8B /* TransformerFuseCalcFormula.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TransformerFuseCalcFormula.h; sourceTree = "<group>"; };
 		E5BD39A81A83BE7C00CFFD8B /* TransformerFuseCalcFormula.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransformerFuseCalcFormula.m; sourceTree = "<group>"; };
+		E5F3C0271A8E5A0800B0196C /* ElectricalEnvCal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ElectricalEnvCal.h; sourceTree = "<group>"; };
+		E5F3C0281A8E5A0800B0196C /* ElectricalEnvCal.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ElectricalEnvCal.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -182,12 +185,10 @@
 		E53D097C1A6FE82F00A101E8 /* Electrical Calculator */ = {
 			isa = PBXGroup;
 			children = (
+				E5F3C0261A8E57A000B0196C /* Environment */,
 				E53D09811A6FE82F00A101E8 /* AppDelegate.h */,
 				E53D09821A6FE82F00A101E8 /* AppDelegate.m */,
-				E52807D81A7692B600AF1A17 /* MasterViewController.h */,
-				E52807D91A7692B600AF1A17 /* MasterViewController.m */,
-				E52807DA1A7692B600AF1A17 /* DetailViewController.h */,
-				E52807DB1A7692B600AF1A17 /* DetailViewController.m */,
+				E5F3C0251A8E578100B0196C /* ViewControllers */,
 				E53D09C01A704B6E00A101E8 /* Variables */,
 				E53D09C11A704B8200A101E8 /* Formulas */,
 				E53D09AD1A6FF01D00A101E8 /* Resorces */,
@@ -253,8 +254,8 @@
 				E52807E41A76CECC00AF1A17 /* FTransformerCalc */,
 				E54A666A1A812ADF0044C488 /* FTransformerRatingCalc */,
 				E5BD39A31A83BDE100CFFD8B /* FTransformerFuseCalc */,
-				E5AEE6C51A8AC1E4002E3BB7 /* FAluminumACVoltDropCalc */,
 				E5AEE6D01A8AC356002E3BB7 /* FWireSizeVoltageDrop */,
+				E5AEE6C51A8AC1E4002E3BB7 /* FAluminumACVoltDropCalc */,
 			);
 			name = Formulas;
 			sourceTree = "<group>";
@@ -329,6 +330,26 @@
 				E5BD39A81A83BE7C00CFFD8B /* TransformerFuseCalcFormula.m */,
 			);
 			name = FTransformerFuseCalc;
+			sourceTree = "<group>";
+		};
+		E5F3C0251A8E578100B0196C /* ViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+				E52807D81A7692B600AF1A17 /* MasterViewController.h */,
+				E52807D91A7692B600AF1A17 /* MasterViewController.m */,
+				E52807DA1A7692B600AF1A17 /* DetailViewController.h */,
+				E52807DB1A7692B600AF1A17 /* DetailViewController.m */,
+			);
+			name = ViewControllers;
+			sourceTree = "<group>";
+		};
+		E5F3C0261A8E57A000B0196C /* Environment */ = {
+			isa = PBXGroup;
+			children = (
+				E5F3C0271A8E5A0800B0196C /* ElectricalEnvCal.h */,
+				E5F3C0281A8E5A0800B0196C /* ElectricalEnvCal.m */,
+			);
+			name = Environment;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -475,6 +496,7 @@
 				E52807DD1A7692B600AF1A17 /* DetailViewController.m in Sources */,
 				E5AEE6D61A8BBC1E002E3BB7 /* WireSizeVoltageDropFormula.m in Sources */,
 				E5AEE6CF1A8AC2DC002E3BB7 /* WireSizeVoltageDropVariables.m in Sources */,
+				E5F3C0291A8E5A0800B0196C /* ElectricalEnvCal.m in Sources */,
 				E52807E71A76CF0300AF1A17 /* TransformerCalcFormula.m in Sources */,
 				E5BD39A91A83BE7C00CFFD8B /* TransformerFuseCalcFormula.m in Sources */,
 				E52807E21A76CE9700AF1A17 /* TransformerCalcVariables.m in Sources */,

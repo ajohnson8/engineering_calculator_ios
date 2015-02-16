@@ -37,21 +37,21 @@
 
 #pragma mark - Add
 -(void) addTFCOHs:(TFCOH *)TFCOH{
-    [_ohs addObject:TFCOH];
-    [self filterOH_UG_SUBD:TFCOH];
+    NSMutableArray *temp = [NSMutableArray arrayWithObject:TFCOH];
+    [temp addObjectsFromArray:_ohs];
+    _ohs = temp;
 }
 
 -(void) addTFCUG:(TFCUG *)tfcug{
-    [tfcug setKVA:@"0"];
-    [tfcug setSnCSM:@"0"];
-    [tfcug setNX:@"0"];
-    [_ugs addObject:tfcug];
-    [self filterOH_UG_SUBD:tfcug];
+    NSMutableArray *temp = [NSMutableArray arrayWithObject:tfcug];
+    [temp addObjectsFromArray:_ugs];
+    _ugs = temp;
 }
 
 -(void) addTFCSUBD:(TFCSUBD *)TFCSUBD{
-    [_subds addObject:TFCSUBD];
-    [self filterOH_UG_SUBD:TFCSUBD];
+    NSMutableArray *temp = [NSMutableArray arrayWithObject:TFCSUBD];
+    [temp addObjectsFromArray:_subds];
+    _subds = temp;
 }
 #pragma mark - Delete
 -(void) deleteTFCOHs:(TFCOH *)TFCOH{

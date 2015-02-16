@@ -40,8 +40,9 @@
 
 #pragma mark - Add
 -(void) addTRCImpedances:(TRCImpedance *)impedance{
-    [_impedances addObject:impedance];
-    [self filterImpedances];
+    NSMutableArray *temp = [NSMutableArray arrayWithObject:impedance];
+    [temp addObjectsFromArray:_impedances];
+    _impedances = temp;
 }
 
 #pragma mark - Delete

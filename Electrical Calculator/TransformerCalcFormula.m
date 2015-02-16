@@ -378,87 +378,33 @@
 -(void)initView{
     
     if (_transformerCalcV == nil) {
-        
-        NSData *t =[UICKeyChainStore dataForKey:@"SystemDefaultsArrayLLSec"];
-        NSData *t2 =[UICKeyChainStore dataForKey:@"SystemDefaultsArrayPhase"];
+        _selectedPhase = nil;
+        _selectedLLSec = nil;
         
         _transformerCalcV = [[ TransformerCalcVariables alloc ]init];
         
-        if (t.length == 0  || t2.length == 0) {
-            
-            TCPhase *phase = [[TCPhase alloc]init];
-            [phase setPhaseID:1];
-            [phase setPhaseLL:7200];
-            [phase setPhasevalue:1.0];
-            
-            TCPhase *phase2 = [[TCPhase alloc]init];
-            [phase2 setPhaseID:3];
-            [phase2 setPhaseLL:12470];
-            [phase2 setPhasevalue:1.732];
-            
-            NSMutableArray *defaultPhase = [[NSMutableArray alloc]init];
-            [defaultPhase addObject:phase];
-            [defaultPhase addObject:phase2];
-            
-            NSMutableArray *defaultLLSec = [[NSMutableArray alloc]init];
-            [defaultLLSec addObject:[NSNumber numberWithInt:208]];
-            [defaultLLSec addObject:[NSNumber numberWithInt:240]];
-            [defaultLLSec addObject:[NSNumber numberWithInt:480]];
-            [defaultLLSec addObject:[NSNumber numberWithInt:577]];
-            
-            [_transformerCalcV setDefaultsTCLLSec:defaultLLSec];
-            [_transformerCalcV setDefaultsTCPhase:defaultPhase];
-            [_transformerCalcV setDefaultskilovolt_amps:750];
-            [_transformerCalcV setDefaultsAmpsPer:5.67];
-            [_kilaVoltAmpsTxt setText:[NSString stringWithFormat:@"%i",750]];
-            [_ampsTxt setText:[NSString stringWithFormat:@"%f",5.67]];
-            
-            [_phaseTV setDataSource:self];
-            [_phaseTV setDelegate:self];
-            [_secLLVoltTV setDataSource:self];
-            [_secLLVoltTV setDelegate:self];
-            
-            NSData* myDataArrayPhase = [NSKeyedArchiver archivedDataWithRootObject:defaultPhase];
-            [UICKeyChainStore setData:myDataArrayPhase forKey:@"SystemDefaultsArrayPhase"];
-            
-            NSData* myDataArrayLLSec = [NSKeyedArchiver archivedDataWithRootObject:defaultLLSec];
-            [UICKeyChainStore setData:myDataArrayLLSec forKey:@"SystemDefaultsArrayLLSec"];
-            
-            [UICKeyChainStore setString:@"NO" forKey:@"FormulaConfiguration"];
-            
-        }else{
-            NSData* myDataArrayPhase = [UICKeyChainStore dataForKey:@"SystemDefaultsArrayPhase"];
-            NSMutableArray* defaultPhases = [NSKeyedUnarchiver unarchiveObjectWithData:myDataArrayPhase];
-            
-            NSData* myDataArrayLLSec = [UICKeyChainStore dataForKey:@"SystemDefaultsArrayLLSec"];
-            NSMutableArray* defaultLLSecs = [NSKeyedUnarchiver unarchiveObjectWithData:myDataArrayLLSec];
-            
-            [_transformerCalcV setDefaultsTCLLSec:defaultLLSecs];
-            [_transformerCalcV setDefaultsTCPhase:defaultPhases];
-            
-            [_phaseTV setDataSource:self];
-            [_phaseTV setDelegate:self];
-            [_secLLVoltTV setDataSource:self];
-            [_secLLVoltTV setDelegate:self];
-            
-            _selectedPhase = nil;
-            _selectedLLSec = nil;
-            [_phaseTV deselectRowAtIndexPath:[_phaseTV indexPathForSelectedRow] animated:YES];
-            [_secLLVoltTV deselectRowAtIndexPath:[_secLLVoltTV indexPathForSelectedRow] animated:YES];
-            
-            [_kilaVoltAmpsTxt setText:@""];
-            [_ampsTxt setText:@""];
-            
-            [_transformerCalcV setDefaultskilovolt_amps:0];
-            [_transformerCalcV setDefaultsAmpsPer:0];
-            
-            [_AFCPLlb setText:[self roundingUp:0.00]];
-            [_AFCSLlb setText:[self roundingUp:0.00]];
-            [_FLAPLlb setText:[self roundingUp:0.00]];
-            [_FLASLlb setText:[self roundingUp:0.00]];
-            
-        }
+        NSData* myDataArrayPhase = [UICKeyChainStore dataForKey:@"SystemDefaultsArrayPhase"];
+        NSMutableArray* defaultPhases = [NSKeyedUnarchiver unarchiveObjectWithData:myDataArrayPhase];
         
+        NSData* myDataArrayLLSec = [UICKeyChainStore dataForKey:@"SystemDefaultsArrayLLSec"];
+        NSMutableArray* defaultLLSecs = [NSKeyedUnarchiver unarchiveObjectWithData:myDataArrayLLSec];
+        
+        [_transformerCalcV setDefaultsTCLLSec:defaultLLSecs];
+        [_transformerCalcV setDefaultsTCPhase:defaultPhases];
+        
+        [_phaseTV setDataSource:self];
+        [_phaseTV setDelegate:self];
+        [_phaseTV deselectRowAtIndexPath:[_phaseTV indexPathForSelectedRow] animated:YES];
+
+        [_secLLVoltTV setDataSource:self];
+        [_secLLVoltTV setDelegate:self];
+        [_secLLVoltTV deselectRowAtIndexPath:[_secLLVoltTV indexPathForSelectedRow] animated:YES];
+        
+        [_kilaVoltAmpsTxt setText:@""];
+        [_ampsTxt setText:@""];
+        
+        [_transformerCalcV setDefaultskilovolt_amps:0];
+        [_transformerCalcV setDefaultsAmpsPer:0];
     }
     if (UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPad){
         UITapGestureRecognizer *tapper = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleSingleTap:)];

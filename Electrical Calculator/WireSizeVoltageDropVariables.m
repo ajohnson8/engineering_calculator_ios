@@ -24,8 +24,9 @@
 }
 
 -(void) addWSVDWire:(WSVDWire *)wire{
-    [_wires addObject:wire];
-    [self filterWires];
+    NSMutableArray *temp = [NSMutableArray arrayWithObject:wire];
+    [temp addObjectsFromArray:_wires];
+    _wires = temp;
 }
 -(void) deleteWSVDWire:(WSVDWire *)wire{
     [_wires removeObject:wire];

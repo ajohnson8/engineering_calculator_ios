@@ -356,7 +356,7 @@
             [_transformerFuseCalcV updateTFCUGs:fuse andIndex:row];
             break;
         case 1:
-             [_transformerFuseCalcV updateTFCOH:fuse andIndex:row];
+            [_transformerFuseCalcV updateTFCOH:fuse andIndex:row];
             break;
         case 2:
             [_transformerFuseCalcV updateTFCSUBD:fuse andIndex:row];
@@ -365,7 +365,7 @@
 }
 
 -(void)canAddAnotherFuse:(BOOL)check{
-        [_addFuseBtn setEnabled:check];
+    [_addFuseBtn setEnabled:check];
 }
 
 #pragma mark - Private Methods
@@ -373,39 +373,24 @@
 -(void)initView{
     if (_transformerFuseCalcV == nil) {
         
-        NSData *ug =[UICKeyChainStore dataForKey:@"SystemDefaultsArrayUG"];
-        NSData *oh =[UICKeyChainStore dataForKey:@"SystemDefaultsArrayOH"];
-        NSData *subd =[UICKeyChainStore dataForKey:@"SystemDefaultsArraySUBD"];
-        
         _transformerFuseCalcV = [[ TransformerFuseCalcVariables alloc ]init];
         
         [_fuseTV setDataSource:self];
         [_fuseTV setDelegate:self];
+        [_fuseTV deselectRowAtIndexPath:[_fuseTV indexPathForSelectedRow] animated:YES];
+        NSData* myDataArrayUG = [UICKeyChainStore dataForKey:@"SystemDefaultsArrayUG"];
+        NSData* myDataArrayOH = [UICKeyChainStore dataForKey:@"SystemDefaultsArrayOH"];
+        NSData* myDataArraySUBD = [UICKeyChainStore dataForKey:@"SystemDefaultsArraySUBD"];
+        NSMutableArray* defaultUG = [NSKeyedUnarchiver unarchiveObjectWithData:myDataArrayUG];
+        NSMutableArray* defaultOH = [NSKeyedUnarchiver unarchiveObjectWithData:myDataArrayOH];
+        NSMutableArray* defaultSUBD = [NSKeyedUnarchiver unarchiveObjectWithData:myDataArraySUBD];
         
-        if (ug.length == 0 || oh.length == 0 || subd.length == 0){
-            [self addUGs];
-            [self addOHs];
-            [self addSUBDs];
-            [UICKeyChainStore setString:@"NO" forKey:@"FormulaConfiguration"];
-        } else{
-            NSData* myDataArrayUG = [UICKeyChainStore dataForKey:@"SystemDefaultsArrayUG"];
-            NSData* myDataArrayOH = [UICKeyChainStore dataForKey:@"SystemDefaultsArrayOH"];
-            NSData* myDataArraySUBD = [UICKeyChainStore dataForKey:@"SystemDefaultsArraySUBD"];
-            NSMutableArray* defaultUG = [NSKeyedUnarchiver unarchiveObjectWithData:myDataArrayUG];
-            NSMutableArray* defaultOH = [NSKeyedUnarchiver unarchiveObjectWithData:myDataArrayOH];
-            NSMutableArray* defaultSUBD = [NSKeyedUnarchiver unarchiveObjectWithData:myDataArraySUBD];
-            
-            [_transformerFuseCalcV setUgs:defaultUG];
-            [_transformerFuseCalcV setOhs:defaultOH];
-            [_transformerFuseCalcV setSubds:defaultSUBD];
-            
-            [_fuseTV setDataSource:self];
-            [_fuseTV setDelegate:self];
-            
-            [_fuseTV deselectRowAtIndexPath:[_fuseTV indexPathForSelectedRow] animated:YES];
-            [_typeSmc setSelectedSegmentIndex:0];
-        }
+        [_transformerFuseCalcV setUgs:defaultUG];
+        [_transformerFuseCalcV setOhs:defaultOH];
+        [_transformerFuseCalcV setSubds:defaultSUBD];
         
+        
+        [_typeSmc setSelectedSegmentIndex:0];
     }
     if (UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPad){
         UITapGestureRecognizer *tapper = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleSingleTap:)];
@@ -507,326 +492,6 @@
     [formatter setRoundingMode: NSNumberFormatterRoundHalfUp];
     
     return [formatter stringFromNumber:[NSNumber numberWithFloat:num]];
-}
-
--(void)addUGs{
-
-    NSMutableArray *defaultugs = [[NSMutableArray alloc]init];
-    
-    TFCUG * ug = [[TFCUG alloc]init];
-    [ug setKVA :@"25"];
-    [ug setBayonet:8];
-    [ug setNX:@""];
-    [ug setSnCSM:@""];
-    [_transformerFuseCalcV addTFCUG:ug];
-    [defaultugs addObject:ug];
-    
-    TFCUG * ug1 = [[TFCUG alloc]init];
-    [ug1 setKVA :@"50"];
-    [ug1 setBayonet:15];
-    [ug1 setNX:@""];
-    [ug1 setSnCSM:@""];
-    [_transformerFuseCalcV addTFCUG:ug1];
-    [defaultugs addObject:ug1];
-    
-    TFCUG * ug2 = [[TFCUG alloc]init];
-    [ug2 setKVA :@"75"];
-    [ug2 setBayonet:25];
-    [ug2 setNX:@""];
-    [ug2 setSnCSM:@""];
-    [_transformerFuseCalcV addTFCUG:ug2];
-    [defaultugs addObject:ug2];
-    
-    TFCUG * ug3 = [[TFCUG alloc]init];
-    [ug3 setKVA :@"100"];
-    [ug3 setBayonet:25];
-    [ug3 setNX:@""];
-    [ug3 setSnCSM:@""];
-    [_transformerFuseCalcV addTFCUG:ug3];
-    [defaultugs addObject:ug3];
-    
-    TFCUG * ug4 = [[TFCUG alloc]init];
-    [ug4 setKVA :@"167"];
-    [ug4 setBayonet:50];
-    [ug4 setNX:@""];
-    [ug4 setSnCSM:@""];
-    [_transformerFuseCalcV addTFCUG:ug4];
-    [defaultugs addObject:ug4];
-    
-    TFCUG * ug5 = [[TFCUG alloc]init];
-    [ug5 setKVA :@"150"];
-    [ug5 setBayonet:15];
-    [ug5 setNX:@""];
-    [ug5 setSnCSM:@""];
-    [_transformerFuseCalcV addTFCUG:ug5];
-    [defaultugs addObject:ug5];
-    
-    TFCUG * ug6 = [[TFCUG alloc]init];
-    [ug6 setKVA :@"300"];
-    [ug6 setBayonet:25];
-    [ug6 setNX:@""];
-    [ug6 setSnCSM:@"30E"];
-    [_transformerFuseCalcV addTFCUG:ug6];
-    [defaultugs addObject:ug6];
-    
-    TFCUG * ug7 = [[TFCUG alloc]init];
-    [ug7 setKVA :@"500"];
-    [ug7 setBayonet:50];
-    [ug7 setNX:@""];
-    [ug7 setSnCSM:@"50E"];
-    [_transformerFuseCalcV addTFCUG:ug7];
-    [defaultugs addObject:ug7];
-    
-    TFCUG * ug8 = [[TFCUG alloc]init];
-    [ug8 setKVA :@"750"];
-    [ug8 setBayonet:65];
-    [ug8 setNX:@""];
-    [ug8 setSnCSM:@"80E"];
-    [_transformerFuseCalcV addTFCUG:ug8];
-    [defaultugs addObject:ug8];
-    
-    TFCUG * ug9 = [[TFCUG alloc]init];
-    [ug9 setKVA :@"1000"];
-    [ug9 setBayonet:65];
-    [ug9 setNX:@"100A"];
-    [ug9 setSnCSM:@"100E"];
-    [_transformerFuseCalcV addTFCUG:ug9];
-    [defaultugs addObject:ug9];
-    
-    TFCUG * ug10 = [[TFCUG alloc]init];
-    [ug10 setKVA :@"1500"];
-    [ug10 setBayonet:140];
-    [ug10 setNX:@"2-65A"];
-    [ug10 setSnCSM:@"150E"];
-    [_transformerFuseCalcV addTFCUG:ug10];
-    [defaultugs addObject:ug10];
-    
-    TFCUG * ug11 = [[TFCUG alloc]init];
-    [ug11 setKVA :@"2000"];
-    [ug11 setBayonet:0];
-    [ug11 setNX:@"2-100A"];
-    [ug11 setSnCSM:@"200E"];
-    [_transformerFuseCalcV addTFCUG:ug11];
-    [defaultugs addObject:ug11];
-    
-    TFCUG * ug12 = [[TFCUG alloc]init];
-    [ug12 setKVA :@"2500"];
-    [ug12 setBayonet:0];
-    [ug12 setNX:@"2-100A"];
-    [ug12 setSnCSM:@"250E"];
-    [_transformerFuseCalcV addTFCUG:ug12];
-    [defaultugs addObject:ug12];
-    
-    TFCUG * ug13 = [[TFCUG alloc]init];
-    [ug13 setKVA :@"2-1500"];
-    [ug13 setBayonet:0];
-    [ug13 setNX:@"2-100A"];
-    [ug13 setSnCSM:@"250E"];
-    [_transformerFuseCalcV addTFCUG:ug13];
-    [defaultugs addObject:ug13];
-    
-    TFCUG * ug14 = [[TFCUG alloc]init];
-    [ug14 setKVA :@"2-2000"];
-    [ug14 setBayonet:0];
-    [ug14 setNX:@"2-100A"];
-    [ug14 setSnCSM:@"300E"];
-    [_transformerFuseCalcV addTFCUG:ug14];
-    [defaultugs addObject:ug14];
-    
-    TFCUG * ug15 = [[TFCUG alloc]init];
-    [ug15 setKVA :@"2-2500"];
-     [ug15 setBayonet:0];
-     [ug15 setNX:@"2-100A"];
-     [ug15 setSnCSM:@"400E"];
-     [_transformerFuseCalcV addTFCUG:ug15];
-     [defaultugs addObject:ug15];
-    
-    
-    NSData* myDataArrayPhase = [NSKeyedArchiver archivedDataWithRootObject:defaultugs];
-    [UICKeyChainStore setData:myDataArrayPhase forKey:@"SystemDefaultsArrayUG"];
-}
-
--(void)addOHs{
-    
-    NSMutableArray *defaultohs = [[NSMutableArray alloc]init];
-    
-    TFCOH * oh0 = [[TFCOH alloc]init];
-    [oh0 setKVA :5];
-    [oh0 setNXCompII:@"12k"];
-    [oh0 setSnC:5];
-    [oh0 setMultSnC:5];
-    [_transformerFuseCalcV addTFCOHs:oh0];
-    [defaultohs addObject:oh0];
-    
-    
-    TFCOH * oh1 = [[TFCOH alloc]init];
-    [oh1 setKVA :10];
-    [oh1 setNXCompII:@"12k"];
-    [oh1 setSnC:5];
-    [oh1 setMultSnC:5];
-    [_transformerFuseCalcV addTFCOHs:oh1];
-    [defaultohs addObject:oh1];
-    
-    TFCOH * oh2 = [[TFCOH alloc]init];
-    [oh2 setKVA :15];
-    [oh2 setNXCompII:@"12k"];
-    [oh2 setSnC:5];
-    [oh2 setMultSnC:5];
-    [_transformerFuseCalcV addTFCOHs:oh2];
-    [defaultohs addObject:oh2];
-    
-    TFCOH * oh3 = [[TFCOH alloc]init];
-    [oh3 setKVA :25];
-    [oh3 setNXCompII:@"12k"];
-    [oh3 setSnC:7];
-    [oh3 setMultSnC:7];
-    [_transformerFuseCalcV addTFCOHs:oh3];
-    [defaultohs addObject:oh3];
-    
-    TFCOH * oh4 = [[TFCOH alloc]init];
-    [oh4 setKVA :37.5];
-    [oh4 setNXCompII:@"12k"];
-    [oh4 setSnC:10];
-    [oh4 setMultSnC:10];
-    [_transformerFuseCalcV addTFCOHs:oh4];
-    [defaultohs addObject:oh4];
-    
-    TFCOH * oh5 = [[TFCOH alloc]init];
-    [oh5 setKVA :50];
-    [oh5 setNXCompII:@"25k"];
-    [oh5 setSnC:10];
-    [oh5 setMultSnC:10];
-    [_transformerFuseCalcV addTFCOHs:oh5];
-    [defaultohs addObject:oh5];
-    
-    TFCOH * oh6 = [[TFCOH alloc]init];
-    [oh6 setKVA :75];
-    [oh6 setNXCompII:@"25k"];
-    [oh6 setSnC:15];
-    [oh6 setMultSnC:15];
-    [_transformerFuseCalcV addTFCOHs:oh6];
-    [defaultohs addObject:oh6];
-    
-    TFCOH * oh7 = [[TFCOH alloc]init];
-    [oh7 setKVA :100];
-    [oh7 setNXCompII:@"40k"];
-    [oh7 setSnC:20];
-    [oh7 setMultSnC:15];
-    [_transformerFuseCalcV addTFCOHs:oh7];
-    [defaultohs addObject:oh7];
-    
-    TFCOH * oh8 = [[TFCOH alloc]init];
-    [oh8 setKVA :125];
-    [oh8 setNXCompII:@""];
-    [oh8 setSnC:0];
-    [oh8 setMultSnC:20];
-    [_transformerFuseCalcV addTFCOHs:oh8];
-    [defaultohs addObject:oh8];
-    
-    TFCOH * oh9 = [[TFCOH alloc]init];
-    [oh9 setKVA :150];
-    [oh9 setNXCompII:@""];
-    [oh9 setSnC:0];
-    [oh9 setMultSnC:25];
-    [_transformerFuseCalcV addTFCOHs:oh9];
-    [defaultohs addObject:oh9];
-    
-    TFCOH * oh10 = [[TFCOH alloc]init];
-    [oh10 setKVA :175];
-    [oh10 setNXCompII:@""];
-    [oh10 setSnC:0];
-    [oh10 setMultSnC:30];
-    [_transformerFuseCalcV addTFCOHs:oh10];
-    [defaultohs addObject:oh10];
-    
-    TFCOH * oh11 = [[TFCOH alloc]init];
-    [oh11 setKVA :200];
-    [oh11 setNXCompII:@""];
-    [oh11 setSnC:0];
-    [oh11 setMultSnC:30];
-    [_transformerFuseCalcV addTFCOHs:oh11];
-    [defaultohs addObject:oh11];
-    
-    TFCOH * oh12 = [[TFCOH alloc]init];
-    [oh12 setKVA :225];
-    [oh12 setNXCompII:@""];
-    [oh12 setSnC:0];
-    [oh12 setMultSnC:40];
-    [_transformerFuseCalcV addTFCOHs:oh12];
-    [defaultohs addObject:oh12];
-    
-    TFCOH * oh13 = [[TFCOH alloc]init];
-    [oh13 setKVA :250];
-    [oh13 setNXCompII:@""];
-    [oh13 setSnC:0];
-    [oh13 setMultSnC:40];
-    [_transformerFuseCalcV addTFCOHs:oh13];
-    [defaultohs addObject:oh13];
-    
-    TFCOH * oh14 = [[TFCOH alloc]init];
-    [oh14 setKVA :275];
-    [oh14 setNXCompII:@""];
-    [oh14 setSnC:0];
-    [oh14 setMultSnC:50];
-    [_transformerFuseCalcV addTFCOHs:oh14];
-    [defaultohs addObject:oh14];
-    
-    TFCOH * oh15 = [[TFCOH alloc]init];
-    [oh15 setKVA :300];
-    [oh15 setNXCompII:@""];
-    [oh15 setSnC:0];
-    [oh15 setMultSnC:50];
-    [_transformerFuseCalcV addTFCOHs:oh15];
-    [defaultohs addObject:oh15];
-    
-    NSData* myDataArrayPhase = [NSKeyedArchiver archivedDataWithRootObject:defaultohs];
-    [UICKeyChainStore setData:myDataArrayPhase forKey:@"SystemDefaultsArrayOH"];
-}
-
--(void)addSUBDs{
-
-    
-    NSMutableArray *defaultsubds = [[NSMutableArray alloc]init];
-    
-    TFCSUBD * subd1 = [[TFCSUBD alloc]init];
-    [subd1 setCKVAnPhase:@"<150"];
-    [subd1 setSnCSTD:20];
-    [_transformerFuseCalcV addTFCSUBD:subd1];
-    [defaultsubds addObject:subd1];
-    
-    TFCSUBD * subd2 = [[TFCSUBD alloc]init];
-    [subd2 setCKVAnPhase:@"<200"];
-    [subd2 setSnCSTD:30];
-    [_transformerFuseCalcV addTFCSUBD:subd2];
-    [defaultsubds addObject:subd2];
-    
-    TFCSUBD * subd3 = [[TFCSUBD alloc]init];
-    [subd3 setCKVAnPhase:@"<275"];
-    [subd3 setSnCSTD:40];
-    [_transformerFuseCalcV addTFCSUBD:subd3];
-    [defaultsubds addObject:subd3];
-    
-    TFCSUBD * subd4 = [[TFCSUBD alloc]init];
-    [subd4 setCKVAnPhase:@"<350"];
-    [subd4 setSnCSTD:50];
-    [_transformerFuseCalcV addTFCSUBD:subd4];
-    [defaultsubds addObject:subd4];
-    
-    TFCSUBD * subd5 = [[TFCSUBD alloc]init];
-    [subd5 setCKVAnPhase:@"<450"];
-    [subd5 setSnCSTD:65];
-    [_transformerFuseCalcV addTFCSUBD:subd5];
-    [defaultsubds addObject:subd5];
-    
-    TFCSUBD * subd6 = [[TFCSUBD alloc]init];
-    [subd6 setCKVAnPhase:@"<573"];
-    [subd6 setSnCSTD:80];
-    [_transformerFuseCalcV addTFCSUBD:subd6];
-    [defaultsubds addObject:subd6];
-    
-    NSData* myDataArrayPhase = [NSKeyedArchiver archivedDataWithRootObject:defaultsubds];
-    [UICKeyChainStore setData:myDataArrayPhase forKey:@"SystemDefaultsArraySUBD"];
-    
 }
 
 @end
