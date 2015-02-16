@@ -57,7 +57,6 @@
 
 @end
 
-
 @interface TransformerLLCell : UITableViewCell <UITextFieldDelegate>
 
 @property (strong, nonatomic) IBOutlet UITextField *LLSecVauleTxt;

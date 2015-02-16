@@ -31,9 +31,10 @@
     [_cirtVoltTxt setDelegate:self];
     [_wireResistivityTxt setDelegate:self];
     
-    UIBarButtonItem * configure = [[UIBarButtonItem alloc]initWithTitle:@"Configure" style:UIBarButtonItemStylePlain target:self action:@selector(pressedConfig:)];
+    UIBarButtonItem * configure = [[UIBarButtonItem alloc]initWithTitle:@"" style:UIBarButtonItemStylePlain target:self action:@selector(pressedConfig:)];
+    [[self.navigationController.viewControllers.lastObject navigationItem] setRightBarButtonItem:configure];
     
-    [self configureMode];
+    [self configureMode:0];
     
 }
 
@@ -194,13 +195,13 @@
     NSTextCheckingResult *match = [regex firstMatchInString:s options:0 range:NSMakeRange(0, [s length])];
     BOOL x = (match != nil);
     if (textField == _cirtCurrentTxt)
-        [_aluminumACVoltDropV setCurrent:[NSNumber numberWithFloat:[textField.text floatValue]]];
+        [_aluminumACVoltDropV setCurrent:[NSNumber numberWithFloat:[s floatValue]]];
     if (textField == _cirtVoltTxt)
-        [_aluminumACVoltDropV setCirtVoltage:[NSNumber numberWithFloat:[textField.text floatValue]]];
+        [_aluminumACVoltDropV setCirtVoltage:[NSNumber numberWithFloat:[s floatValue]]];
     if (textField == _lengthTxt)
-        [_aluminumACVoltDropV setOneWayLength:[NSNumber numberWithFloat:[textField.text floatValue]]];
+        [_aluminumACVoltDropV setOneWayLength:[NSNumber numberWithFloat:[s floatValue]]];
     if (textField == _wireResistivityTxt)
-        [_aluminumACVoltDropV setResistivity:[NSNumber numberWithFloat:[textField.text floatValue]]];
+        [_aluminumACVoltDropV setResistivity:[NSNumber numberWithFloat:[s floatValue]]];
     [self calulateTotal];
     return x;
 }
@@ -216,7 +217,7 @@
                     animations:^{ }
                     completion:NULL];
     
-    [self configureMode];
+    [self configureMode:1];
     [self.view endEditing:YES];
     
     [_wireTV deselectRowAtIndexPath:[_wireTV indexPathForSelectedRow] animated:YES];
@@ -224,6 +225,14 @@
     
     [_phaseTV deselectRowAtIndexPath:[_phaseTV indexPathForSelectedRow] animated:YES];
     [_phaseTV reloadData];
+    
+    [_attribute2Lbl setText:@""];
+    [_attributeLbl setText:@""];
+    [_lengthTxt setText:@""];
+    [_cirtCurrentTxt setText:@""];
+    [_cirtVoltTxt setText:@""];
+    
+    [_aluminumACVoltDropV removeValues];
 }
 
 - (IBAction)addImpedanceAction:(id)sender {
@@ -339,9 +348,12 @@
 
 -(void)calulateTotal{
     int x = (int)[_phaseTV indexPathForSelectedRow].row;
+    [_type2Lbl setText:@"Vold Drop %"];
+    [_attribute2Lbl setText:[self roundingUp:[_aluminumACVoltDropV calulateWirePercent:_aluminumACVoltDropV.phases[x]]*100 andDecimalPlace:2]];
     if (x == 0) {
         [_typeLbl setText:@"Single Phase Two-Wire Circuits"];
         [_attributeLbl setText:[NSString stringWithFormat:@"%f",[_aluminumACVoltDropV calulate2PhaseOne]]];
+        
     }else {
         
         [_typeLbl setText:@"Three Phase Three-Wire Circuits"];
@@ -360,32 +372,51 @@
     return [formatter stringFromNumber:[NSNumber numberWithFloat:num]];
 }
 
--(void)configureMode{
-    [_addFuseBtn setHidden:_config];
-    [_addFuseBtn setEnabled:!_config];
-    [_wireResistivityTxt setEnabled:_config];
-    if (_config) {
+-(void)configureMode:(int)mode{
+    BOOL boolValue = [[UICKeyChainStore stringForKey:@"FormulaConfiguration"] boolValue];
+    if (mode == 0)
+        boolValue = !boolValue;
+    if (boolValue) {
         _config = NO;
-        [_wireResistivityTxt setTextColor:[UIColor grayColor]];
         [UICKeyChainStore setString:@"NO" forKey:@"FormulaConfiguration"];
         [_defaultBtn setTitle:@"Default" forState:UIControlStateNormal];[_defaultBtn setNeedsLayout];
-        [_addFuseBtn setHidden:YES];
-        [_addFuseBtn setEnabled:NO];
-        [_wireResistivityTxt setEnabled:_config];
-        [self.navigationController.viewControllers.lastObject setTitle:@"Transformer Rating"];
+        [self.navigationController.viewControllers.lastObject setTitle:@"AC Volt Drop"];
         [[[self.navigationController.viewControllers.lastObject navigationItem] rightBarButtonItem]setTitle:@"Configure"];
         [_wireResistivityTxt setTextColor:[UIColor grayColor]];
+         _wireResistivityTxt.layer.borderColor=[[UIColor clearColor]CGColor];
+        _wireResistivityTxt.layer.borderWidth=1.0;
+        _lengthTxt.layer.borderColor=[[UIColor blackColor]CGColor];
+        _lengthTxt.layer.borderWidth=1.0;
+        _cirtCurrentTxt.layer.borderColor=[[UIColor blackColor]CGColor];
+        _cirtCurrentTxt.layer.borderWidth=1.0;
+        _cirtVoltTxt.layer.borderColor=[[UIColor blackColor]CGColor];
+        _cirtVoltTxt.layer.borderWidth=1.0;
+        
     }else{
         _config = YES;
         [UICKeyChainStore setString:@"YES" forKey:@"FormulaConfiguration"];
         [_defaultBtn setTitle:@"Set Default" forState:UIControlStateNormal];[_defaultBtn setNeedsLayout];
-        [_addFuseBtn setHidden:NO];
-        [_addFuseBtn setEnabled:YES];
-        [_wireResistivityTxt setEnabled:_config];
-        [self.navigationController.viewControllers.lastObject setTitle:@"Transformer Rating Configuration"];
+        [self.navigationController.viewControllers.lastObject setTitle:@"AC Volt Drop Configuration"];
         [[[self.navigationController.viewControllers.lastObject navigationItem] rightBarButtonItem]setTitle:@"Done"];
         [_wireResistivityTxt setTextColor:[UIColor blackColor]];
+        _wireResistivityTxt.layer.borderColor=[[UIColor blackColor]CGColor];
+        _wireResistivityTxt.layer.borderWidth=1.0;
+        _lengthTxt.layer.borderColor=[[UIColor clearColor]CGColor];
+        _lengthTxt.layer.borderWidth=1.0;
+        _cirtCurrentTxt.layer.borderColor=[[UIColor clearColor]CGColor];
+        _cirtCurrentTxt.layer.borderWidth=1.0;
+        _cirtVoltTxt.layer.borderColor=[[UIColor clearColor]CGColor];
+        _cirtVoltTxt.layer.borderWidth=1.0;
     }
+    [_phaseTV setUserInteractionEnabled:!_config];
+    [_addFuseBtn setHidden:!_config];
+    [_addFuseBtn setEnabled:_config];
+    [_wireResistivityTxt setEnabled:_config];
+    [_lengthTxt setEnabled:!_config];
+    [_cirtCurrentTxt setEnabled:!_config];
+    [_cirtVoltTxt setEnabled:!_config];
+    
+    
 }
 
 @end

@@ -23,6 +23,12 @@
     _wires = [[NSMutableArray alloc]initWithArray:[wires copy]];
 }
 
+-(void) removeValues{
+    _oneWayLength = 0;
+    _current = 0;
+    _selectWire = nil;
+}
+
 -(void) addWSVDWire:(WSVDWire *)wire{
     NSMutableArray *temp = [NSMutableArray arrayWithObject:wire];
     [temp addObjectsFromArray:_wires];

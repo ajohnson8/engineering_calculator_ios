@@ -51,6 +51,11 @@
     kilovolt_amps = updatedKilovolt_amps;
 }
 
+-(void) removeValues{
+    ampsPer = 0;
+    kilovolt_amps = 0;
+}
+
 #pragma mark - Add
 -(void)addTCLLSec:(TCLLSec *)newLLSec {
     NSMutableArray *temp = [NSMutableArray arrayWithObject:newLLSec];

@@ -15,6 +15,7 @@
 
 @required
 -(void)updateTransformerFuse:(id)fuse andIndexPath:(int)row;
+-(void)reloadList;
 -(void)canAddAnotherFuse:(BOOL)check;
 
 @end

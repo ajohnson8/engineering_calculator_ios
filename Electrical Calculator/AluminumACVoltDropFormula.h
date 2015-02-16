@@ -25,6 +25,8 @@
 
 @property (weak, nonatomic) IBOutlet UILabel *typeLbl;
 @property (weak, nonatomic) IBOutlet UILabel *attributeLbl;
+@property (weak, nonatomic) IBOutlet UILabel *type2Lbl;
+@property (weak, nonatomic) IBOutlet UILabel *attribute2Lbl;
 
 @property (strong, nonatomic) IBOutlet UITextField *lengthTxt;
 @property (strong, nonatomic) IBOutlet UITextField *cirtCurrentTxt;

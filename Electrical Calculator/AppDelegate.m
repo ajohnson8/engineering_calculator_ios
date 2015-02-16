@@ -45,7 +45,6 @@
     _rotate = false;
     _dismissKeyCount = 0;
     
-    
     if (![UICKeyChainStore stringForKey:@"FirstLoad"]) {
         [UICKeyChainStore setString:@"Yes" forKey:@"FirstLoad"];
         [ElectricalEnvCal setAllDeafults];

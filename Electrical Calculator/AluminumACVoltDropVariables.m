@@ -29,6 +29,13 @@
     _phases = [[NSMutableArray alloc]initWithArray:[phases copy]];
 }
 
+-(void) removeValues{
+    _oneWayLength = 0;
+    _current = 0;
+    _cirtVoltage = 0;
+    _selectWire = nil;
+}
+
 -(void) addWSVDWire:(WSVDWire *)wire{
     NSMutableArray *temp = [NSMutableArray arrayWithObject:wire];
     [temp addObjectsFromArray:_wires];
@@ -52,6 +59,13 @@
 }
 -(float)calulate2PhaseOne{
     return ((2*[_resistivity floatValue])*[_oneWayLength floatValue]*[_current floatValue])/_selectWire.circ;
+}
+
+-(float)calulateWirePercent:(TCPhase *)phase{
+    if (phase.phaseID == 1)
+        return [self calulate2PhaseOne]/[_cirtVoltage floatValue];
+    else
+        return [self calulate1PhaseThree]/[_cirtVoltage floatValue];
 }
 
 -(void)filterWires{

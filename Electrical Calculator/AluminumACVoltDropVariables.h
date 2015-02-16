@@ -27,6 +27,7 @@
 -(void) setDefaultsResistivity:     (float)resistivity;
 -(void) setDefaultsWSVDWire:        (NSMutableArray *)wires;
 -(void) setDefaultsAVDPhases:       (NSMutableArray *)phases;
+-(void) removeValues;
 
 -(void) addWSVDWire:                (WSVDWire *)wire;
 -(void) deleteWSVDWire:             (WSVDWire *)wire;
@@ -35,6 +36,7 @@
 
 -(float)calulate1PhaseThree;
 -(float)calulate2PhaseOne;
+-(float)calulateWirePercent:(TCPhase *)phase;
 
 @end
 

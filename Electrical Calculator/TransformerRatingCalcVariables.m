@@ -38,6 +38,13 @@
     _ltlSecVolts = [[NSNumber alloc]initWithFloat:secVolts];
 }
 
+
+-(void) removeValues{
+    _kilovolt_amps = 0;
+    _ltlSecVolts = 0;
+    _ltlPriVolts = 0;
+}
+
 #pragma mark - Add
 -(void) addTRCImpedances:(TRCImpedance *)impedance{
     NSMutableArray *temp = [NSMutableArray arrayWithObject:impedance];

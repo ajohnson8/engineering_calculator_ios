@@ -25,28 +25,9 @@
 -(void)viewWillAppear:(BOOL)animated{
     
     [_typeLbl setText:@"UG"];
-    UIBarButtonItem * configure = [[UIBarButtonItem alloc]initWithTitle:@"Configure" style:UIBarButtonItemStylePlain target:self action:@selector(pressedConfig:)];
-    
-    BOOL boolValue = [[UICKeyChainStore stringForKey:@"FormulaConfiguration"] boolValue];
-    
-    if (!boolValue) {
-        _config = NO;
-        [_defaultBtn setTitle:@"Default" forState:UIControlStateNormal];[_defaultBtn setNeedsLayout];
-        [_addFuseBtn setHidden:YES];
-        [_addFuseBtn setEnabled:NO];
-        [configure setTitle:@"Configure"];
-        [[self.navigationController.viewControllers.lastObject navigationItem] setRightBarButtonItem:configure];
-        [self.navigationController.viewControllers.lastObject setTitle:@"Transformer Rating"];
-    }else {
-        _config = YES;
-        [_defaultBtn setTitle:@"Set Default" forState:UIControlStateNormal];[_defaultBtn setNeedsLayout];
-        [_addFuseBtn setHidden:NO];
-        [_addFuseBtn setEnabled:YES];
-        [configure setTitle:@"Done"];
-        [[self.navigationController.viewControllers.lastObject navigationItem] setRightBarButtonItem:configure];
-        [self.navigationController.viewControllers.lastObject setTitle:@"Transformer Rating Configuration"];
-    }
-    
+    UIBarButtonItem * configure = [[UIBarButtonItem alloc]initWithTitle:@"" style:UIBarButtonItemStylePlain target:self action:@selector(pressedConfig:)];
+    [[self.navigationController.viewControllers.lastObject navigationItem] setRightBarButtonItem:configure];
+    [self configureMode:0];
 }
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
@@ -98,8 +79,8 @@
             NSArray *nib = [[NSBundle mainBundle] loadNibNamed:@"Celllabels" owner:self options:nil];
             cell = [nib objectAtIndex:0];
         }
-        
-        
+        [cell.attribute3Lbl setHidden:NO];
+        [cell.attribute4Lbl setHidden:NO];
         if (_typeSmc.selectedSegmentIndex == 0) {
             [cell.attribute1Lbl setText:@"KVA"];
             [cell.attribute2Lbl setText:@"BAYONET"];
@@ -115,8 +96,8 @@
             [cell.attribute1Lbl setText:@"KVA/Phase"];
             [cell.attribute1Lbl setAdjustsFontSizeToFitWidth:YES];
             [cell.attribute2Lbl setText:@"S&C STD"];
-            [cell.attribute3Lbl setText:@""];
-            [cell.attribute4Lbl setText:@""];
+            [cell.attribute3Lbl setHidden:YES];
+            [cell.attribute4Lbl setHidden:YES];
         }
         [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
         return cell;
@@ -130,6 +111,8 @@
                 NSArray *nib = [[NSBundle mainBundle] loadNibNamed:@"Celltexts" owner:self options:nil];
                 cell = [nib objectAtIndex:0];
             }
+            [cell.attribute3Txt setHidden:NO];
+            [cell.attribute4Txt setHidden:NO];
             if (_typeSmc.selectedSegmentIndex == 0) {
                 TFCUG *temp = _transformerFuseCalcV.ugs[indexPath.row-1];
                 [cell.attribute1Txt setText:temp.KVA];
@@ -148,8 +131,8 @@
                 [cell.attribute1Txt setText:temp.CKVAnPhase];
                 [cell.attribute1Txt setAdjustsFontSizeToFitWidth:YES];
                 [cell.attribute2Txt setText:[self roundingUp:temp.SnCSTD andDecimalPlace:2]];
-                [cell.attribute3Txt setText:@""];
-                [cell.attribute4Txt setText:@""];
+                [cell.attribute3Txt setHidden:YES];
+                [cell.attribute4Txt setHidden:YES];
             }
             
             [cell.attribute1Txt setDelegate:cell];
@@ -244,28 +227,16 @@
                     animations:^{ }
                     completion:NULL];
     
-    BOOL boolValue = [[UICKeyChainStore stringForKey:@"FormulaConfiguration"] boolValue];
-    [self.view endEditing:YES];
+    [self configureMode:1];
     
-    if (boolValue) {
-        _config = NO;
-        [UICKeyChainStore setString:@"NO" forKey:@"FormulaConfiguration"];
-        [_defaultBtn setTitle:@"Default" forState:UIControlStateNormal];[_defaultBtn setNeedsLayout];
-        [_addFuseBtn setHidden:YES];
-        [_addFuseBtn setEnabled:NO];
-        [self.navigationController.viewControllers.lastObject setTitle:@"Transformer Rating"];
-        [[[self.navigationController.viewControllers.lastObject navigationItem] rightBarButtonItem]setTitle:@"Configure"];
-    }else {
-        _config = YES;
-        [UICKeyChainStore setString:@"YES" forKey:@"FormulaConfiguration"];
-        [_defaultBtn setTitle:@"Set Default" forState:UIControlStateNormal];[_defaultBtn setNeedsLayout];
-        [_addFuseBtn setHidden:NO];
-        [_addFuseBtn setEnabled:YES];
-        [self.navigationController.viewControllers.lastObject setTitle:@"Transformer Rating Configuration"];
-        [[[self.navigationController.viewControllers.lastObject navigationItem] rightBarButtonItem]setTitle:@"Done"];
-    }
-    [_fuseTV deselectRowAtIndexPath:[_fuseTV indexPathForSelectedRow] animated:YES];
-    [_fuseTV reloadData];
+    [_title1Lbl setText:@""];
+    [_title2Lbl setText:@""];
+    [_title3Lbl setText:@""];
+    [_title4Lbl setText:@""];
+    [_attribute1Lbl setText:@""];
+    [_attribute2Lbl setText:@""];
+    [_attribute3Lbl setText:@""];
+    [_attribute4Lbl setText:@""];
 }
 
 - (IBAction)addFuseAction:(id)sender {
@@ -362,6 +333,10 @@
             [_transformerFuseCalcV updateTFCSUBD:fuse andIndex:row];
             break;
     }
+    
+}
+-(void)reloadList{
+    [_fuseTV reloadData];
 }
 
 -(void)canAddAnotherFuse:(BOOL)check{
@@ -385,10 +360,9 @@
         NSMutableArray* defaultOH = [NSKeyedUnarchiver unarchiveObjectWithData:myDataArrayOH];
         NSMutableArray* defaultSUBD = [NSKeyedUnarchiver unarchiveObjectWithData:myDataArraySUBD];
         
-        [_transformerFuseCalcV setUgs:defaultUG];
-        [_transformerFuseCalcV setOhs:defaultOH];
-        [_transformerFuseCalcV setSubds:defaultSUBD];
-        
+        [_transformerFuseCalcV setDefaultsTFCUG:defaultUG];
+        [_transformerFuseCalcV setDefaultsTFCOH:defaultOH];
+        [_transformerFuseCalcV setDefaultsTFCSUBD:defaultSUBD];
         
         [_typeSmc setSelectedSegmentIndex:0];
     }
@@ -494,6 +468,33 @@
     return [formatter stringFromNumber:[NSNumber numberWithFloat:num]];
 }
 
+-(void)configureMode:(int)mode{
+    [self.view endEditing:YES];
+    BOOL boolValue = [[UICKeyChainStore stringForKey:@"FormulaConfiguration"] boolValue];
+    if (mode == 0)
+        boolValue = !boolValue;
+    
+    if (boolValue) {
+        _config = NO;
+        [UICKeyChainStore setString:@"NO" forKey:@"FormulaConfiguration"];
+        [_defaultBtn setTitle:@"Default" forState:UIControlStateNormal];[_defaultBtn setNeedsLayout];
+        [self.navigationController.viewControllers.lastObject setTitle:@"Transformer Fuse"];
+        [[[self.navigationController.viewControllers.lastObject navigationItem] rightBarButtonItem]setTitle:@"Configure"];
+    }else {
+        _config = YES;
+        [UICKeyChainStore setString:@"YES" forKey:@"FormulaConfiguration"];
+        [_defaultBtn setTitle:@"Set Default" forState:UIControlStateNormal];[_defaultBtn setNeedsLayout];
+        [self.navigationController.viewControllers.lastObject setTitle:@"Transformer Fuse Configuration"];
+        [[[self.navigationController.viewControllers.lastObject navigationItem] rightBarButtonItem]setTitle:@"Done"];
+    }
+    [_addFuseBtn setHidden:!_config];
+    [_addFuseBtn setEnabled:_config];
+
+    
+    [_fuseTV deselectRowAtIndexPath:[_fuseTV indexPathForSelectedRow] animated:YES];
+    [_fuseTV reloadData];
+}
+
 @end
 
 #pragma mark - TransformerRatingImpedanceCell
@@ -519,6 +520,7 @@
             [self updateSUBD:textField];
             break;
     }
+    [[self delegate] reloadList];
 }
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {

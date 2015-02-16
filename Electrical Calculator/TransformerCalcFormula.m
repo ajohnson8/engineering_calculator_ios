@@ -29,26 +29,10 @@
     [_kilaVoltAmpsTxt setDelegate:self];
     [_ampsTxt setDelegate:self];
     
-    UIBarButtonItem * configure = [[UIBarButtonItem alloc]initWithTitle:@"Configure" style:UIBarButtonItemStylePlain target:self action:@selector(pressedConfig:)];
+    UIBarButtonItem * configure = [[UIBarButtonItem alloc]initWithTitle:@"" style:UIBarButtonItemStylePlain target:self action:@selector(pressedConfig:)];
+     [[self.navigationController.viewControllers.lastObject navigationItem] setRightBarButtonItem:configure];
     
-    BOOL boolValue = [[UICKeyChainStore stringForKey:@"FormulaConfiguration"] boolValue];
-    if (!boolValue) {
-        _config = NO;
-        [_defaultBtn setTitle:@"Default" forState:UIControlStateNormal];[_defaultBtn setNeedsLayout];
-        [_addLLVoltsBtn setHidden:YES];
-        [_addLLVoltsBtn setEnabled:NO];
-        [self.navigationController.viewControllers.lastObject setTitle:@"Transformer"];
-        [configure setTitle:@"Configure"];
-        [[self.navigationController.viewControllers.lastObject navigationItem] setRightBarButtonItem:configure];
-    }else {
-        _config = YES;
-        [_defaultBtn setTitle:@"Set Default" forState:UIControlStateNormal];[_defaultBtn setNeedsLayout];
-        [_addLLVoltsBtn setHidden:NO];
-        [_addLLVoltsBtn setEnabled:YES];
-        [self.navigationController.viewControllers.lastObject setTitle:@"Transformer Configuration"];
-        [configure setTitle:@"Done"];
-        [[self.navigationController.viewControllers.lastObject navigationItem] setRightBarButtonItem:configure];
-    }
+    [self configureMode:0];
     
 }
 
@@ -67,31 +51,15 @@
                     animations:^{ }
                     completion:NULL];
     
-    BOOL boolValue = [[UICKeyChainStore stringForKey:@"FormulaConfiguration"] boolValue];
-    [self.view endEditing:YES];
+    [self configureMode:1];
     
-    if (boolValue) {
-        _config = NO;
-        [UICKeyChainStore setString:@"NO" forKey:@"FormulaConfiguration"];
-        [_defaultBtn setTitle:@"Default" forState:UIControlStateNormal];[_defaultBtn setNeedsLayout];
-        [_addLLVoltsBtn setHidden:YES];
-        [_addLLVoltsBtn setEnabled:NO];
-        [self.navigationController.viewControllers.lastObject setTitle:@"Transformer"];
-        [[[self.navigationController.viewControllers.lastObject navigationItem] rightBarButtonItem]setTitle:@"Configure"];
-    }else {
-        _config = YES;
-        [UICKeyChainStore setString:@"YES" forKey:@"FormulaConfiguration"];
-        [_defaultBtn setTitle:@"Set Default" forState:UIControlStateNormal];[_defaultBtn setNeedsLayout];
-        [_addLLVoltsBtn setHidden:NO];
-        [_addLLVoltsBtn setEnabled:YES];
-        [self.navigationController.viewControllers.lastObject setTitle:@"Transformer Configuration"];
-        [[[self.navigationController.viewControllers.lastObject navigationItem] rightBarButtonItem]setTitle:@"Done"];
-    }
-    
-    [_phaseTV deselectRowAtIndexPath:[_phaseTV indexPathForSelectedRow] animated:YES];
-    [_secLLVoltTV deselectRowAtIndexPath:[_secLLVoltTV indexPathForSelectedRow] animated:YES];
-    [_secLLVoltTV reloadData];
-    [_phaseTV reloadData];
+    [_FLAPLlb setText:@""];
+    [_FLASLlb setText:@""];
+    [_AFCPLlb setText:@""];
+    [_AFCSLlb setText:@""];
+    [_kilaVoltAmpsTxt setText:@""];
+    [_ampsTxt setText:@""];
+    [_transformerCalcV removeValues];
 }
 
 - (IBAction)addLLVoltAction:(id)sender {
@@ -302,9 +270,6 @@
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
     if (tableView == _secLLVoltTV) {
-        if (indexPath.row == 0) {
-            return NO;
-        }
         return _config;
     }else {
         return NO;
@@ -435,6 +400,45 @@
     [formatter setRoundingMode: NSNumberFormatterRoundHalfUp];
     
     return [formatter stringFromNumber:[NSNumber numberWithFloat:num]];
+}
+
+-(void)configureMode:(int)mode{
+    [self.view endEditing:YES];
+    BOOL boolValue = [[UICKeyChainStore stringForKey:@"FormulaConfiguration"] boolValue];
+    if (mode == 0)
+        boolValue = !boolValue;
+    if (boolValue) {
+        _config = NO;
+        [UICKeyChainStore setString:@"NO" forKey:@"FormulaConfiguration"];
+        [_defaultBtn setTitle:@"Default" forState:UIControlStateNormal];[_defaultBtn setNeedsLayout];
+        [self.navigationController.viewControllers.lastObject setTitle:@"Transformer"];
+        [[[self.navigationController.viewControllers.lastObject navigationItem] rightBarButtonItem]setTitle:@"Configure"];
+        _ampsTxt.layer.borderColor=[[UIColor blackColor]CGColor];
+        _ampsTxt.layer.borderWidth=1.0;
+        _kilaVoltAmpsTxt.layer.borderColor=[[UIColor blackColor]CGColor];
+        _kilaVoltAmpsTxt.layer.borderWidth=1.0;
+    }else {
+        _config = YES;
+        [UICKeyChainStore setString:@"YES" forKey:@"FormulaConfiguration"];
+        [_defaultBtn setTitle:@"Set Default" forState:UIControlStateNormal];[_defaultBtn setNeedsLayout];
+        [self.navigationController.viewControllers.lastObject setTitle:@"Transformer Configuration"];
+        [[[self.navigationController.viewControllers.lastObject navigationItem] rightBarButtonItem]setTitle:@"Done"];
+        _ampsTxt.layer.borderColor=[[UIColor clearColor]CGColor];
+        _ampsTxt.layer.borderWidth=1.0;
+        _kilaVoltAmpsTxt.layer.borderColor=[[UIColor clearColor]CGColor];
+        _kilaVoltAmpsTxt.layer.borderWidth=1.0;
+    }
+    [_addLLVoltsBtn setHidden:!_config];
+    [_addLLVoltsBtn setEnabled:_config];
+    [_ampsTxt setEnabled:!_config];
+    [_kilaVoltAmpsTxt setEnabled:!_config];
+    
+    
+    [_phaseTV deselectRowAtIndexPath:[_phaseTV indexPathForSelectedRow] animated:YES];
+    [_phaseTV reloadData];
+    
+    [_secLLVoltTV deselectRowAtIndexPath:[_secLLVoltTV indexPathForSelectedRow] animated:YES];
+    [_secLLVoltTV reloadData];
 }
 
 @end

@@ -27,12 +27,15 @@
 #pragma mark - Defaults
 -(void) setDefaultsTFCOH:(NSMutableArray *)TFCOH{
     _ohs = [[NSMutableArray alloc]initWithArray:[TFCOH copy]];
+    [self filterOH_UG_SUBD:_ohs];
 }
 -(void) setDefaultsTFCUG:(NSMutableArray *)TFCUG{
     _ugs = [[NSMutableArray alloc]initWithArray:[TFCUG copy]];
+    [self filterOH_UG_SUBD:_ugs];
 }
 -(void) setDefaultsTFCSUBD:(NSMutableArray *)TFCSUBD{
     _subds = [[NSMutableArray alloc]initWithArray:[TFCSUBD copy]];
+    [self filterOH_UG_SUBD:_subds];
 }
 
 #pragma mark - Add
@@ -100,6 +103,11 @@
 
 #pragma mark - Private Methods
 -(void)filterOH_UG_SUBD:(id)object{
+    if ([object isKindOfClass:[NSMutableArray class]]) {
+        NSMutableArray *temp = object;
+        object = temp.lastObject;
+        temp = nil;
+    }
     
     NSMutableArray *unique = [NSMutableArray array];
     NSMutableSet *processedXFRMR = [NSMutableSet set];

@@ -35,6 +35,7 @@ typedef enum {
 -(void) setDefaultsOneWayLength:    (float)oneWayLength;
 -(void) setDefaultsCurrent:         (float)current;
 -(void) setDefaultsWSVDWire:        (NSMutableArray *)wires;
+-(void) removeValues;
 
 -(void) addWSVDWire:                (WSVDWire *)wire;
 -(void) deleteWSVDWire:             (WSVDWire *)wire;

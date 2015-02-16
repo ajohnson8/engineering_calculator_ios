@@ -25,8 +25,6 @@
 -(void)viewDidLoad{
     [super viewDidLoad];
     [self initView];
-    
-    
 }
 
 -(void)viewWillAppear:(BOOL)animated{
@@ -42,29 +40,10 @@
     [_kilaVoltAmpsTxt setDelegate:self];
     [_voltTxt setDelegate:self];
     
-    UIBarButtonItem * configure = [[UIBarButtonItem alloc]initWithTitle:@"Configure" style:UIBarButtonItemStylePlain target:self action:@selector(pressedConfig:)];
-    
-    BOOL boolValue = [[UICKeyChainStore stringForKey:@"FormulaConfiguration"] boolValue];
-    if (!boolValue) {
-        _config = NO;
-        [_kilaVoltAmpsTxt setEnabled:NO];
-        [_voltTxt setEnabled:NO];
-        [_defaultBtn setTitle:@"Default" forState:UIControlStateNormal];[_defaultBtn setNeedsLayout];
-        [_addSizeBtn setHidden:YES];
-        [configure setTitle:@"Configure"];
-        [[self.navigationController.viewControllers.lastObject navigationItem] setRightBarButtonItem:configure];
-        [self.navigationController.viewControllers.lastObject setTitle:@"Subdivision Load"];
-    }else {
-        _config = YES;
-        [_kilaVoltAmpsTxt setEnabled:YES];
-        [_voltTxt setEnabled:YES];
-        [_defaultBtn setTitle:@"Set Default" forState:UIControlStateNormal];[_defaultBtn setNeedsLayout];
-        [_addSizeBtn setHidden:NO];
-        [configure setTitle:@"Done"];
-        [[self.navigationController.viewControllers.lastObject navigationItem] setRightBarButtonItem:configure];
-        [self.navigationController.viewControllers.lastObject  setTitle:@"Subdivision Load Configuration"];
-        
-    }
+    UIBarButtonItem * configure = [[UIBarButtonItem alloc]initWithTitle:@"" style:UIBarButtonItemStylePlain target:self action:@selector(pressedConfig:)];
+    [[self.navigationController.viewControllers.lastObject navigationItem] setRightBarButtonItem:configure];
+
+    [self configureMode:0];
 }
 
 
@@ -78,27 +57,9 @@
                     animations:^{ }
                     completion:NULL];
     
-    BOOL boolValue = [[UICKeyChainStore stringForKey:@"FormulaConfiguration"] boolValue];
-    [self resignFirstResponder];
-    if (boolValue) {
-        _config = NO;
-        [_kilaVoltAmpsTxt setEnabled:NO];
-        [_voltTxt setEnabled:NO];
-        [_defaultBtn setTitle:@"Default" forState:UIControlStateNormal];[_defaultBtn setNeedsLayout];
-        [UICKeyChainStore setString:@"NO" forKey:@"FormulaConfiguration"];
-        [_addSizeBtn setHidden:YES];
-        [self.navigationController.viewControllers.lastObject  setTitle:@"Subdivision Load"];
-        [[[self.navigationController.viewControllers.lastObject navigationItem] rightBarButtonItem]setTitle:@"Configure"];
-    }else {
-        _config = YES;
-        [_kilaVoltAmpsTxt setEnabled:YES];
-        [_voltTxt setEnabled:YES];
-        [_defaultBtn setTitle:@"Set Default" forState:UIControlStateNormal];[_defaultBtn setNeedsLayout];
-        [UICKeyChainStore setString:@"YES" forKey:@"FormulaConfiguration"];
-        [_addSizeBtn setHidden:NO];
-        [self.navigationController.viewControllers.lastObject  setTitle:@"Subdivision Load Configuration"];
-        [[[self.navigationController.viewControllers.lastObject navigationItem] rightBarButtonItem]setTitle:@"Done"];
-    }
+    
+    [self configureMode:1];
+    
     [_calulationTotal setText:[NSString stringWithFormat:@"Full Load is : %i",0]];
     [_xfrmrTVC reloadData];
 }
@@ -398,6 +359,47 @@
         [self.navigationController pushViewController:tableView animated:YES];
     }
     
+}
+
+-(void)configureMode:(int)mode{
+    [self.view endEditing:YES];
+    BOOL boolValue = [[UICKeyChainStore stringForKey:@"FormulaConfiguration"] boolValue];
+    if (mode == 0)
+        boolValue = !boolValue;
+    if (boolValue) {
+        _config = NO;
+        [UICKeyChainStore setString:@"NO" forKey:@"FormulaConfiguration"];
+        [_defaultBtn setTitle:@"Default" forState:UIControlStateNormal];[_defaultBtn setNeedsLayout];
+        [self.navigationController.viewControllers.lastObject setTitle:@"Subdivision Load"];
+        [[[self.navigationController.viewControllers.lastObject navigationItem] rightBarButtonItem]setTitle:@"Configure"];
+        [_voltTxt setTextColor:[UIColor grayColor]];
+        _voltTxt.layer.borderColor=[[UIColor clearColor]CGColor];
+        _voltTxt.layer.borderWidth=1.0;
+        [_kilaVoltAmpsTxt setTextColor:[UIColor grayColor]];
+        _kilaVoltAmpsTxt.layer.borderColor=[[UIColor clearColor]CGColor];
+        _kilaVoltAmpsTxt.layer.borderWidth=1.0;
+    }else {
+        _config = YES;
+        [UICKeyChainStore setString:@"YES" forKey:@"FormulaConfiguration"];
+        [_defaultBtn setTitle:@"Set Default" forState:UIControlStateNormal];[_defaultBtn setNeedsLayout];
+        [self.navigationController.viewControllers.lastObject setTitle:@"Subdivision Load Configuration"];
+        [[[self.navigationController.viewControllers.lastObject navigationItem] rightBarButtonItem]setTitle:@"Done"];
+        [_voltTxt setTextColor:[UIColor blackColor]];
+        _voltTxt.layer.borderColor=[[UIColor blackColor]CGColor];
+        _voltTxt.layer.borderWidth=1.0;
+        [_kilaVoltAmpsTxt setTextColor:[UIColor blackColor]];
+        _kilaVoltAmpsTxt.layer.borderColor=[[UIColor blackColor]CGColor];
+        _kilaVoltAmpsTxt.layer.borderWidth=1.0;
+    }
+    [_addSizeBtn setHidden:!_config];
+    [_addSizeBtn setEnabled:_config];
+    [_voltTxt setEnabled:_config];
+    [_kilaVoltAmpsTxt setEnabled:_config];
+    
+    
+    [_xfrmrTVC deselectRowAtIndexPath:[_xfrmrTVC indexPathForSelectedRow] animated:YES];
+    [_xfrmrTVC reloadData];
+
 }
 
 @end

@@ -32,27 +32,9 @@
     [_priVoltTxt setDelegate:self];
     [_kilaVoltAmpsTxt setDelegate:self];
     
-    UIBarButtonItem * configure = [[UIBarButtonItem alloc]initWithTitle:@"Configure" style:UIBarButtonItemStylePlain target:self action:@selector(pressedConfig:)];
-    
-    BOOL boolValue = [[UICKeyChainStore stringForKey:@"FormulaConfiguration"] boolValue];
-    if (!boolValue) {
-        _config = NO;
-        [_defaultBtn setTitle:@"Default" forState:UIControlStateNormal];[_defaultBtn setNeedsLayout];
-        [_addImpedanceBtn setHidden:YES];
-        [_addImpedanceBtn setEnabled:NO];
-        [configure setTitle:@"Configure"];
-        [[self.navigationController.viewControllers.lastObject navigationItem] setRightBarButtonItem:configure];
-        [self.navigationController.viewControllers.lastObject setTitle:@"Transformer Rating"];
-    }else {
-        _config = YES;
-        [_defaultBtn setTitle:@"Set Default" forState:UIControlStateNormal];[_defaultBtn setNeedsLayout];
-        [_addImpedanceBtn setHidden:NO];
-        [_addImpedanceBtn setEnabled:YES];
-        [configure setTitle:@"Done"];
-        [[self.navigationController.viewControllers.lastObject navigationItem] setRightBarButtonItem:configure];
-        [self.navigationController.viewControllers.lastObject setTitle:@"Transformer Rating Configuration"];
-    }
-    
+    UIBarButtonItem * configure = [[UIBarButtonItem alloc]initWithTitle:@"" style:UIBarButtonItemStylePlain target:self action:@selector(pressedConfig:)];
+    [[self.navigationController.viewControllers.lastObject navigationItem] setRightBarButtonItem:configure];
+     [self configureMode:0];
 }
 
 
@@ -199,29 +181,19 @@
                        options:UIViewAnimationOptionTransitionFlipFromRight
                     animations:^{ }
                     completion:NULL];
-    
-    BOOL boolValue = [[UICKeyChainStore stringForKey:@"FormulaConfiguration"] boolValue];
-    [self.view endEditing:YES];
-    
-    if (boolValue) {
-        _config = NO;
-        [UICKeyChainStore setString:@"NO" forKey:@"FormulaConfiguration"];
-        [_defaultBtn setTitle:@"Default" forState:UIControlStateNormal];[_defaultBtn setNeedsLayout];
-        [_addImpedanceBtn setHidden:YES];
-        [_addImpedanceBtn setEnabled:NO];
-        [self.navigationController.viewControllers.lastObject setTitle:@"Transformer Rating"];
-        [[[self.navigationController.viewControllers.lastObject navigationItem] rightBarButtonItem]setTitle:@"Configure"];
-    }else {
-        _config = YES;
-        [UICKeyChainStore setString:@"YES" forKey:@"FormulaConfiguration"];
-        [_defaultBtn setTitle:@"Set Default" forState:UIControlStateNormal];[_defaultBtn setNeedsLayout];
-        [_addImpedanceBtn setHidden:NO];
-        [_addImpedanceBtn setEnabled:YES];
-        [self.navigationController.viewControllers.lastObject setTitle:@"Transformer Rating Configuration"];
-        [[[self.navigationController.viewControllers.lastObject navigationItem] rightBarButtonItem]setTitle:@"Done"];
-    }
-    [_impedanceTV deselectRowAtIndexPath:[_impedanceTV indexPathForSelectedRow] animated:YES];
-    [_impedanceTV reloadData];
+    [self configureMode:1];
+    [_impedancePerLbl setText:@""];
+    [_priFLALbl setText:@""];
+    [_secFLALbl setText:@""];
+    [_priMaxLbl setText:@""];
+    [_priMinLbl setText:@""];
+    [_secBreakerLbl setText:@""];
+    [_faultPriLbl setText:@""];
+    [_faultSecLbl setText:@""];
+    [_secVoltTxt setText:@""];
+    [_priVoltTxt setText:@""];
+    [_kilaVoltAmpsTxt setText:@""];
+    [_transformerRateCalcV removeValues];
 }
 
 - (IBAction)addImpedanceAction:(id)sender {
@@ -350,6 +322,47 @@
     [formatter setRoundingMode: NSNumberFormatterRoundHalfUp];
     
     return [formatter stringFromNumber:[NSNumber numberWithFloat:num]];
+}
+
+-(void)configureMode:(int)mode{
+    [self.view endEditing:YES];
+    BOOL boolValue = [[UICKeyChainStore stringForKey:@"FormulaConfiguration"] boolValue];
+    if (mode == 0)
+        boolValue = !boolValue;
+    if (boolValue) {
+        _config = NO;
+        [UICKeyChainStore setString:@"NO" forKey:@"FormulaConfiguration"];
+        [_defaultBtn setTitle:@"Default" forState:UIControlStateNormal];[_defaultBtn setNeedsLayout];
+        [self.navigationController.viewControllers.lastObject setTitle:@"Transformer Rating"];
+        [[[self.navigationController.viewControllers.lastObject navigationItem] rightBarButtonItem]setTitle:@"Configure"];
+        _secVoltTxt.layer.borderColor=[[UIColor blackColor]CGColor];
+        _secVoltTxt.layer.borderWidth=1.0;
+        _priVoltTxt.layer.borderColor=[[UIColor blackColor]CGColor];
+        _priVoltTxt.layer.borderWidth=1.0;
+        _kilaVoltAmpsTxt.layer.borderColor=[[UIColor blackColor]CGColor];
+        _kilaVoltAmpsTxt.layer.borderWidth=1.0;
+    }else {
+        _config = YES;
+        [UICKeyChainStore setString:@"YES" forKey:@"FormulaConfiguration"];
+        [_defaultBtn setTitle:@"Set Default" forState:UIControlStateNormal];[_defaultBtn setNeedsLayout];
+        [self.navigationController.viewControllers.lastObject setTitle:@"Transformer Rating Configuration"];
+        [[[self.navigationController.viewControllers.lastObject navigationItem] rightBarButtonItem]setTitle:@"Done"];
+        _secVoltTxt.layer.borderColor=[[UIColor clearColor]CGColor];
+        _secVoltTxt.layer.borderWidth=1.0;
+        _priVoltTxt.layer.borderColor=[[UIColor clearColor]CGColor];
+        _priVoltTxt.layer.borderWidth=1.0;
+        _kilaVoltAmpsTxt.layer.borderColor=[[UIColor clearColor]CGColor];
+        _kilaVoltAmpsTxt.layer.borderWidth=1.0;
+    }
+    [_addImpedanceBtn setHidden:!_config];
+    [_addImpedanceBtn setEnabled:_config];
+    [_secVoltTxt setEnabled:!_config];
+    [_priVoltTxt setEnabled:!_config];
+    [_kilaVoltAmpsTxt setEnabled:!_config];
+
+    
+    [_impedanceTV deselectRowAtIndexPath:[_impedanceTV indexPathForSelectedRow] animated:YES];
+    [_impedanceTV reloadData];
 }
 @end
 

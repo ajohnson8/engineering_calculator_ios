@@ -29,26 +29,9 @@
     [_cirtCurrentTxt setDelegate:self];
     
     UIBarButtonItem * configure = [[UIBarButtonItem alloc]initWithTitle:@"Configure" style:UIBarButtonItemStylePlain target:self action:@selector(pressedConfig:)];
+    [[self.navigationController.viewControllers.lastObject navigationItem] setRightBarButtonItem:configure];
     
-    BOOL boolValue = [[UICKeyChainStore stringForKey:@"FormulaConfiguration"] boolValue];
-    if (!boolValue) {
-        _config = NO;
-        [_defaultBtn setTitle:@"Default" forState:UIControlStateNormal];[_defaultBtn setNeedsLayout];
-        [_addFuseBtn setHidden:YES];
-        [_addFuseBtn setEnabled:NO];
-        [configure setTitle:@"Configure"];
-        [[self.navigationController.viewControllers.lastObject navigationItem] setRightBarButtonItem:configure];
-        [self.navigationController.viewControllers.lastObject setTitle:@"Wire Volt Drop"];
-    }else {
-        _config = YES;
-        [_defaultBtn setTitle:@"Set Default" forState:UIControlStateNormal];[_defaultBtn setNeedsLayout];
-        [_addFuseBtn setHidden:NO];
-        [_addFuseBtn setEnabled:YES];
-        [configure setTitle:@"Done"];
-        [[self.navigationController.viewControllers.lastObject navigationItem] setRightBarButtonItem:configure];
-        [self.navigationController.viewControllers.lastObject setTitle:@"Wire Volt Drop Configuration"];
-    }
-    
+    [self configureMode:0];
 }
 
 
@@ -185,9 +168,9 @@
     NSTextCheckingResult *match = [regex firstMatchInString:s options:0 range:NSMakeRange(0, [s length])];
     BOOL x = (match != nil);
     if (textField == _cirtCurrentTxt)
-        [_wireSizeVoltageDropV setCurrent:[NSNumber numberWithFloat:[textField.text floatValue]]];
+        [_wireSizeVoltageDropV setCurrent:[NSNumber numberWithFloat:[s floatValue]]];
     if (textField == _lengthTxt)
-        [_wireSizeVoltageDropV setOneWayLength:[NSNumber numberWithFloat:[textField.text floatValue]]];
+        [_wireSizeVoltageDropV setOneWayLength:[NSNumber numberWithFloat:[s floatValue]]];
     [self calulateTotal];
     return x;
 }
@@ -206,29 +189,23 @@
                        options:UIViewAnimationOptionTransitionFlipFromRight
                     animations:^{ }
                     completion:NULL];
+    [self configureMode:1];
     
-    BOOL boolValue = [[UICKeyChainStore stringForKey:@"FormulaConfiguration"] boolValue];
-    [self.view endEditing:YES];
+    [_attribute1Lbl setText:@""];
+    [_attribute2Lbl setText:@""];
+    [_attribute3Lbl setText:@""];
+    [_attribute4Lbl setText:@""];
+    [_attribute5Lbl setText:@""];
+    [_attribute6Lbl setText:@""];
+    [_attribute7Lbl setText:@""];
+    [_attribute8Lbl setText:@""];
+    [_voltSizeLbl setText:@"<- Select Voltage"];
+
+    [_lengthTxt setText:@""];
+    [_cirtCurrentTxt setText:@""];
     
-    if (boolValue) {
-        _config = NO;
-        [UICKeyChainStore setString:@"NO" forKey:@"FormulaConfiguration"];
-        [_defaultBtn setTitle:@"Default" forState:UIControlStateNormal];[_defaultBtn setNeedsLayout];
-        [_addFuseBtn setHidden:YES];
-        [_addFuseBtn setEnabled:NO];
-        [self.navigationController.viewControllers.lastObject setTitle:@"Transformer Rating"];
-        [[[self.navigationController.viewControllers.lastObject navigationItem] rightBarButtonItem]setTitle:@"Configure"];
-    }else {
-        _config = YES;
-        [UICKeyChainStore setString:@"YES" forKey:@"FormulaConfiguration"];
-        [_defaultBtn setTitle:@"Set Default" forState:UIControlStateNormal];[_defaultBtn setNeedsLayout];
-        [_addFuseBtn setHidden:NO];
-        [_addFuseBtn setEnabled:YES];
-        [self.navigationController.viewControllers.lastObject setTitle:@"Transformer Rating Configuration"];
-        [[[self.navigationController.viewControllers.lastObject navigationItem] rightBarButtonItem]setTitle:@"Done"];
-    }
-    [_wireTV deselectRowAtIndexPath:[_wireTV indexPathForSelectedRow] animated:YES];
-    [_wireTV reloadData];
+    [_wireSizeVoltageDropV removeValues];
+    
 }
 - (IBAction)changeVoltage:(id)sender {
     [self createVoltPopoverListWith];
@@ -321,6 +298,44 @@
     [_voltage setDelegate:self];
 }
 
+
+-(void)configureMode:(int)mode{
+    [self.view endEditing:YES];
+    BOOL boolValue = [[UICKeyChainStore stringForKey:@"FormulaConfiguration"] boolValue];
+    if (mode == 0)
+        boolValue = !boolValue;
+    if (boolValue) {
+        _config = NO;
+        [UICKeyChainStore setString:@"NO" forKey:@"FormulaConfiguration"];
+        [_defaultBtn setTitle:@"Default" forState:UIControlStateNormal];[_defaultBtn setNeedsLayout];
+        [self.navigationController.viewControllers.lastObject setTitle:@"Wire Size Volt Drop"];
+        [[[self.navigationController.viewControllers.lastObject navigationItem] rightBarButtonItem]setTitle:@"Configure"];
+        _cirtCurrentTxt.layer.borderColor=[[UIColor blackColor]CGColor];
+        _cirtCurrentTxt.layer.borderWidth=1.0;
+        _lengthTxt.layer.borderColor=[[UIColor blackColor]CGColor];
+        _lengthTxt.layer.borderWidth=1.0;
+    }else {
+        _config = YES;
+        [UICKeyChainStore setString:@"YES" forKey:@"FormulaConfiguration"];
+        [_defaultBtn setTitle:@"Set Default" forState:UIControlStateNormal];[_defaultBtn setNeedsLayout];
+        [self.navigationController.viewControllers.lastObject setTitle:@"Wire Size Volt Drop Configuration"];
+        [[[self.navigationController.viewControllers.lastObject navigationItem] rightBarButtonItem]setTitle:@"Done"];
+        _cirtCurrentTxt.layer.borderColor=[[UIColor clearColor]CGColor];
+        _cirtCurrentTxt.layer.borderWidth=1.0;
+        _lengthTxt.layer.borderColor=[[UIColor clearColor]CGColor];
+        _lengthTxt.layer.borderWidth=1.0;
+        
+    }
+    [_addFuseBtn setHidden:!_config];
+    [_addFuseBtn setEnabled:_config];
+    [_lengthTxt setEnabled:!_config];
+    [_cirtCurrentTxt setEnabled:!_config];
+    [_voltage setEnabled:!_config];
+    
+    [_wireTV deselectRowAtIndexPath:[_wireTV indexPathForSelectedRow] animated:YES];
+    [_wireTV reloadData];
+}
+
 - (void)handleSingleTap:(UITapGestureRecognizer *) sender
 {
     [self.view endEditing:YES];
@@ -328,10 +343,10 @@
 
 -(void)calulateTotal{
     
-    [_attribute1Lbl setText:[self roundingUp:[_wireSizeVoltageDropV calulate1NECAmpacity] andDecimalPlace:0]];
-    [_attribute2Lbl setText:[self roundingUp:[_wireSizeVoltageDropV calulate2Insulation] andDecimalPlace:0]];
-    [_attribute3Lbl setText:[self roundingUp:[_wireSizeVoltageDropV calulate3FullLoadRate] andDecimalPlace:0]];
-    [_attribute4Lbl setText:[self roundingUp:[_wireSizeVoltageDropV calulate4NeutralCounted] andDecimalPlace:0]];
+    [_attribute1Lbl setText:[self roundingUp:[_wireSizeVoltageDropV calulate1NECAmpacity] andDecimalPlace:2]];
+    [_attribute2Lbl setText:[self roundingUp:[_wireSizeVoltageDropV calulate2Insulation] andDecimalPlace:2]];
+    [_attribute3Lbl setText:[self roundingUp:[_wireSizeVoltageDropV calulate3FullLoadRate] andDecimalPlace:2]];
+    [_attribute4Lbl setText:[self roundingUp:[_wireSizeVoltageDropV calulate4NeutralCounted] andDecimalPlace:2]];
     
     if ([_voltSizeLbl.text isEqualToString:@"120"]){
         [_attribute5Lbl setText:[self roundingUp:[_wireSizeVoltageDropV calulate5Resistance:v120] andDecimalPlace:6]];

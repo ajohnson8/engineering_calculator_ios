@@ -30,6 +30,7 @@
 -(void) setDefaultsPriVolts:        (float)priVolts;
 -(void) setDefaultsSecVolts:        (float)secVolts;
 -(void) setDefaultsTRCImpedances:   (NSMutableArray *)impedances;
+-(void) removeValues;
 
 -(void) addTRCImpedances:           (TRCImpedance *)impedance;
 -(void) deleteTRCImpedances:        (TRCImpedance *)impedance;

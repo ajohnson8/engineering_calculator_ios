@@ -33,6 +33,7 @@
 -(void) setDefaultsTCLLSec:(NSMutableArray *)llSecArray;
 -(void) setDefaultsAmpsPer:(float)updatedAmpsPer;
 -(void) setDefaultskilovolt_amps:(float)updatedKilovolt_amps;
+-(void) removeValues;
 
 -(void) addTCLLSec:(TCLLSec *)newLLSec;
 -(void) deleteTCLLSec:(TCLLSec *)llsec;
