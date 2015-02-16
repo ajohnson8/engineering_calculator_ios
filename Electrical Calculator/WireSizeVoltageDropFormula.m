@@ -342,7 +342,7 @@
 }
 
 -(void)calulateTotal{
-    
+    [_wireSizeLbl setText:[NSString stringWithFormat:@"Wire Size, %@",_wireSizeVoltageDropV.selectWire.wireSize]];
     [_attribute1Lbl setText:[self roundingUp:[_wireSizeVoltageDropV calulate1NECAmpacity] andDecimalPlace:2]];
     [_attribute2Lbl setText:[self roundingUp:[_wireSizeVoltageDropV calulate2Insulation] andDecimalPlace:2]];
     [_attribute3Lbl setText:[self roundingUp:[_wireSizeVoltageDropV calulate3FullLoadRate] andDecimalPlace:2]];

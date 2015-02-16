@@ -7,11 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <MessageUI/MessageUI.h>
 #import "TransformerCalcVariables.h"
 
 @class DetailViewController;
 
-@interface MasterViewController : UITableViewController
+@interface MasterViewController : UITableViewController <UIGestureRecognizerDelegate, UIImagePickerControllerDelegate,UINavigationControllerDelegate,UIToolbarDelegate,MFMailComposeViewControllerDelegate>
 
 @property (strong, nonatomic) DetailViewController *detailViewController;
 @property (strong, nonatomic) TransformerCalcVariables *tranfor;
