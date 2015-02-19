@@ -7,10 +7,10 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "WireSizeVoltageDropVariables.h"
+#import "BranchCircutVoltageDropVariables.h"
 #import "TransformerCalcVariables.h"
 
-@interface AluminumACVoltDropVariables : NSObject
+@interface MainServiceVoltageDropVariables : NSObject
 
 @property (strong,nonatomic) WSVDWire       *selectWire;
 @property (strong,nonatomic) TCPhase        *selectPhase;

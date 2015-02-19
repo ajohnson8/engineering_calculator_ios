@@ -25,7 +25,7 @@ typedef enum {
 
 @end
 
-@interface WireSizeVoltageDropVariables : NSObject
+@interface BranchCircutVoltageDropVariables : NSObject
 
 @property (strong, nonatomic)NSMutableArray *wires;
 @property (strong,nonatomic) NSNumber       *oneWayLength;

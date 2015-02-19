@@ -39,7 +39,7 @@
 
 @end
 
-@interface TransformerFuseCalcVariables : NSObject
+@interface FuseWizardVariables : NSObject
 
 @property (strong, nonatomic)   NSMutableArray *ohs;
 @property (strong, nonatomic)   NSMutableArray *ugs;

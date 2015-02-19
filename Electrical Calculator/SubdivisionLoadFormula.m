@@ -32,12 +32,12 @@
     
     [_xfrmrTVC reloadData];
     
-    [_kilaVoltAmpsTxt setText:[NSString stringWithFormat:@"%@",subDivLoadVar.kilovolt_amps]];
-    [_kilaVoltAmpsTxt setTag:0];
+    [_voltAmpsTxt setText:[NSString stringWithFormat:@"%@",subDivLoadVar.voltAmps]];
+    [_voltAmpsTxt setTag:0];
     [_voltTxt setText:[NSString stringWithFormat:@"%@",subDivLoadVar.volts]];
     [_voltTxt setTag:1];
     
-    [_kilaVoltAmpsTxt setDelegate:self];
+    [_voltAmpsTxt setDelegate:self];
     [_voltTxt setDelegate:self];
     
     UIBarButtonItem * configure = [[UIBarButtonItem alloc]initWithTitle:@"" style:UIBarButtonItemStylePlain target:self action:@selector(pressedConfig:)];
@@ -80,7 +80,7 @@
         NSData* myDataVolts = [NSKeyedArchiver archivedDataWithRootObject:[NSNumber numberWithInt:(int)[_voltTxt.text integerValue]]];
         [UICKeyChainStore setData:myDataVolts forKey:@"SystemDefaultsVolts"];
         
-        NSData* myDataKilovolt_Amps = [NSKeyedArchiver archivedDataWithRootObject:[NSNumber numberWithInt:(int)[_kilaVoltAmpsTxt.text integerValue]]];
+        NSData* myDataKilovolt_Amps = [NSKeyedArchiver archivedDataWithRootObject:[NSNumber numberWithInt:(int)[_voltAmpsTxt.text integerValue]]];
         [UICKeyChainStore setData:myDataKilovolt_Amps forKey:@"SystemDefaultsKilovolt_Amps"];
         
         [TSMessage showNotificationInViewController:self.navigationController.viewControllers.lastObject title:@"SubdivisionLoadFormula" subtitle:@"Defaults has been set." type:TSMessageNotificationTypeSuccess duration:1.5];
@@ -97,10 +97,10 @@
         NSNumber* kilovolt_Amps = [NSKeyedUnarchiver unarchiveObjectWithData:myDataKilovolt_Amps];
         
         [subDivLoadVar setDefaultVolts:volts];
-        [subDivLoadVar setDefaultKilovolt_Amps:kilovolt_Amps];
+        [subDivLoadVar setDefaultVoltAmps:kilovolt_Amps];
         [subDivLoadVar setDefaultXFRMR:defaultSize];
         
-        [_kilaVoltAmpsTxt setText:[NSString stringWithFormat:@"%@",subDivLoadVar.kilovolt_amps]];
+        [_voltAmpsTxt setText:[NSString stringWithFormat:@"%@",subDivLoadVar.voltAmps]];
         [_voltTxt setText:[NSString stringWithFormat:@"%@",subDivLoadVar.volts]];
         [_xfrmrTVC reloadData];
         
@@ -144,7 +144,7 @@
             cell = [nib objectAtIndex:0];
         }
         [cell.quantityLbl setHidden:_config];
-        [cell.sizeLbl setText:@"Size"];
+        [cell.sizeLbl setText:@"kVA"];
         [cell.quantityLbl setText:@"Qty"];
         return cell;
     }
@@ -160,7 +160,7 @@
         }
         
         XFRMR *temp = subDivLoadVar.xfrmr[indexPath.row-1];
-        [cell.sizeLbl setText:[NSString stringWithFormat:@"%i",(int)temp.size]];
+        [cell.sizeLbl setText:[NSString stringWithFormat:@"%i",(int)temp.vKA]];
         [cell.quantityLbl setText:[NSString stringWithFormat:@"%i",(int)temp.qtyl]];
         [cell.quantityLbl setHidden:_config];
         [cell setDelegate:self];
@@ -185,8 +185,8 @@
         [cell setTag:indexPath.row-1];
         [cell.sizeTxt setTag:indexPath.row-1];
         
-        if (temp.size != 0 ){
-            [cell.sizeTxt setText:[NSString stringWithFormat:@"%i",(int)temp.size]];}
+        if (temp.vKA != 0 ){
+            [cell.sizeTxt setText:[NSString stringWithFormat:@"%i",(int)temp.vKA]];}
         else {
             [cell.sizeTxt setText:@""];
             [cell.sizeTxt becomeFirstResponder];
@@ -231,7 +231,7 @@
 
 - (void)textFieldDidEndEditing:(UITextField *)textField{
     if (textField.tag == 0) {
-        [subDivLoadVar setDefaultKilovolt_Amps:[NSNumber numberWithInt:(int)[textField.text integerValue]]];
+        [subDivLoadVar setDefaultVoltAmps:[NSNumber numberWithInt:(int)[textField.text integerValue]]];
     }else {
         [subDivLoadVar setDefaultVolts:[NSNumber numberWithInt:(int)[textField.text integerValue]]];
     }
@@ -256,6 +256,7 @@
     [_calulationTotal setText:[NSString stringWithFormat:@"Full Load is : %f",[subDivLoadVar calulateXFRMRFullLoad]]];
 }
 
+
 #pragma  mark - XFRMRQtylCellDelegate
 
 -(void)updateXFRMRQuantity:(XFRMR *)xfrmr{
@@ -268,7 +269,7 @@
     }
     for (int x = 0; x < subDivLoadVar.xfrmr.count; x++) {
         XFRMR *temp = subDivLoadVar.xfrmr[x];
-        if (temp.size == xfrmr.size){
+        if (temp.vKA == xfrmr.vKA){
             subDivLoadVar.xfrmr[x] = xfrmr;
         }
     }
@@ -277,7 +278,7 @@
 }
 
 -(void)updateXFRMR:(XFRMR *)xfrmr andIndexPath:(int)row{
-    if (xfrmr.size == 0) {
+    if (xfrmr.vKA == 0) {
         [self deleteXFRMR:xfrmr];
         [self canAddAnother:YES];
     } else
@@ -298,7 +299,7 @@
 -(void)deleteXFRMR:(XFRMR *)xfrmr{
     for (int x = 0; x < subDivLoadVar.xfrmr.count; x++) {
         XFRMR *temp = subDivLoadVar.xfrmr[x];
-        if (temp.size == xfrmr.size){
+        if (temp.vKA == xfrmr.vKA){
             [subDivLoadVar.xfrmr removeObjectAtIndex: x];
         }
     }
@@ -324,7 +325,7 @@
         NSNumber* kilovolt_Amps = [NSKeyedUnarchiver unarchiveObjectWithData:myDataKilovolt_Amps];
         
         [subDivLoadVar setDefaultVolts:volts];
-        [subDivLoadVar setDefaultKilovolt_Amps:kilovolt_Amps];
+        [subDivLoadVar setDefaultVoltAmps:kilovolt_Amps];
         [subDivLoadVar setDefaultXFRMR:defaultSize];
         
     }
@@ -378,9 +379,9 @@
         [_voltTxt setTextColor:[UIColor grayColor]];
         _voltTxt.layer.borderColor=[[UIColor clearColor]CGColor];
         _voltTxt.layer.borderWidth=1.0;
-        [_kilaVoltAmpsTxt setTextColor:[UIColor grayColor]];
-        _kilaVoltAmpsTxt.layer.borderColor=[[UIColor clearColor]CGColor];
-        _kilaVoltAmpsTxt.layer.borderWidth=1.0;
+        [_voltAmpsTxt setTextColor:[UIColor grayColor]];
+        _voltAmpsTxt.layer.borderColor=[[UIColor clearColor]CGColor];
+        _voltAmpsTxt.layer.borderWidth=1.0;
     }else {
         _config = YES;
         [UICKeyChainStore setString:@"YES" forKey:@"FormulaConfiguration"];
@@ -390,19 +391,36 @@
         [_voltTxt setTextColor:[UIColor blackColor]];
         _voltTxt.layer.borderColor=[[UIColor blackColor]CGColor];
         _voltTxt.layer.borderWidth=1.0;
-        [_kilaVoltAmpsTxt setTextColor:[UIColor blackColor]];
-        _kilaVoltAmpsTxt.layer.borderColor=[[UIColor blackColor]CGColor];
-        _kilaVoltAmpsTxt.layer.borderWidth=1.0;
+        [_voltAmpsTxt setTextColor:[UIColor blackColor]];
+        _voltAmpsTxt.layer.borderColor=[[UIColor blackColor]CGColor];
+        _voltAmpsTxt.layer.borderWidth=1.0;
     }
     [_addSizeBtn setHidden:!_config];
     [_addSizeBtn setEnabled:_config];
     [_voltTxt setEnabled:_config];
-    [_kilaVoltAmpsTxt setEnabled:_config];
+    [_voltAmpsTxt setEnabled:_config];
     
     
     [_xfrmrTVC deselectRowAtIndexPath:[_xfrmrTVC indexPathForSelectedRow] animated:YES];
     [_xfrmrTVC reloadData];
 
+}
+
+-(void)getEmail{
+    NSString *emailBody = [[NSString alloc]initWithFormat:@"<table style=\"width:100\"><tr><td>Transformer Size</td><td>Quality</td></tr>"];
+    
+    for (XFRMR *temp in subDivLoadVar.xfrmr) {
+        NSString *appendString;
+        appendString = [NSString stringWithFormat: @"<tr><td>%f</td><td>%i</td></tr>",temp.vKA,temp.qtyl];
+        emailBody = [emailBody stringByAppendingString:appendString];
+    }
+    
+    emailBody = [emailBody stringByAppendingString:[NSString stringWithFormat: @"<tr><td>Full Amp Load</td><td>%f</td></tr></table>",subDivLoadVar.calulateXFRMRFullLoad]];
+    
+    
+    [[self delegate]giveFormlaDetails:emailBody];
+    [[self delegate]giveFormlaInformation:@"Somthing"];
+    [[self delegate]giveFormlaTitle:@"Subdivision Load"];
 }
 
 @end
@@ -415,7 +433,7 @@
 - (void)textFieldDidEndEditing:(UITextField *)textField{
     XFRMR * updated = [[ XFRMR alloc]init];
     [updated setQtyl:0];
-    [updated setSize:[textField.text floatValue]];
+    [updated setVKA:[textField.text floatValue]];
     [[self delegate]updateXFRMR:updated andIndexPath:(int)self.tag];
 }
 
@@ -432,6 +450,8 @@
 -(void)toggleAddSize{
     [[self delegate]canAddAnother:NO];
 }
+
+
 
 @end
 
@@ -462,7 +482,7 @@
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     XFRMR * updated = [[ XFRMR alloc]init];
-    [updated setSize:[_sizeLbl.text floatValue]];
+    [updated setVKA:[_sizeLbl.text floatValue]];
     [updated setQtyl:(int)indexPath.row];
     [[self delegate] updateXFRMRQuantity:updated];
 }

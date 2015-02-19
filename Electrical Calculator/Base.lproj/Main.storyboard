@@ -28,10 +28,10 @@
             </objects>
             <point key="canvasLocation" x="598.5" y="-399"/>
         </scene>
-        <!--Transformer Calc Formula-->
+        <!--Transformer Load Formula-->
         <scene sceneID="pGm-wc-Gga">
             <objects>
-                <viewController storyboardIdentifier="TransformerCalcFormula" useStoryboardIdentifierAsRestorationIdentifier="YES" id="cWF-7q-6ZE" customClass="TransformerCalcFormula" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="TransformerCalcFormula" useStoryboardIdentifierAsRestorationIdentifier="YES" id="cWF-7q-6ZE" customClass="TransformerLoadFormula" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="Zwi-Cr-9KR"/>
                         <viewControllerLayoutGuide type="bottom" id="54o-ao-FSe"/>
@@ -40,7 +40,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Size KiloVolt Amps" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ret-ps-9pO">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Enter kVA Size" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ret-ps-9pO">
                                 <rect key="frame" x="324" y="84" width="155" height="21"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="155" id="7Im-oa-8C8"/>
@@ -59,7 +59,7 @@
                                     <rect key="frame" x="70" y="79" width="155" height="21"/>
                                 </variation>
                             </label>
-                            <textField opaque="NO" clipsSubviews="YES" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Imp" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="rmn-NR-oBE">
+                            <textField opaque="NO" clipsSubviews="YES" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Imp%" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="rmn-NR-oBE">
                                 <rect key="frame" x="487" y="122" width="97" height="30"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="97" id="yw4-OJ-VTG"/>
@@ -70,7 +70,7 @@
                                     <rect key="frame" x="233" y="117" width="97" height="30"/>
                                 </variation>
                             </textField>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Size klva" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="ysT-UD-6bi">
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="kVA Size" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="ysT-UD-6bi">
                                 <rect key="frame" x="487" y="84" width="97" height="30"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="97" id="UFX-dA-OFF"/>
@@ -530,7 +530,7 @@
                                     <constraint firstAttribute="width" constant="260" id="vLh-4c-5kg"/>
                                 </constraints>
                             </scrollView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="% imp" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Xoa-1a-oOY">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Enter Impedance % " lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Xoa-1a-oOY">
                                 <rect key="frame" x="324" y="122" width="155" height="21"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="21" id="1r9-TE-foY"/>
@@ -1863,10 +1863,10 @@
             </objects>
             <point key="canvasLocation" x="1308" y="-811"/>
         </scene>
-        <!--Transformer Fuse Calc Formula-->
+        <!--Fuse Wizard Formula-->
         <scene sceneID="BcV-5S-aZC">
             <objects>
-                <viewController storyboardIdentifier="TransformerFuseCalcFormula" useStoryboardIdentifierAsRestorationIdentifier="YES" id="YFV-gv-Zmr" customClass="TransformerFuseCalcFormula" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="TransformerFuseCalcFormula" useStoryboardIdentifierAsRestorationIdentifier="YES" id="YFV-gv-Zmr" customClass="FuseWizardFormula" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="9Ga-bZ-3AU"/>
                         <viewControllerLayoutGuide type="bottom" id="oTi-Nf-fZ5"/>
@@ -2078,7 +2078,7 @@
                                     <constraint firstAttribute="width" constant="280" id="ega-Mb-ke9"/>
                                 </constraints>
                                 <prototypes>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Celllabels" rowHeight="44" id="DhU-6h-QEx" customClass="TransformerFuseLabelCell">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Celllabels" rowHeight="44" id="DhU-6h-QEx" customClass="FuseWizardLabelCell">
                                         <rect key="frame" x="0.0" y="0.0" width="165" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="DhU-6h-QEx" id="URE-rY-lnV">
@@ -2260,10 +2260,10 @@
             </objects>
             <point key="canvasLocation" x="1308" y="-102"/>
         </scene>
-        <!--AluminumAC Volt Drop Formula-->
+        <!--Main Service Voltage Drop Formula-->
         <scene sceneID="uWY-fq-Edk">
             <objects>
-                <viewController storyboardIdentifier="AluminumACVoltDropFormula" useStoryboardIdentifierAsRestorationIdentifier="YES" id="tVH-CI-AUA" customClass="AluminumACVoltDropFormula" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="AluminumACVoltDropFormula" useStoryboardIdentifierAsRestorationIdentifier="YES" id="tVH-CI-AUA" customClass="MainServiceVoltageDropFormula" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="g7x-Pu-foC"/>
                         <viewControllerLayoutGuide type="bottom" id="7u0-KU-7eX"/>
@@ -2313,7 +2313,7 @@
                                     <constraint firstAttribute="width" constant="180" id="j40-Yp-0CD"/>
                                 </constraints>
                                 <prototypes>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="CellEdit" id="5T1-aA-7pZ" customClass="AluminumACVoltageDropEditCell">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="CellEdit" id="5T1-aA-7pZ" customClass="MainServiceVoltageDropEditCell">
                                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="5T1-aA-7pZ" id="0en-o3-IBp">
@@ -2362,7 +2362,7 @@
                                             <outlet property="wireSizeTxt" destination="8oz-Kd-2tG" id="9IQ-PS-n4u"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="Cell" id="IMp-iL-9pZ" customClass="AluminumACVoltageDropLabelCell">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="Cell" id="IMp-iL-9pZ" customClass="MainServiceVoltageDropLabelCell">
                                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="IMp-iL-9pZ" id="gtJ-Mu-0LY">
@@ -2766,10 +2766,10 @@
             </objects>
             <point key="canvasLocation" x="1308" y="645"/>
         </scene>
-        <!--Wire Size Voltage Drop Formula-->
+        <!--Branch Circut Voltage Drop Formula-->
         <scene sceneID="K9o-Yj-rbr">
             <objects>
-                <viewController storyboardIdentifier="WireSizeVoltageDropFormula" useStoryboardIdentifierAsRestorationIdentifier="YES" id="Icv-ke-ggG" customClass="WireSizeVoltageDropFormula" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="WireSizeVoltageDropFormula" useStoryboardIdentifierAsRestorationIdentifier="YES" id="Icv-ke-ggG" customClass="BranchCircutVoltageDropFormula" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="rMW-2X-0Ai"/>
                         <viewControllerLayoutGuide type="bottom" id="AuP-qg-q7P"/>
@@ -2950,7 +2950,7 @@
                                                     <rect key="frame" x="200" y="759" width="184" height="21"/>
                                                 </variation>
                                             </label>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Z5h-vP-EdQ" customClass="WireSizeVoltageDropButton">
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Z5h-vP-EdQ" customClass="BranchCircutVoltageDropButton">
                                                 <rect key="frame" x="8" y="168" width="57" height="22"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" constant="57" id="dmn-xZ-Nop"/>
@@ -3148,7 +3148,7 @@
                                     <constraint firstAttribute="width" constant="272" id="FsB-17-KuO"/>
                                 </constraints>
                                 <prototypes>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="Cell" id="fhe-RK-YUM" customClass="WireSizeVoltageDropLabelCell">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="Cell" id="fhe-RK-YUM" customClass="BranchCircutVoltageDropLabelCell">
                                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="fhe-RK-YUM" id="bIS-9o-9gm">
@@ -3214,7 +3214,7 @@
                                             <outlet property="wireSize" destination="qkX-02-vkD" id="eWO-14-fB9"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="CellEdit" id="XAG-ND-saq" customClass="WireSizeVoltageDropEditCell">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="CellEdit" id="XAG-ND-saq" customClass="BranchCircutVoltageDropEditCell">
                                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="XAG-ND-saq" id="b1c-ar-pEF">
@@ -3532,7 +3532,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="KilaVolt Amps" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="J3v-2N-34X">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Enter Volt Amps" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="J3v-2N-34X">
                                 <rect key="frame" x="331" y="108" width="148" height="21"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="148" id="koE-y3-sSb"/>
@@ -3548,7 +3548,7 @@
                                     <rect key="frame" x="331" y="108" width="148" height="21"/>
                                 </variation>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Volts" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CNP-CG-aP4">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Enter Volts" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CNP-CG-aP4">
                                 <rect key="frame" x="331" y="141" width="148" height="21"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="148" id="Eil-Dm-N5P"/>
@@ -3580,7 +3580,7 @@
                                     <rect key="frame" x="487" y="137" width="97" height="21"/>
                                 </variation>
                             </textField>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="KilaVolts" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="IvV-gW-YME">
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Volt Amps" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="IvV-gW-YME">
                                 <rect key="frame" x="487" y="99" width="97" height="30"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="97" id="3Qo-cF-CfV"/>
@@ -3844,7 +3844,7 @@
                         <outlet property="addSizeBtn" destination="WfQ-rf-L2h" id="5Cb-ZN-pjn"/>
                         <outlet property="calulationTotal" destination="Tul-Gm-NXH" id="LbU-vY-LyV"/>
                         <outlet property="defaultBtn" destination="5jz-Wu-lCV" id="bwX-72-4lY"/>
-                        <outlet property="kilaVoltAmpsTxt" destination="IvV-gW-YME" id="dJZ-dj-Gz4"/>
+                        <outlet property="voltAmpsTxt" destination="IvV-gW-YME" id="H3G-Nq-Xxb"/>
                         <outlet property="voltTxt" destination="k42-AE-FIw" id="2yh-ie-WNm"/>
                         <outlet property="xfrmrTVC" destination="E1v-WN-5CB" id="Znq-vi-N8M"/>
                     </connections>

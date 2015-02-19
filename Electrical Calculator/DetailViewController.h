@@ -7,12 +7,22 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "SubdivisionLoadFormula.h"
+#import "TransformerLoadFormula.h"
+#import "TransformerRatingCalcFormula.h"
+#import "FuseWizardFormula.h"
+#import "BranchCircutVoltageDropFormula.h"
+#import "MainServiceVoltageDropFormula.h"
 
-@interface DetailViewController : UIViewController
+@interface DetailViewController : UIViewController<SubdivisionLoadFormulaDelegate,TransformerLoadFormulaDelegate,TransformerRatingCalcFormulaDelegate,FuseWizardFormulaDelegate,BranchCircutVoltageDropFormulaDelegate,MainServiceVoltageDropFormulaDelegate>
 
 @property (strong, nonatomic) id detailItem;
-
 @property int transition;
 
+@property (strong,nonatomic) NSString *  emailTitle;
+@property (strong,nonatomic) NSString *  emailInfromation;
+@property (strong,nonatomic) NSString *  emailDetails;
+
+-(void)setupEmail;
 @end
 

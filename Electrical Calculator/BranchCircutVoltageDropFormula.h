@@ -9,9 +9,16 @@
 #import <UIKit/UIKit.h>
 #import <TSMessages/TSMessageView.h>
 #import <UICKeyChainStore/UICKeyChainStore.h>
-#import "WireSizeVoltageDropVariables.h"
+#import "BranchCircutVoltageDropVariables.h"
 
-@protocol WireSizeVoltageDropEditCellDelegate <NSObject>
+@protocol BranchCircutVoltageDropFormulaDelegate <NSObject>
+-(void)giveFormlaDetails:(NSString *)details;
+-(void)giveFormlaInformation:(NSString *)information;
+-(void)giveFormlaTitle:(NSString *)title;
+
+@end
+
+@protocol BranchCircutVoltageDropEditCellDelegate <NSObject>
 
 @required
 -(void)updateWire:(WSVDWire *)wire andIndexPath:(int)row;
@@ -19,7 +26,7 @@
 
 @end
 
-@protocol WireSizeVoltageDropButtonDelegate <NSObject>
+@protocol BranchCircutVoltageDropButtonDelegate <NSObject>
 
 @required
 -(void)updateVoltage:(int)volts;
@@ -27,12 +34,12 @@
 @end
 
 
-@interface WireSizeVoltageDropButton: UIButton <UITableViewDataSource,UITableViewDelegate>
+@interface BranchCircutVoltageDropButton: UIButton <UITableViewDataSource,UITableViewDelegate>
 
-@property (weak, nonatomic)id <WireSizeVoltageDropButtonDelegate> delegate;
+@property (weak, nonatomic)id <BranchCircutVoltageDropButtonDelegate> delegate;
 @end
 
-@interface WireSizeVoltageDropFormula : UIViewController <UITextFieldDelegate,UITableViewDataSource,UITableViewDelegate,UIPopoverControllerDelegate,WireSizeVoltageDropEditCellDelegate,WireSizeVoltageDropButtonDelegate>
+@interface BranchCircutVoltageDropFormula : UIViewController <UITextFieldDelegate,UITableViewDataSource,UITableViewDelegate,UIPopoverControllerDelegate,BranchCircutVoltageDropEditCellDelegate,BranchCircutVoltageDropButtonDelegate>
 
 @property (strong, nonatomic) IBOutlet UITableView *wireTV;
 
@@ -54,13 +61,16 @@
 @property (weak, nonatomic) IBOutlet UIButton *defaultBtn;
 @property (nonatomic, strong) UIPopoverController *quantityPickerPopover;
 
-@property (strong, nonatomic) IBOutlet WireSizeVoltageDropButton *voltage;
+@property (strong, nonatomic) IBOutlet BranchCircutVoltageDropButton *voltage;
 
-@property (strong, nonatomic) WireSizeVoltageDropVariables* wireSizeVoltageDropV;
+@property (strong, nonatomic) BranchCircutVoltageDropVariables* wireSizeVoltageDropV;
+@property (weak, nonatomic)id <BranchCircutVoltageDropFormulaDelegate> delegate;
+
+-(void)getEmail;
 
 @end
 
-@interface WireSizeVoltageDropLabelCell: UITableViewCell
+@interface BranchCircutVoltageDropLabelCell: UITableViewCell
 
 @property (strong, nonatomic) IBOutlet UILabel *wireSize;
 @property (strong, nonatomic) IBOutlet UILabel *ampacity;
@@ -68,11 +78,11 @@
 
 @end
 
-@interface WireSizeVoltageDropEditCell : UITableViewCell <UITextFieldDelegate>
+@interface BranchCircutVoltageDropEditCell : UITableViewCell <UITextFieldDelegate>
 
 @property (strong, nonatomic) IBOutlet UITextField *wireSize;
 @property (strong, nonatomic) IBOutlet UITextField *ampacity;
 @property (strong, nonatomic) IBOutlet UITextField *ohms;
-@property (weak, nonatomic)id <WireSizeVoltageDropEditCellDelegate> delegate;
+@property (weak, nonatomic)id <BranchCircutVoltageDropEditCellDelegate> delegate;
 
 @end

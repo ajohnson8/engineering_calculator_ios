@@ -9,16 +9,23 @@
 #import <UIKit/UIKit.h>
 #import <TSMessages/TSMessageView.h>
 #import <UICKeyChainStore/UICKeyChainStore.h>
-#import "AluminumACVoltDropVariables.h"
+#import "MainServiceVoltageDropVariables.h"
 
-@protocol AluminumACVoltageDropEditCellDelegate <NSObject>
+@protocol MainServiceVoltageDropFormulaDelegate <NSObject>
+-(void)giveFormlaDetails:(NSString *)details;
+-(void)giveFormlaInformation:(NSString *)information;
+-(void)giveFormlaTitle:(NSString *)title;
+
+@end
+
+@protocol MainServiceVoltageDropEditCellDelegate <NSObject>
 
 @required
 -(void)updateWire:(WSVDWire *)wire andIndexPath:(int)row;
 -(void)canAddAnotherWire:(BOOL)check;
 
 @end
-@interface AluminumACVoltDropFormula : UIViewController <UITextFieldDelegate,UITableViewDataSource,UITableViewDelegate,AluminumACVoltageDropEditCellDelegate>
+@interface MainServiceVoltageDropFormula : UIViewController <UITextFieldDelegate,UITableViewDataSource,UITableViewDelegate,MainServiceVoltageDropEditCellDelegate>
 
 @property (strong, nonatomic) IBOutlet UITableView *wireTV;
 @property (strong, nonatomic) IBOutlet UITableView *phaseTV;
@@ -36,21 +43,23 @@
 @property (weak, nonatomic) IBOutlet UIButton *addFuseBtn;
 @property (weak, nonatomic) IBOutlet UIButton *defaultBtn;
 
-@property (strong, nonatomic) AluminumACVoltDropVariables*  aluminumACVoltDropV;
+@property (strong, nonatomic) MainServiceVoltageDropVariables*  aluminumACVoltDropV;
+@property (weak, nonatomic)id <MainServiceVoltageDropFormulaDelegate> delegate;
 
+-(void)getEmail;
 @end
 
-@interface AluminumACVoltageDropLabelCell: UITableViewCell
+@interface MainServiceVoltageDropLabelCell: UITableViewCell
 
 @property (strong, nonatomic) IBOutlet UILabel *wireSizeLbl;
 @property (strong, nonatomic) IBOutlet UILabel * conductorSectionLbl;
 
 @end
 
-@interface AluminumACVoltageDropEditCell : UITableViewCell <UITextFieldDelegate>
+@interface MainServiceVoltageDropEditCell : UITableViewCell <UITextFieldDelegate>
 
 @property (strong, nonatomic) IBOutlet UITextField *wireSizeTxt;
 @property (strong, nonatomic) IBOutlet UITextField *ampacityTxt;
-@property (weak, nonatomic)id <AluminumACVoltageDropEditCellDelegate> delegate;
+@property (weak, nonatomic)id <MainServiceVoltageDropEditCellDelegate> delegate;
 
 @end
