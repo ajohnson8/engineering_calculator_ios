@@ -11,22 +11,25 @@
 #import <TSMessages/TSMessage.h>
 #import "TransformerCalcVariables.h"
 
-@protocol TransformerPhaseCellDelegate <NSObject>
+@protocol TransformerLoadFormulaDelegate <NSObject>
+-(void)giveFormlaDetails:(NSString *)details;
+-(void)giveFormlaInformation:(NSString *)information;
+-(void)giveFormlaTitle:(NSString *)title;
 
+@end
+
+@protocol TransformerPhaseCellDelegate <NSObject>
 @required
 -(void)updateTransformerPhase:(TCPhase *)phase andIndexPath:(int)row;
-
 @end
 
 @protocol TransformerLLCellDelegate <NSObject>
-
 @required
 -(void)updateTransformerLL:(TCLLSec *)LLSec andIndexPath:(int)row;
 -(void)canAddAnotherLLSec:(BOOL)check;
-
 @end
 
-@interface TransformerCalcFormula : UIViewController <UITableViewDataSource,UITableViewDelegate,UITextFieldDelegate,TransformerLLCellDelegate,TransformerPhaseCellDelegate>
+@interface TransformerLoadFormula : UIViewController <UITableViewDataSource,UITableViewDelegate,UITextFieldDelegate,TransformerLLCellDelegate,TransformerPhaseCellDelegate>
 
 @property (strong, nonatomic) IBOutlet UITextField *kilaVoltAmpsTxt;
 @property (strong, nonatomic) IBOutlet UITextField *ampsTxt;
@@ -44,6 +47,8 @@
 @property (weak, nonatomic) IBOutlet UIButton *configBtn;
 
 @property (strong, nonatomic) TransformerCalcVariables* transformerCalcV;
+@property (weak, nonatomic)id <TransformerLoadFormulaDelegate> delegate;
+-(void)getEmail;
 
 @end
 

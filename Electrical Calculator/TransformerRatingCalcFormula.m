@@ -149,11 +149,7 @@
     
     NSString *s = [textField.text stringByReplacingCharactersInRange:range withString:string];
     NSRegularExpression *regex;
-    if (textField.tag == 0) {
-        regex = [NSRegularExpression regularExpressionWithPattern:@"^\\d{0,9}$" options:0 error:nil];
-    }else{
-        regex = [NSRegularExpression regularExpressionWithPattern:@"^(0*100{1,1}\\.?((?<=\\.)0*)?%?$)|(^0*\\d{0,2}\\.?((?<=\\.)\\d*)?%?)$" options:0 error:nil];
-    }
+    regex = [NSRegularExpression regularExpressionWithPattern:@"^\\d{0,9}$" options:0 error:nil];
     
     NSTextCheckingResult *match = [regex firstMatchInString:s options:0 range:NSMakeRange(0, [s length])];
     
@@ -363,6 +359,19 @@
     
     [_impedanceTV deselectRowAtIndexPath:[_impedanceTV indexPathForSelectedRow] animated:YES];
     [_impedanceTV reloadData];
+}
+
+-(void)getEmail{
+    NSString *emailBody = [[NSString alloc]initWithFormat:@"<table><tr><td style=\"border-right:1px solid black%@ border-bottom:1px solid black \">Full-Load Rating,kVA</td><td style=\"border-right:1px solid black%@ border-bottom:1px solid black \">Line-to-Line Pri voltage</td><td style=\"border-bottom:1px solid black \">Line-to-Line Sec voltage</td></tr><tr><td style=\"border-right:1px solid black\">%@</td><td style=\"border-right:1px solid black\">%@</td><td>%@</td></tr></table>",@";",@";",_kilaVoltAmpsTxt.text,_priVoltTxt.text,_secVoltTxt.text];
+
+    
+    NSString *emailAnw =[[NSString alloc]initWithFormat:@"</br><table><tr><td>SNL Standard Impedance, </td><td>%@</td></tr><tr><td>Primary current, FLA:</td><td>%@</td></tr><tr><td>Secondary current, FLA:</td><td>%@</td></tr><tr><td>Primary fuse, max of 300</td><td>%@</td></tr><tr><td>Primary fuse, min of 125</td><td>%@</td></tr><tr><td>Secondary breaker, 125</td><td>%@</td></tr><tr><td>Fault duty, primary</td><td>%@</td></tr><tr><td>Fault duty, secondary</td><td>%@</td></tr></table>",_impedancePerLbl.text,_priFLALbl.text,_secFLALbl.text,_priMaxLbl.text,_priMinLbl.text,_secBreakerLbl.text,_faultPriLbl.text,_faultSecLbl.text];
+    
+    emailBody = [ emailBody stringByAppendingString:emailAnw];
+    
+    [[self delegate]giveFormlaDetails:emailBody];
+    [[self delegate]giveFormlaInformation:@"Somthing"];
+    [[self delegate]giveFormlaTitle:@"Transformer Rating"];
 }
 @end
 

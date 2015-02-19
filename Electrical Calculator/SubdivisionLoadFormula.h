@@ -12,6 +12,13 @@
 #import <TSMessages/TSMessage.h>
 #import "SubdivisionLoadVariables.h"
 
+@protocol SubdivisionLoadFormulaDelegate <NSObject>
+-(void)giveFormlaDetails:(NSString *)details;
+-(void)giveFormlaInformation:(NSString *)information;
+-(void)giveFormlaTitle:(NSString *)title;
+
+@end
+
 @protocol XFRMRQtylCellDelegate <NSObject>
 
 @required
@@ -30,7 +37,7 @@
 
 @property (strong, nonatomic) IBOutlet UITableView *xfrmrTVC;
 
-@property (strong, nonatomic) IBOutlet UITextField *kilaVoltAmpsTxt;
+@property (strong, nonatomic) IBOutlet UITextField *voltAmpsTxt;
 @property (strong, nonatomic) IBOutlet UITextField *voltTxt;
 
 @property (strong, nonatomic) IBOutlet UILabel *calulationTotal;
@@ -43,6 +50,9 @@
 
 @property (strong,nonatomic) SubdivisionLoadVariables *subDivLoadVar;
 
+@property (weak, nonatomic)id <SubdivisionLoadFormulaDelegate> delegate;
+
+-(void)getEmail;
 @end
 
 

@@ -6,9 +6,9 @@
 //  Copyright (c) 2015 Paul Marney. All rights reserved.
 //
 
-#import "TransformerFuseCalcVariables.h"
+#import "FuseWizardVariables.h"
 
-@implementation TransformerFuseCalcVariables
+@implementation FuseWizardVariables
 
 #pragma mark - Initialize
 -(id)init{

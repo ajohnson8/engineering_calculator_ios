@@ -9,15 +9,15 @@
 #import "SubdivisionLoadVariables.h"
 
 @implementation SubdivisionLoadVariables
-@synthesize xfrmr=_xfrmr,kilovolt_amps=_kilovolt_amps,volts=_volts;
+@synthesize xfrmr=_xfrmr,voltAmps=_voltAmps,volts=_volts;
 
 -(id)init{
     
     return self;
 }
 
-- (void)setDefaultKilovolt_Amps:(NSNumber *)kamps{
-    _kilovolt_amps=kamps;
+- (void)setDefaultVoltAmps:(NSNumber *)voltamps{
+    _voltAmps=voltamps;
 }
 
 - (void)setDefaultVolts:(NSNumber *)volts{
@@ -30,7 +30,7 @@
     if ([temp isKindOfClass:[XFRMR class]]) {
         for (XFRMR *num in xmfrmr) {
             XFRMR *temp = [[XFRMR alloc]init];
-            [temp setSize:[num size]];
+            [temp setVKA:[num vKA]];
             [temp setQtyl:0];
             [_xfrmr addObject:temp];
         }
@@ -38,7 +38,7 @@
     else{
         for (NSNumber *num in xmfrmr) {
             XFRMR *temp = [[XFRMR alloc]init];
-            [temp setSize:[num floatValue]];
+            [temp setVKA:[num floatValue]];
             [temp setQtyl:0];
             [_xfrmr addObject:temp];
         }
@@ -68,9 +68,9 @@
     NSMutableSet *processedXFRMR = [NSMutableSet set];
     
     for (XFRMR *wo in _xfrmr) {
-        if (!([processedXFRMR containsObject:[NSNumber numberWithFloat:wo.size]])){
+        if (!([processedXFRMR containsObject:[NSNumber numberWithFloat:wo.vKA]])){
             [unique addObject:wo];
-            [processedXFRMR addObject:[NSNumber numberWithFloat:wo.size]];
+            [processedXFRMR addObject:[NSNumber numberWithFloat:wo.vKA]];
         }
     }
     _xfrmr = unique;
@@ -86,7 +86,7 @@
     
     float FULLLOAD = 0.00;
     for (XFRMR *temp in self.xfrmr) {
-        float x = ((temp.size * [self.kilovolt_amps floatValue])/[self.volts floatValue])*temp.qtyl;
+        float x = ((temp.vKA * [self.voltAmps floatValue])/[self.volts floatValue])*temp.qtyl;
         FULLLOAD+=x;
     }
     
@@ -96,7 +96,7 @@
 @end
 
 @implementation XFRMR
-@synthesize size,qtyl;
+@synthesize vKA,qtyl;
 
 -(id)init{
     
@@ -106,13 +106,13 @@
 
 -(void) encodeWithCoder: (NSCoder *) encoder
 {
-    [encoder encodeObject:[NSNumber numberWithFloat:size] forKey:@"size"];
+    [encoder encodeObject:[NSNumber numberWithFloat:vKA] forKey:@"size"];
     [encoder encodeObject:[NSNumber numberWithInteger:qtyl] forKey:@"qtyl"];
 }
 
 -(id) initWithCoder: (NSCoder *) decoder
 {
-    size = [[decoder decodeObjectForKey :@"size"] floatValue];
+    vKA = [[decoder decodeObjectForKey :@"size"] floatValue];
     qtyl = [[decoder decodeObjectForKey :@"qtyl"] intValue];
     return self;
 }

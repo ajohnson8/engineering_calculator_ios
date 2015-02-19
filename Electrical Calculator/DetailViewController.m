@@ -7,9 +7,11 @@
 //
 
 #import "DetailViewController.h"
-#import "SubdivisionLoadFormula.h"
 
-@interface DetailViewController ()
+
+@interface DetailViewController (){
+    UIViewController *_currentCtrl;
+}
 
 @end
 
@@ -29,20 +31,20 @@
     // Update the user interface for the detail item.
     [super viewDidLoad];
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
-    SubdivisionLoadFormula *myCtrl = (SubdivisionLoadFormula *)[storyboard instantiateViewControllerWithIdentifier:view];
+    _currentCtrl = (UIViewController *)[storyboard instantiateViewControllerWithIdentifier:view];
     
     CGRect rect = CGRectMake(self.view.frame.origin.x, 0 , self.view.frame.size.width, self.view.frame.size.height );
-    myCtrl.view.frame = rect;
+    _currentCtrl.view.frame = rect;
     [self removeChildViewControllers];
-    [self addChildViewController:myCtrl];
+    [self addChildViewController:_currentCtrl];
     
     if (_transition == 0)
         [UIView transitionWithView:self.view
                           duration:.75
                            options:UIViewAnimationOptionTransitionCurlUp
                         animations:^{
-                            [self.view addSubview:myCtrl.view];
-                            [myCtrl didMoveToParentViewController:self];
+                            [self.view addSubview:_currentCtrl.view];
+                            [_currentCtrl didMoveToParentViewController:self];
                         }
                         completion:nil];
     else
@@ -50,8 +52,8 @@
                           duration:.75
                            options:UIViewAnimationOptionTransitionCurlDown
                         animations:^{
-                            [self.view addSubview:myCtrl.view];
-                            [myCtrl didMoveToParentViewController:self];
+                            [self.view addSubview:_currentCtrl.view];
+                            [_currentCtrl didMoveToParentViewController:self];
                         }
                         completion:nil];
 }
@@ -82,6 +84,47 @@
         obj = nil;
     }
     
+}
+
+
+-(void)setupEmail{
+    
+    if([_currentCtrl isKindOfClass:[SubdivisionLoadFormula class]]){
+        SubdivisionLoadFormula *temp = (SubdivisionLoadFormula *)_currentCtrl;
+        [temp setDelegate:self];
+        [temp getEmail];
+    } else if([_currentCtrl isKindOfClass:[TransformerLoadFormula class]]){
+        TransformerLoadFormula *temp = (TransformerLoadFormula *)_currentCtrl;
+        [temp setDelegate:self];
+        [temp getEmail];
+    } else if([_currentCtrl isKindOfClass:[TransformerRatingCalcFormula class]]){
+        TransformerRatingCalcFormula *temp = (TransformerRatingCalcFormula *)_currentCtrl;
+        [temp setDelegate:self];
+        [temp getEmail];
+    }
+    else if([_currentCtrl isKindOfClass:[FuseWizardFormula class]]){
+        FuseWizardFormula *temp = (FuseWizardFormula *)_currentCtrl;
+        [temp setDelegate:self];
+        [temp getEmail];
+    }else if([_currentCtrl isKindOfClass:[BranchCircutVoltageDropFormula class]]){
+        BranchCircutVoltageDropFormula *temp = (BranchCircutVoltageDropFormula *)_currentCtrl;
+        [temp setDelegate:self];
+        [temp getEmail];
+    }else if([_currentCtrl isKindOfClass:[MainServiceVoltageDropFormula class]]){
+        MainServiceVoltageDropFormula *temp = (MainServiceVoltageDropFormula *)_currentCtrl;
+        [temp setDelegate:self];
+        [temp getEmail];
+    }
+}
+
+-(void)giveFormlaDetails:(NSString *)details{
+    _emailDetails =details;
+}
+-(void)giveFormlaInformation:(NSString *)information{
+    _emailInfromation = information;
+}
+-(void)giveFormlaTitle:(NSString *)title{
+    _emailTitle =title;
 }
 
 @end

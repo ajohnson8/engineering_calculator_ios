@@ -12,7 +12,7 @@
 		E52807DC1A7692B600AF1A17 /* MasterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E52807D91A7692B600AF1A17 /* MasterViewController.m */; };
 		E52807DD1A7692B600AF1A17 /* DetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E52807DB1A7692B600AF1A17 /* DetailViewController.m */; };
 		E52807E21A76CE9700AF1A17 /* TransformerCalcVariables.m in Sources */ = {isa = PBXBuildFile; fileRef = E52807E11A76CE9700AF1A17 /* TransformerCalcVariables.m */; };
-		E52807E71A76CF0300AF1A17 /* TransformerCalcFormula.m in Sources */ = {isa = PBXBuildFile; fileRef = E52807E61A76CF0300AF1A17 /* TransformerCalcFormula.m */; };
+		E52807E71A76CF0300AF1A17 /* TransformerLoadFormula.m in Sources */ = {isa = PBXBuildFile; fileRef = E52807E61A76CF0300AF1A17 /* TransformerLoadFormula.m */; };
 		E53D09801A6FE82F00A101E8 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = E53D097F1A6FE82F00A101E8 /* main.m */; };
 		E53D09831A6FE82F00A101E8 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = E53D09821A6FE82F00A101E8 /* AppDelegate.m */; };
 		E53D09891A6FE82F00A101E8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E53D09871A6FE82F00A101E8 /* Main.storyboard */; };
@@ -24,12 +24,12 @@
 		E54A66691A811D440044C488 /* Celldivider.png in Resources */ = {isa = PBXBuildFile; fileRef = E54A66681A811D440044C488 /* Celldivider.png */; };
 		E54A666D1A812B210044C488 /* TransformerRatingCalcFormula.m in Sources */ = {isa = PBXBuildFile; fileRef = E54A666C1A812B210044C488 /* TransformerRatingCalcFormula.m */; };
 		E55BD2131A7FD20B00F4230E /* TransformerRatingCalcVariables.m in Sources */ = {isa = PBXBuildFile; fileRef = E55BD2121A7FD20B00F4230E /* TransformerRatingCalcVariables.m */; };
-		E5AEE6C81A8AC236002E3BB7 /* AluminumACVoltDropVariables.m in Sources */ = {isa = PBXBuildFile; fileRef = E5AEE6C71A8AC236002E3BB7 /* AluminumACVoltDropVariables.m */; };
-		E5AEE6CB1A8AC267002E3BB7 /* AluminumACVoltDropFormula.m in Sources */ = {isa = PBXBuildFile; fileRef = E5AEE6CA1A8AC267002E3BB7 /* AluminumACVoltDropFormula.m */; };
-		E5AEE6CF1A8AC2DC002E3BB7 /* WireSizeVoltageDropVariables.m in Sources */ = {isa = PBXBuildFile; fileRef = E5AEE6CE1A8AC2DC002E3BB7 /* WireSizeVoltageDropVariables.m */; };
-		E5AEE6D61A8BBC1E002E3BB7 /* WireSizeVoltageDropFormula.m in Sources */ = {isa = PBXBuildFile; fileRef = E5AEE6D51A8BBC1E002E3BB7 /* WireSizeVoltageDropFormula.m */; };
-		E5BD39A61A83BE3F00CFFD8B /* TransformerFuseCalcVariables.m in Sources */ = {isa = PBXBuildFile; fileRef = E5BD39A51A83BE3F00CFFD8B /* TransformerFuseCalcVariables.m */; };
-		E5BD39A91A83BE7C00CFFD8B /* TransformerFuseCalcFormula.m in Sources */ = {isa = PBXBuildFile; fileRef = E5BD39A81A83BE7C00CFFD8B /* TransformerFuseCalcFormula.m */; };
+		E5AEE6C81A8AC236002E3BB7 /* MainServiceVoltageDropVariables.m in Sources */ = {isa = PBXBuildFile; fileRef = E5AEE6C71A8AC236002E3BB7 /* MainServiceVoltageDropVariables.m */; };
+		E5AEE6CB1A8AC267002E3BB7 /* MainServiceVoltageDropFormula.m in Sources */ = {isa = PBXBuildFile; fileRef = E5AEE6CA1A8AC267002E3BB7 /* MainServiceVoltageDropFormula.m */; };
+		E5AEE6CF1A8AC2DC002E3BB7 /* BranchCircutVoltageDropVariables.m in Sources */ = {isa = PBXBuildFile; fileRef = E5AEE6CE1A8AC2DC002E3BB7 /* BranchCircutVoltageDropVariables.m */; };
+		E5AEE6D61A8BBC1E002E3BB7 /* BranchCircutVoltageDropFormula.m in Sources */ = {isa = PBXBuildFile; fileRef = E5AEE6D51A8BBC1E002E3BB7 /* BranchCircutVoltageDropFormula.m */; };
+		E5BD39A61A83BE3F00CFFD8B /* FuseWizardVariables.m in Sources */ = {isa = PBXBuildFile; fileRef = E5BD39A51A83BE3F00CFFD8B /* FuseWizardVariables.m */; };
+		E5BD39A91A83BE7C00CFFD8B /* FuseWizardFormula.m in Sources */ = {isa = PBXBuildFile; fileRef = E5BD39A81A83BE7C00CFFD8B /* FuseWizardFormula.m */; };
 		E5F3C0291A8E5A0800B0196C /* ElectricalEnvCal.m in Sources */ = {isa = PBXBuildFile; fileRef = E5F3C0281A8E5A0800B0196C /* ElectricalEnvCal.m */; };
 /* End PBXBuildFile section */
 
@@ -54,8 +54,8 @@
 		E52807DB1A7692B600AF1A17 /* DetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DetailViewController.m; sourceTree = "<group>"; };
 		E52807E01A76CE9700AF1A17 /* TransformerCalcVariables.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TransformerCalcVariables.h; sourceTree = "<group>"; };
 		E52807E11A76CE9700AF1A17 /* TransformerCalcVariables.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransformerCalcVariables.m; sourceTree = "<group>"; };
-		E52807E51A76CF0300AF1A17 /* TransformerCalcFormula.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TransformerCalcFormula.h; sourceTree = "<group>"; };
-		E52807E61A76CF0300AF1A17 /* TransformerCalcFormula.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransformerCalcFormula.m; sourceTree = "<group>"; };
+		E52807E51A76CF0300AF1A17 /* TransformerLoadFormula.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TransformerLoadFormula.h; sourceTree = "<group>"; };
+		E52807E61A76CF0300AF1A17 /* TransformerLoadFormula.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransformerLoadFormula.m; sourceTree = "<group>"; };
 		E53D097A1A6FE82E00A101E8 /* Electrical Calculator.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Electrical Calculator.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E53D097E1A6FE82F00A101E8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E53D097F1A6FE82F00A101E8 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -76,18 +76,18 @@
 		E54A666C1A812B210044C488 /* TransformerRatingCalcFormula.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransformerRatingCalcFormula.m; sourceTree = "<group>"; };
 		E55BD2111A7FD20B00F4230E /* TransformerRatingCalcVariables.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TransformerRatingCalcVariables.h; sourceTree = "<group>"; };
 		E55BD2121A7FD20B00F4230E /* TransformerRatingCalcVariables.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransformerRatingCalcVariables.m; sourceTree = "<group>"; };
-		E5AEE6C61A8AC236002E3BB7 /* AluminumACVoltDropVariables.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AluminumACVoltDropVariables.h; sourceTree = "<group>"; };
-		E5AEE6C71A8AC236002E3BB7 /* AluminumACVoltDropVariables.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AluminumACVoltDropVariables.m; sourceTree = "<group>"; };
-		E5AEE6C91A8AC267002E3BB7 /* AluminumACVoltDropFormula.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AluminumACVoltDropFormula.h; sourceTree = "<group>"; };
-		E5AEE6CA1A8AC267002E3BB7 /* AluminumACVoltDropFormula.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AluminumACVoltDropFormula.m; sourceTree = "<group>"; };
-		E5AEE6CD1A8AC2DC002E3BB7 /* WireSizeVoltageDropVariables.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WireSizeVoltageDropVariables.h; sourceTree = "<group>"; };
-		E5AEE6CE1A8AC2DC002E3BB7 /* WireSizeVoltageDropVariables.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WireSizeVoltageDropVariables.m; sourceTree = "<group>"; };
-		E5AEE6D41A8BBC1E002E3BB7 /* WireSizeVoltageDropFormula.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WireSizeVoltageDropFormula.h; sourceTree = "<group>"; };
-		E5AEE6D51A8BBC1E002E3BB7 /* WireSizeVoltageDropFormula.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WireSizeVoltageDropFormula.m; sourceTree = "<group>"; };
-		E5BD39A41A83BE3F00CFFD8B /* TransformerFuseCalcVariables.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TransformerFuseCalcVariables.h; sourceTree = "<group>"; };
-		E5BD39A51A83BE3F00CFFD8B /* TransformerFuseCalcVariables.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransformerFuseCalcVariables.m; sourceTree = "<group>"; };
-		E5BD39A71A83BE7C00CFFD8B /* TransformerFuseCalcFormula.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TransformerFuseCalcFormula.h; sourceTree = "<group>"; };
-		E5BD39A81A83BE7C00CFFD8B /* TransformerFuseCalcFormula.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransformerFuseCalcFormula.m; sourceTree = "<group>"; };
+		E5AEE6C61A8AC236002E3BB7 /* MainServiceVoltageDropVariables.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainServiceVoltageDropVariables.h; sourceTree = "<group>"; };
+		E5AEE6C71A8AC236002E3BB7 /* MainServiceVoltageDropVariables.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainServiceVoltageDropVariables.m; sourceTree = "<group>"; };
+		E5AEE6C91A8AC267002E3BB7 /* MainServiceVoltageDropFormula.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainServiceVoltageDropFormula.h; sourceTree = "<group>"; };
+		E5AEE6CA1A8AC267002E3BB7 /* MainServiceVoltageDropFormula.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainServiceVoltageDropFormula.m; sourceTree = "<group>"; };
+		E5AEE6CD1A8AC2DC002E3BB7 /* BranchCircutVoltageDropVariables.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BranchCircutVoltageDropVariables.h; sourceTree = "<group>"; };
+		E5AEE6CE1A8AC2DC002E3BB7 /* BranchCircutVoltageDropVariables.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BranchCircutVoltageDropVariables.m; sourceTree = "<group>"; };
+		E5AEE6D41A8BBC1E002E3BB7 /* BranchCircutVoltageDropFormula.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BranchCircutVoltageDropFormula.h; sourceTree = "<group>"; };
+		E5AEE6D51A8BBC1E002E3BB7 /* BranchCircutVoltageDropFormula.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BranchCircutVoltageDropFormula.m; sourceTree = "<group>"; };
+		E5BD39A41A83BE3F00CFFD8B /* FuseWizardVariables.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FuseWizardVariables.h; sourceTree = "<group>"; };
+		E5BD39A51A83BE3F00CFFD8B /* FuseWizardVariables.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FuseWizardVariables.m; sourceTree = "<group>"; };
+		E5BD39A71A83BE7C00CFFD8B /* FuseWizardFormula.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FuseWizardFormula.h; sourceTree = "<group>"; };
+		E5BD39A81A83BE7C00CFFD8B /* FuseWizardFormula.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FuseWizardFormula.m; sourceTree = "<group>"; };
 		E5F3C0271A8E5A0800B0196C /* ElectricalEnvCal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ElectricalEnvCal.h; sourceTree = "<group>"; };
 		E5F3C0281A8E5A0800B0196C /* ElectricalEnvCal.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ElectricalEnvCal.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -158,8 +158,8 @@
 		E52807E41A76CECC00AF1A17 /* FTransformerCalc */ = {
 			isa = PBXGroup;
 			children = (
-				E52807E51A76CF0300AF1A17 /* TransformerCalcFormula.h */,
-				E52807E61A76CF0300AF1A17 /* TransformerCalcFormula.m */,
+				E52807E51A76CF0300AF1A17 /* TransformerLoadFormula.h */,
+				E52807E61A76CF0300AF1A17 /* TransformerLoadFormula.m */,
 			);
 			name = FTransformerCalc;
 			sourceTree = "<group>";
@@ -284,8 +284,8 @@
 		E5AEE6C41A8AB4F3002E3BB7 /* VAluminumACVoltDropCalc */ = {
 			isa = PBXGroup;
 			children = (
-				E5AEE6C61A8AC236002E3BB7 /* AluminumACVoltDropVariables.h */,
-				E5AEE6C71A8AC236002E3BB7 /* AluminumACVoltDropVariables.m */,
+				E5AEE6C61A8AC236002E3BB7 /* MainServiceVoltageDropVariables.h */,
+				E5AEE6C71A8AC236002E3BB7 /* MainServiceVoltageDropVariables.m */,
 			);
 			name = VAluminumACVoltDropCalc;
 			sourceTree = "<group>";
@@ -293,8 +293,8 @@
 		E5AEE6C51A8AC1E4002E3BB7 /* FAluminumACVoltDropCalc */ = {
 			isa = PBXGroup;
 			children = (
-				E5AEE6C91A8AC267002E3BB7 /* AluminumACVoltDropFormula.h */,
-				E5AEE6CA1A8AC267002E3BB7 /* AluminumACVoltDropFormula.m */,
+				E5AEE6C91A8AC267002E3BB7 /* MainServiceVoltageDropFormula.h */,
+				E5AEE6CA1A8AC267002E3BB7 /* MainServiceVoltageDropFormula.m */,
 			);
 			name = FAluminumACVoltDropCalc;
 			sourceTree = "<group>";
@@ -302,8 +302,8 @@
 		E5AEE6CC1A8AC279002E3BB7 /* VWireSizeVoltageDropCalc */ = {
 			isa = PBXGroup;
 			children = (
-				E5AEE6CD1A8AC2DC002E3BB7 /* WireSizeVoltageDropVariables.h */,
-				E5AEE6CE1A8AC2DC002E3BB7 /* WireSizeVoltageDropVariables.m */,
+				E5AEE6CD1A8AC2DC002E3BB7 /* BranchCircutVoltageDropVariables.h */,
+				E5AEE6CE1A8AC2DC002E3BB7 /* BranchCircutVoltageDropVariables.m */,
 			);
 			name = VWireSizeVoltageDropCalc;
 			sourceTree = "<group>";
@@ -311,8 +311,8 @@
 		E5AEE6D01A8AC356002E3BB7 /* FWireSizeVoltageDrop */ = {
 			isa = PBXGroup;
 			children = (
-				E5AEE6D41A8BBC1E002E3BB7 /* WireSizeVoltageDropFormula.h */,
-				E5AEE6D51A8BBC1E002E3BB7 /* WireSizeVoltageDropFormula.m */,
+				E5AEE6D41A8BBC1E002E3BB7 /* BranchCircutVoltageDropFormula.h */,
+				E5AEE6D51A8BBC1E002E3BB7 /* BranchCircutVoltageDropFormula.m */,
 			);
 			name = FWireSizeVoltageDrop;
 			sourceTree = "<group>";
@@ -320,8 +320,8 @@
 		E5BD39A21A83BDAF00CFFD8B /* VTransformerFuseCalc */ = {
 			isa = PBXGroup;
 			children = (
-				E5BD39A41A83BE3F00CFFD8B /* TransformerFuseCalcVariables.h */,
-				E5BD39A51A83BE3F00CFFD8B /* TransformerFuseCalcVariables.m */,
+				E5BD39A41A83BE3F00CFFD8B /* FuseWizardVariables.h */,
+				E5BD39A51A83BE3F00CFFD8B /* FuseWizardVariables.m */,
 			);
 			name = VTransformerFuseCalc;
 			sourceTree = "<group>";
@@ -329,8 +329,8 @@
 		E5BD39A31A83BDE100CFFD8B /* FTransformerFuseCalc */ = {
 			isa = PBXGroup;
 			children = (
-				E5BD39A71A83BE7C00CFFD8B /* TransformerFuseCalcFormula.h */,
-				E5BD39A81A83BE7C00CFFD8B /* TransformerFuseCalcFormula.m */,
+				E5BD39A71A83BE7C00CFFD8B /* FuseWizardFormula.h */,
+				E5BD39A81A83BE7C00CFFD8B /* FuseWizardFormula.m */,
 			);
 			name = FTransformerFuseCalc;
 			sourceTree = "<group>";
@@ -492,20 +492,20 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E5AEE6CB1A8AC267002E3BB7 /* AluminumACVoltDropFormula.m in Sources */,
+				E5AEE6CB1A8AC267002E3BB7 /* MainServiceVoltageDropFormula.m in Sources */,
 				E53D09BC1A704B1500A101E8 /* SubdivisionLoadFormula.m in Sources */,
 				E54A666D1A812B210044C488 /* TransformerRatingCalcFormula.m in Sources */,
 				E53D09BF1A704B5A00A101E8 /* SubdivisionLoadVariables.m in Sources */,
-				E5BD39A61A83BE3F00CFFD8B /* TransformerFuseCalcVariables.m in Sources */,
+				E5BD39A61A83BE3F00CFFD8B /* FuseWizardVariables.m in Sources */,
 				E52807DD1A7692B600AF1A17 /* DetailViewController.m in Sources */,
-				E5AEE6D61A8BBC1E002E3BB7 /* WireSizeVoltageDropFormula.m in Sources */,
-				E5AEE6CF1A8AC2DC002E3BB7 /* WireSizeVoltageDropVariables.m in Sources */,
+				E5AEE6D61A8BBC1E002E3BB7 /* BranchCircutVoltageDropFormula.m in Sources */,
+				E5AEE6CF1A8AC2DC002E3BB7 /* BranchCircutVoltageDropVariables.m in Sources */,
 				E5F3C0291A8E5A0800B0196C /* ElectricalEnvCal.m in Sources */,
-				E52807E71A76CF0300AF1A17 /* TransformerCalcFormula.m in Sources */,
-				E5BD39A91A83BE7C00CFFD8B /* TransformerFuseCalcFormula.m in Sources */,
+				E52807E71A76CF0300AF1A17 /* TransformerLoadFormula.m in Sources */,
+				E5BD39A91A83BE7C00CFFD8B /* FuseWizardFormula.m in Sources */,
 				E52807E21A76CE9700AF1A17 /* TransformerCalcVariables.m in Sources */,
 				E55BD2131A7FD20B00F4230E /* TransformerRatingCalcVariables.m in Sources */,
-				E5AEE6C81A8AC236002E3BB7 /* AluminumACVoltDropVariables.m in Sources */,
+				E5AEE6C81A8AC236002E3BB7 /* MainServiceVoltageDropVariables.m in Sources */,
 				E53D09831A6FE82F00A101E8 /* AppDelegate.m in Sources */,
 				E53D09801A6FE82F00A101E8 /* main.m in Sources */,
 				E52807DC1A7692B600AF1A17 /* MasterViewController.m in Sources */,

@@ -12,9 +12,9 @@
 #import "SubdivisionLoadVariables.h"
 #import "TransformerCalcVariables.h"
 #import "TransformerRatingCalcVariables.h"
-#import "TransformerFuseCalcVariables.h"
-#import "AluminumACVoltDropVariables.h"
-#import "WireSizeVoltageDropVariables.h"
+#import "FuseWizardVariables.h"
+#import "MainServiceVoltageDropVariables.h"
+#import "BranchCircutVoltageDropVariables.h"
 
 @interface ElectricalEnvCal : NSObject
 

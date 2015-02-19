@@ -175,7 +175,7 @@
     
     Forumal *Forumal2 = [[Forumal alloc]init];
     [Forumal2 setStoryboardName:@"TransformerCalcFormula"];
-    [Forumal2 setName:@"Transformer"];
+    [Forumal2 setName:@"Transformer Load"];
     [self.objects addObject:Forumal2];
     
     Forumal *Forumal3 = [[Forumal alloc]init];
@@ -185,17 +185,17 @@
     
     Forumal *Forumal4 = [[Forumal alloc]init];
     [Forumal4 setStoryboardName:@"TransformerFuseCalcFormula"];
-    [Forumal4 setName:@"Transformer Fuse"];
+    [Forumal4 setName:@"Fuse Wizard"];
     [self.objects addObject:Forumal4];
     
     Forumal *Forumal5 = [[Forumal alloc]init];
     [Forumal5 setStoryboardName:@"AluminumACVoltDropFormula"];
-    [Forumal5 setName:@"Aluminum AC Volt Drop"];
+    [Forumal5 setName:@"Main Service Voltage Drop"];
     [self.objects addObject:Forumal5];
     
     Forumal *Forumal6 = [[Forumal alloc]init];
     [Forumal6 setStoryboardName:@"WireSizeVoltageDropFormula"];
-    [Forumal6 setName:@"Wire Size Voltage Drop"];
+    [Forumal6 setName:@"Branch Circut Voltage Drop"];
     [self.objects addObject:Forumal6];
     //Fuse
 }
@@ -223,12 +223,28 @@
     
     UIImageView *imgView;
     if (pngData.length == 0)
-        imgView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"image.png"]];
+        imgView = [[UIImageView alloc] initWithImage:[self imageWithImage:[UIImage imageNamed:@"image.png"] scaledToSize:CGSizeMake(200, 100)]];
     else
-        imgView = [[UIImageView alloc] initWithImage:[UIImage imageWithData:pngData]];
-
+        imgView = [[UIImageView alloc] initWithImage:[self imageWithImage:[UIImage imageWithData:pngData] scaledToSize:CGSizeMake(200, 100)]];
     return imgView;
 }
+
+- (UIImage *)imageWithImage:(UIImage *)image scaledToSize:(CGSize)newSize {
+    if ([[UIScreen mainScreen] respondsToSelector:@selector(scale)]) {
+        if ([[UIScreen mainScreen] scale] == 2.0) {
+            UIGraphicsBeginImageContextWithOptions(newSize, YES, 2.0);
+        } else {
+            UIGraphicsBeginImageContext(newSize);
+        }
+    } else {
+        UIGraphicsBeginImageContext(newSize);
+    }
+    [image drawInRect:CGRectMake(0, 0, newSize.width, newSize.height)];
+    UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return newImage;
+}
+
 #pragma marks - Sender
 - (void) tapGesture: (id)sender
 {
@@ -247,28 +263,29 @@
 
 - (void) sendEmail: (id)sender
 {
+    [_detailViewController setupEmail];
     if ([MFMailComposeViewController canSendMail]) {
         MFMailComposeViewController *composeViewController = [[MFMailComposeViewController alloc] initWithNibName:nil bundle:nil];
         [composeViewController setMailComposeDelegate:self];
-        [composeViewController setToRecipients:@[@"example@email.com"]];
-        [composeViewController setSubject:@"example subject"];
+        [composeViewController setToRecipients:@[@"marneypt@guc.com"]];
+        [composeViewController setSubject:[NSString stringWithFormat:@"%@-%@",@"EngineeringCalculator",[_detailViewController emailTitle]]];
         
         UIImageView *imgView = [self returnStoredImage];
-        UIImage *myImage = imgView.image;
-        NSData *imageData = UIImagePNGRepresentation(myImage);
-        [composeViewController addAttachmentData:imageData mimeType:@"image/png" fileName:@"image.png"];
+        [imgView setFrame:CGRectMake(0, 0, 200, 100)];
+        UIImage * myImage = imgView.image;
+        NSData *imageData = [NSData dataWithData:UIImagePNGRepresentation(myImage)];
+        NSString *title = @"EngineeringCalculator";
+        NSString *formal = [_detailViewController emailTitle];
+        NSString *decs = [_detailViewController emailInfromation];
+        NSString *formalDecs = [_detailViewController emailDetails];
         
-//        NSString *emailBody = @"Have you seen the MobileTuts+ web site?";
-//        [composeViewController setMessageBody:emailBody isHTML:NO];
-//        
+        NSString *emailBody = [NSString stringWithFormat:@"<!DOCTYPE html><html><head><h1 class=\"title\">%@</h1></head><body style=\"  max-width: 300px; margin: 0 auto; \"><div class=\"normalize\"><p>%@</p></div><div><h2>%@</h2><p>%@</p></div></body></html>",title,decs,formal,formalDecs];
+        [composeViewController addAttachmentData:imageData mimeType:@"image/png" fileName:@"image.png"];
+        [composeViewController setMessageBody:emailBody isHTML:YES];
         
         [self presentViewController:composeViewController animated:YES completion:nil];
     }
 }
-
-
-
-
 @end
 
 @implementation Forumal

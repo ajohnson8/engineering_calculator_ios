@@ -9,9 +9,17 @@
 #import <UIKit/UIKit.h>
 #import <UICKeyChainStore/UICKeyChainStore.h>
 #import <TSMessages/TSMessage.h>
-#import "TransformerFuseCalcVariables.h"
+#import "FuseWizardVariables.h"
 
-@protocol TransformerFuseEditCellDelegate <NSObject>
+@protocol FuseWizardFormulaDelegate <NSObject>
+-(void)giveFormlaDetails:(NSString *)details;
+-(void)giveFormlaInformation:(NSString *)information;
+-(void)giveFormlaTitle:(NSString *)title;
+
+@end
+
+
+@protocol FuseWizardEditCellDelegate <NSObject>
 
 @required
 -(void)updateTransformerFuse:(id)fuse andIndexPath:(int)row;
@@ -21,7 +29,7 @@
 @end
 
 
-@interface TransformerFuseCalcFormula : UIViewController <UITextViewDelegate,UITableViewDataSource,UITableViewDelegate,TransformerFuseEditCellDelegate>
+@interface FuseWizardFormula : UIViewController <UITextViewDelegate,UITableViewDataSource,UITableViewDelegate,FuseWizardEditCellDelegate>
 
 @property (weak, nonatomic) IBOutlet UISegmentedControl *typeSmc;
 
@@ -42,10 +50,13 @@
 @property (weak, nonatomic) IBOutlet UIButton *addFuseBtn;
 @property (weak, nonatomic) IBOutlet UIButton *defaultBtn;
 
-@property (strong, nonatomic) TransformerFuseCalcVariables* transformerFuseCalcV;
+@property (strong, nonatomic) FuseWizardVariables* transformerFuseCalcV;
+@property (weak, nonatomic)id <FuseWizardFormulaDelegate> delegate;
+
+-(void)getEmail;
 @end
 
-@interface TransformerFuseLabelCell: UITableViewCell <UITextFieldDelegate>
+@interface FuseWizardLabelCell: UITableViewCell <UITextFieldDelegate>
 
 @property (strong, nonatomic) IBOutlet UILabel *attribute1Lbl;
 @property (strong, nonatomic) IBOutlet UILabel *attribute2Lbl;
@@ -60,6 +71,6 @@
 @property (strong, nonatomic) IBOutlet UITextField *attribute2Txt;
 @property (strong, nonatomic) IBOutlet UITextField *attribute3Txt;
 @property (strong, nonatomic) IBOutlet UITextField *attribute4Txt;
-@property (weak, nonatomic)id <TransformerFuseEditCellDelegate> delegate;
+@property (weak, nonatomic)id <FuseWizardEditCellDelegate> delegate;
 
 @end

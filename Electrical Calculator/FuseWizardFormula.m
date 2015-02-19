@@ -6,15 +6,16 @@
 //  Copyright (c) 2015 Paul Marney. All rights reserved.
 //
 
-#import "TransformerFuseCalcFormula.h"
+#import "FuseWizardFormula.h"
 
-@interface TransformerFuseCalcFormula () {
+@interface FuseWizardFormula () {
     BOOL _config;
+    id _selectedFuse;
 }
 
 @end
 
-@implementation TransformerFuseCalcFormula
+@implementation FuseWizardFormula
 
 #pragma mark - Life Cycles
 - (void)viewDidLoad {
@@ -73,7 +74,7 @@
     } else if (indexPath.row == 0){
         
         static NSString *simpleTableIdentifier = @"Celllabels";
-        TransformerFuseLabelCell *cell = (TransformerFuseLabelCell *)[_fuseTV dequeueReusableCellWithIdentifier:simpleTableIdentifier];
+        FuseWizardLabelCell *cell = (FuseWizardLabelCell *)[_fuseTV dequeueReusableCellWithIdentifier:simpleTableIdentifier];
         if (cell == nil)
         {
             NSArray *nib = [[NSBundle mainBundle] loadNibNamed:@"Celllabels" owner:self options:nil];
@@ -146,21 +147,31 @@
             
             
         } else {
-            UITableViewCell *cell = [[UITableViewCell alloc]init];
+            UITableViewCell *cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@""];
             
             if (_typeSmc.selectedSegmentIndex == 0) {
                 TFCUG *temp = _transformerFuseCalcV.ugs[indexPath.row-1];
                 [cell.textLabel setText:[NSString stringWithFormat:@"%@",temp.KVA]];
+                
+                
             } else if (_typeSmc.selectedSegmentIndex == 1) {
                 TFCOH *temp = _transformerFuseCalcV.ohs[indexPath.row-1];
                 [cell.textLabel setText:[self roundingUp:temp.KVA andDecimalPlace:1]];
-            }else if (_typeSmc.selectedSegmentIndex == 2) {
-                TFCSUBD *temp = _transformerFuseCalcV.subds[indexPath.row-1];
-                [cell.textLabel setText:temp.CKVAnPhase];
-            }
-            return cell;
+                NSString *types = @"";
+                if (temp.NXCompII.length != 0) {
+                    types  = [types stringByAppendingString:@"XFMR/"];
+                }
+                if (temp.MultSnC != 0) {
+                    types  = [types stringByAppendingString:@"Taps"];
+                }
+                [cell.detailTextLabel setText:types];
+        }else if (_typeSmc.selectedSegmentIndex == 2) {
+            TFCSUBD *temp = _transformerFuseCalcV.subds[indexPath.row-1];
+            [cell.textLabel setText:temp.CKVAnPhase];
         }
+        return cell;
     }
+}
 }
 
 
@@ -205,14 +216,14 @@
     
     if (!_config && indexPath.row != 0) {
         if (_typeSmc.selectedSegmentIndex == 0) {
-            TFCUG *temp = _transformerFuseCalcV.ugs[indexPath.row-1];
-            [self calulateTotal:temp];
+            _selectedFuse = _transformerFuseCalcV.ugs[indexPath.row-1];
+            [self calulateTotal:_selectedFuse];
         } else if (_typeSmc.selectedSegmentIndex == 1) {
-            TFCOH *temp = _transformerFuseCalcV.ohs[indexPath.row-1];
-            [self calulateTotal:temp];
+            _selectedFuse = _transformerFuseCalcV.ohs[indexPath.row-1];
+            [self calulateTotal:_selectedFuse];
         }else if (_typeSmc.selectedSegmentIndex == 2) {
-            TFCSUBD *temp = _transformerFuseCalcV.subds[indexPath.row-1];
-            [self calulateTotal:temp];
+            _selectedFuse = _transformerFuseCalcV.subds[indexPath.row-1];
+            [self calulateTotal:_selectedFuse];
         }
     }
 }
@@ -348,7 +359,7 @@
 -(void)initView{
     if (_transformerFuseCalcV == nil) {
         
-        _transformerFuseCalcV = [[ TransformerFuseCalcVariables alloc ]init];
+        _transformerFuseCalcV = [[ FuseWizardVariables alloc ]init];
         
         [_fuseTV setDataSource:self];
         [_fuseTV setDelegate:self];
@@ -478,28 +489,48 @@
         _config = NO;
         [UICKeyChainStore setString:@"NO" forKey:@"FormulaConfiguration"];
         [_defaultBtn setTitle:@"Default" forState:UIControlStateNormal];[_defaultBtn setNeedsLayout];
-        [self.navigationController.viewControllers.lastObject setTitle:@"Transformer Fuse"];
+        [self.navigationController.viewControllers.lastObject setTitle:@"Fuse Wizard"];
         [[[self.navigationController.viewControllers.lastObject navigationItem] rightBarButtonItem]setTitle:@"Configure"];
     }else {
         _config = YES;
         [UICKeyChainStore setString:@"YES" forKey:@"FormulaConfiguration"];
         [_defaultBtn setTitle:@"Set Default" forState:UIControlStateNormal];[_defaultBtn setNeedsLayout];
-        [self.navigationController.viewControllers.lastObject setTitle:@"Transformer Fuse Configuration"];
+        [self.navigationController.viewControllers.lastObject setTitle:@"Fuse Wizard Configuration"];
         [[[self.navigationController.viewControllers.lastObject navigationItem] rightBarButtonItem]setTitle:@"Done"];
     }
     [_addFuseBtn setHidden:!_config];
     [_addFuseBtn setEnabled:_config];
-
+    
     
     [_fuseTV deselectRowAtIndexPath:[_fuseTV indexPathForSelectedRow] animated:YES];
     [_fuseTV reloadData];
+}
+
+
+-(void)getEmail{
+    NSString *emailType = @"";
+    if (_typeSmc.selectedSegmentIndex == 1) {
+        TFCOH *temp = _selectedFuse;
+        if (temp.NXCompII.length != 0) {
+            emailType  = [emailType stringByAppendingString:@"XFMR"];
+        }
+        if (temp.MultSnC != 0) {
+            emailType  = [emailType stringByAppendingString:@"/Taps"];
+        }
+    }
+    
+    NSString *emailBody = [[NSString alloc]initWithFormat:@"<table><tr><td style=\"border-right:1px solid black\">%@</td><td >%@</td></tr><tr><td style=\"border-right:1px solid black\">%@</td><td >%@</td></tr><tr><td style=\"border-right:1px solid black\">%@</td><td >%@</td></tr><tr><td style=\"border-right:1px solid black\">%@</td><td >%@</td></tr><tr><td style=\"border-right:1px solid black\">%@</td><td >%@</td></tr></table>",_typeLbl.text,emailType,_title1Lbl.text, _attribute1Lbl.text,_title2Lbl.text,_attribute2Lbl.text,_title3Lbl.text,_attribute3Lbl.text,_title4Lbl.text,_attribute4Lbl.text];
+    
+    [[self delegate]giveFormlaDetails:emailBody];
+    [[self delegate]giveFormlaInformation:@""];
+    [[self delegate]giveFormlaTitle:@"Fuse Wizard"];
 }
 
 @end
 
 #pragma mark - TransformerRatingImpedanceCell
 
-@implementation TransformerFuseLabelCell
+@implementation FuseWizardLabelCell
 
 @end
 
@@ -507,7 +538,7 @@
 
 @implementation TransformerFuseEditCell
 - (void)textFieldDidEndEditing:(UITextField *)textField{
-    TransformerFuseCalcFormula *trans = (TransformerFuseCalcFormula *)self.delegate;
+    FuseWizardFormula *trans = (FuseWizardFormula *)self.delegate;
     
     switch (trans.typeSmc.selectedSegmentIndex) {
         case 0:
@@ -525,7 +556,7 @@
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
     
-    TransformerFuseCalcFormula *trans = (TransformerFuseCalcFormula *)self.delegate;
+    FuseWizardFormula *trans = (FuseWizardFormula *)self.delegate;
     NSRegularExpression *regex;
     switch (trans.typeSmc.selectedSegmentIndex) {
         case 0:

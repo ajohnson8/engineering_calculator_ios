@@ -6,15 +6,15 @@
 //  Copyright (c) 2015 Paul Marney. All rights reserved.
 //
 
-#import "AluminumACVoltDropFormula.h"
+#import "MainServiceVoltageDropFormula.h"
 
-@interface AluminumACVoltDropFormula (){
+@interface MainServiceVoltageDropFormula (){
     BOOL _config;
 }
 
 @end
 
-@implementation AluminumACVoltDropFormula
+@implementation MainServiceVoltageDropFormula
 
 
 #pragma mark - Life Cycles
@@ -83,7 +83,7 @@
     else if (tableView == _wireTV){
         if (indexPath.row==0) {
             static NSString *simpleTableIdentifier = @"Cell";
-            AluminumACVoltageDropLabelCell *cell = (AluminumACVoltageDropLabelCell *)[_wireTV dequeueReusableCellWithIdentifier:simpleTableIdentifier];
+            MainServiceVoltageDropLabelCell *cell = (MainServiceVoltageDropLabelCell *)[_wireTV dequeueReusableCellWithIdentifier:simpleTableIdentifier];
             if (cell == nil)
             {
                 NSArray *nib = [[NSBundle mainBundle] loadNibNamed:@"Cell" owner:self options:nil];
@@ -102,7 +102,7 @@
         }else{
             if (_config) {
                 static NSString *simpleTableIdentifier = @"CellEdit";
-                AluminumACVoltageDropEditCell *cell = (AluminumACVoltageDropEditCell *)[_wireTV dequeueReusableCellWithIdentifier:simpleTableIdentifier];
+                MainServiceVoltageDropEditCell *cell = (MainServiceVoltageDropEditCell *)[_wireTV dequeueReusableCellWithIdentifier:simpleTableIdentifier];
                 if (cell == nil)
                 {
                     NSArray *nib = [[NSBundle mainBundle] loadNibNamed:@"CellEdit" owner:self options:nil];
@@ -125,7 +125,7 @@
                 
             }else{
                 static NSString *simpleTableIdentifier = @"Cell";
-                AluminumACVoltageDropLabelCell *cell = (AluminumACVoltageDropLabelCell *)[_wireTV dequeueReusableCellWithIdentifier:simpleTableIdentifier];
+                MainServiceVoltageDropLabelCell *cell = (MainServiceVoltageDropLabelCell *)[_wireTV dequeueReusableCellWithIdentifier:simpleTableIdentifier];
                 if (cell == nil)
                 {
                     NSArray *nib = [[NSBundle mainBundle] loadNibNamed:@"Cell" owner:self options:nil];
@@ -251,7 +251,7 @@
         
         [UICKeyChainStore setData:myDataArrayImpedance forKey:@"SystemDefaultsArrayWire"];
         
-        [TSMessage showNotificationInViewController:self.navigationController.viewControllers.lastObject title:@"AluminumACVoltDropFormula" subtitle:@"Defaults has been save." type:TSMessageNotificationTypeSuccess duration:1.5];
+        [TSMessage showNotificationInViewController:self.navigationController.viewControllers.lastObject title:@"MainServiceVoltageDropFormula" subtitle:@"Defaults has been save." type:TSMessageNotificationTypeSuccess duration:1.5];
         
 
         
@@ -297,7 +297,7 @@
 
 -(void)initView{
     if (_aluminumACVoltDropV == nil) {
-        _aluminumACVoltDropV = [[AluminumACVoltDropVariables alloc]init];
+        _aluminumACVoltDropV = [[MainServiceVoltageDropVariables alloc]init];
         
         NSData* myDataArrayWire = [UICKeyChainStore dataForKey:@"SystemDefaultsArrayWire"];
         NSMutableArray* defaultWires = [NSKeyedUnarchiver unarchiveObjectWithData:myDataArrayWire];
@@ -348,8 +348,8 @@
 
 -(void)calulateTotal{
     int x = (int)[_phaseTV indexPathForSelectedRow].row;
-    [_type2Lbl setText:@"Vold Drop %"];
-    [_attribute2Lbl setText:[self roundingUp:[_aluminumACVoltDropV calulateWirePercent:_aluminumACVoltDropV.phases[x]]*100 andDecimalPlace:2]];
+    [_type2Lbl setText:@"Volt Drop %"];
+    [_attribute2Lbl setText:[NSString stringWithFormat:@"%@ %@",[self roundingUp:[_aluminumACVoltDropV calulateWirePercent:_aluminumACVoltDropV.phases[x]]*100 andDecimalPlace:2],@"%"]];
     if (x == 0) {
         [_typeLbl setText:@"Single Phase Two-Wire Circuits"];
         [_attributeLbl setText:[NSString stringWithFormat:@"%f",[_aluminumACVoltDropV calulate2PhaseOne]]];
@@ -380,7 +380,7 @@
         _config = NO;
         [UICKeyChainStore setString:@"NO" forKey:@"FormulaConfiguration"];
         [_defaultBtn setTitle:@"Default" forState:UIControlStateNormal];[_defaultBtn setNeedsLayout];
-        [self.navigationController.viewControllers.lastObject setTitle:@"AC Volt Drop"];
+        [self.navigationController.viewControllers.lastObject setTitle:@"Main Service Voltage Drop"];
         [[[self.navigationController.viewControllers.lastObject navigationItem] rightBarButtonItem]setTitle:@"Configure"];
         [_wireResistivityTxt setTextColor:[UIColor grayColor]];
          _wireResistivityTxt.layer.borderColor=[[UIColor clearColor]CGColor];
@@ -396,7 +396,7 @@
         _config = YES;
         [UICKeyChainStore setString:@"YES" forKey:@"FormulaConfiguration"];
         [_defaultBtn setTitle:@"Set Default" forState:UIControlStateNormal];[_defaultBtn setNeedsLayout];
-        [self.navigationController.viewControllers.lastObject setTitle:@"AC Volt Drop Configuration"];
+        [self.navigationController.viewControllers.lastObject setTitle:@"Main Service Voltage Drop Configuration"];
         [[[self.navigationController.viewControllers.lastObject navigationItem] rightBarButtonItem]setTitle:@"Done"];
         [_wireResistivityTxt setTextColor:[UIColor blackColor]];
         _wireResistivityTxt.layer.borderColor=[[UIColor blackColor]CGColor];
@@ -418,14 +418,25 @@
     
     
 }
+-(void)getEmail{
+    
+    NSString *emailBody = [[NSString alloc]initWithFormat:@"<table><tr><td style=\"border-right:1px solid black\">Phase</td><td>%i</td><td style=\"border-right:1px solid black\">Length of Conductors in Feet</td><td>%@</td></tr><tr><td style=\"border-right:1px solid black\">Wire Size</td><td>%@</td><td style=\"border-right:1px solid black\">Full Load Circuit Current</td><td>%@</td></tr><tr><td style=\"border-right:1px solid black\">Resistivity</td><td>%@</td><td style=\"border-right:1px solid black\">Circuit Voltage</td><td>%@</td></tr><tr><td style=\"border-right:1px solid black\">Circular-mil-area</td><td>%@</td></tr></table>",_aluminumACVoltDropV.selectPhase.phaseID,[self roundingUp:[_aluminumACVoltDropV.oneWayLength floatValue] andDecimalPlace:0],_aluminumACVoltDropV.selectWire.wireSize,[self roundingUp:[_aluminumACVoltDropV.current floatValue] andDecimalPlace:0],[self roundingUp:[_aluminumACVoltDropV.resistivity floatValue] andDecimalPlace:2],[self roundingUp:[_aluminumACVoltDropV.cirtVoltage floatValue] andDecimalPlace:0],[self roundingUp:_aluminumACVoltDropV.selectWire.circ andDecimalPlace:6]];
 
+    NSString *emailAnw =[[NSString alloc]initWithFormat:@"</br><table><tr><td style=\"border-right:1px solid black\">%@</td><td>%@</td></tr><tr><td style=\"border-right:1px solid black\">Volt Drop%@</td><td>%@</td></tr></table>",_typeLbl.text,_attributeLbl.text,@"%",_attribute2Lbl.text];
+    
+    emailBody = [ emailBody stringByAppendingString:emailAnw];
+    
+    [[self delegate]giveFormlaDetails:emailBody];
+    [[self delegate]giveFormlaInformation:@"Somthing"];
+    [[self delegate]giveFormlaTitle:@"Main Service Voltage Drop"];
+}
 @end
 
 
-@implementation AluminumACVoltageDropLabelCell
+@implementation MainServiceVoltageDropLabelCell
 @end
 
-@implementation AluminumACVoltageDropEditCell
+@implementation MainServiceVoltageDropEditCell
 - (void)textFieldDidEndEditing:(UITextField *)textField{
     
     WSVDWire * updated = [[ WSVDWire alloc]init];

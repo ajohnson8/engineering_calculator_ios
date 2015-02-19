@@ -6,9 +6,9 @@
 //  Copyright (c) 2015 Paul Marney. All rights reserved.
 //
 
-#import "AluminumACVoltDropVariables.h"
+#import "MainServiceVoltageDropVariables.h"
 
-@implementation AluminumACVoltDropVariables
+@implementation MainServiceVoltageDropVariables
 
 -(void) setDefaultsOneWayLength:(float)oneWayLength{
     _oneWayLength = [[NSNumber alloc]initWithFloat:oneWayLength];

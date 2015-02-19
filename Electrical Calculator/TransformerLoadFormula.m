@@ -6,9 +6,9 @@
 //  Copyright (c) 2015 Paul Marney. All rights reserved.
 //
 
-#import "TransformerCalcFormula.h"
+#import "TransformerLoadFormula.h"
 
-@interface TransformerCalcFormula (){
+@interface TransformerLoadFormula (){
     BOOL _config;
     TCPhase *_selectedPhase;
     TCLLSec *_selectedLLSec;
@@ -16,7 +16,7 @@
 
 @end
 
-@implementation TransformerCalcFormula
+@implementation TransformerLoadFormula
 
 -(void)viewDidLoad{
     [super viewDidLoad];
@@ -80,7 +80,7 @@
         [UICKeyChainStore setData:myDataArrayLLSec forKey:@"SystemDefaultsArrayLLSec"];
         [UICKeyChainStore setData:myDataArrayPhase forKey:@"SystemDefaultsArrayPhase"];
         
-        [TSMessage showNotificationInViewController:self.navigationController.viewControllers.lastObject title:@"TransformerCalcFormula" subtitle:@"Defaults has been save." type:TSMessageNotificationTypeSuccess duration:1.5];
+        [TSMessage showNotificationInViewController:self.navigationController.viewControllers.lastObject title:@"TransformerLoadFormula" subtitle:@"Defaults has been save." type:TSMessageNotificationTypeSuccess duration:1.5];
         
     }else {
         NSData* myDataArrayPhase = [UICKeyChainStore dataForKey:@"SystemDefaultsArrayPhase"];
@@ -110,7 +110,7 @@
         [_FLAPLlb setText:[self roundingUp:0.00]];
         [_FLASLlb setText:[self roundingUp:0.00]];
         
-        [TSMessage showNotificationInViewController:self.navigationController.viewControllers.lastObject title:@"TransformerCalcFormula" subtitle:@"Defaults has been set." type:TSMessageNotificationTypeSuccess duration:1.5];
+        [TSMessage showNotificationInViewController:self.navigationController.viewControllers.lastObject title:@"TransformerLoadFormula" subtitle:@"Defaults has been set." type:TSMessageNotificationTypeSuccess duration:1.5];
         
     }
     
@@ -411,7 +411,7 @@
         _config = NO;
         [UICKeyChainStore setString:@"NO" forKey:@"FormulaConfiguration"];
         [_defaultBtn setTitle:@"Default" forState:UIControlStateNormal];[_defaultBtn setNeedsLayout];
-        [self.navigationController.viewControllers.lastObject setTitle:@"Transformer"];
+        [self.navigationController.viewControllers.lastObject setTitle:@"Transformer Load"];
         [[[self.navigationController.viewControllers.lastObject navigationItem] rightBarButtonItem]setTitle:@"Configure"];
         _ampsTxt.layer.borderColor=[[UIColor blackColor]CGColor];
         _ampsTxt.layer.borderWidth=1.0;
@@ -421,7 +421,7 @@
         _config = YES;
         [UICKeyChainStore setString:@"YES" forKey:@"FormulaConfiguration"];
         [_defaultBtn setTitle:@"Set Default" forState:UIControlStateNormal];[_defaultBtn setNeedsLayout];
-        [self.navigationController.viewControllers.lastObject setTitle:@"Transformer Configuration"];
+        [self.navigationController.viewControllers.lastObject setTitle:@"Transformer Load Configuration"];
         [[[self.navigationController.viewControllers.lastObject navigationItem] rightBarButtonItem]setTitle:@"Done"];
         _ampsTxt.layer.borderColor=[[UIColor clearColor]CGColor];
         _ampsTxt.layer.borderWidth=1.0;
@@ -440,7 +440,18 @@
     [_secLLVoltTV deselectRowAtIndexPath:[_secLLVoltTV indexPathForSelectedRow] animated:YES];
     [_secLLVoltTV reloadData];
 }
+-(void)getEmail{
+    
+    NSString *emailBody = [[NSString alloc]initWithFormat:@"<table><tr><td style=\"border-right:1px solid black%@ border-bottom:1px solid black \">Phase</td><td style=\"border-right:1px solid black%@ border-bottom:1px solid black \">Sec L-L</td><td style=\"border-right:1px solid black%@ border-bottom:1px solid black \">kVA</td><td style=\"border-bottom:1px solid black \">Impedance%@</td></tr><tr><td style=\"border-right:1px solid black\">%i</td><td style=\"border-right:1px solid black\">%f</td><td style=\"border-right:1px solid black\">%@</td><td>%@</td></tr></table>",@";",@";",@";",@"%",_selectedPhase.phaseID,_selectedLLSec.llSecVaule,_kilaVoltAmpsTxt.text,_ampsTxt.text];
+    
+    NSString *emailAnw =[[NSString alloc]initWithFormat:@"</br><table><tr><td>Full Load Amps on Pri</td><td>%@</td></tr><tr><td>Full Load Amps on Sec</td><td>%@</td></tr><tr><td>Available Fault Current Pri</td><td>%@</td></tr><tr><td>Available Fault Current Sec</td><td>%@</td></tr></table>",_FLAPLlb.text,_FLASLlb.text,_AFCPLlb.text,_AFCSLlb.text];
+    
+    emailBody = [ emailBody stringByAppendingString:emailAnw];
 
+    [[self delegate]giveFormlaDetails:emailBody];
+    [[self delegate]giveFormlaInformation:@"Somthing"];
+    [[self delegate]giveFormlaTitle:@"Transformer Load"];
+}
 @end
 
 

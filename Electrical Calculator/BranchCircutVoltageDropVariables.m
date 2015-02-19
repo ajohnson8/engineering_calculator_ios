@@ -6,9 +6,9 @@
 //  Copyright (c) 2015 Paul Marney. All rights reserved.
 //
 
-#import "WireSizeVoltageDropVariables.h"
+#import "BranchCircutVoltageDropVariables.h"
 
-@implementation WireSizeVoltageDropVariables
+@implementation BranchCircutVoltageDropVariables
 
 -(void) setDefaultsOneWayLength:(float)oneWayLength{
     

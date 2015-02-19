@@ -11,6 +11,13 @@
 #import <UICKeyChainStore/UICKeyChainStore.h>
 #import "TransformerRatingCalcVariables.h"
 
+@protocol TransformerRatingCalcFormulaDelegate <NSObject>
+-(void)giveFormlaDetails:(NSString *)details;
+-(void)giveFormlaInformation:(NSString *)information;
+-(void)giveFormlaTitle:(NSString *)title;
+
+@end
+
 @protocol TransformerRatingEditImpedanceCellDelegate <NSObject>
 
 @required
@@ -41,7 +48,9 @@
 
 
 @property (strong, nonatomic) TransformerRatingCalcVariables* transformerRateCalcV;
+@property (weak, nonatomic)id <TransformerRatingCalcFormulaDelegate> delegate;
 
+-(void)getEmail;
 @end
 
 @interface TransformerRatingImpedanceCell: UITableViewCell <UITextFieldDelegate>

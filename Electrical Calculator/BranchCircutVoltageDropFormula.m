@@ -6,15 +6,15 @@
 //  Copyright (c) 2015 Paul Marney. All rights reserved.
 //
 
-#import "WireSizeVoltageDropFormula.h"
+#import "BranchCircutVoltageDropFormula.h"
 
-@interface WireSizeVoltageDropFormula (){
+@interface BranchCircutVoltageDropFormula (){
     BOOL _config;
 }
 
 @end
 
-@implementation WireSizeVoltageDropFormula
+@implementation BranchCircutVoltageDropFormula
 
 
 #pragma mark - Life Cycles
@@ -58,7 +58,7 @@
     
     if (indexPath.row==0) {
         static NSString *simpleTableIdentifier = @"Cell";
-        WireSizeVoltageDropLabelCell *cell = (WireSizeVoltageDropLabelCell *)[_wireTV dequeueReusableCellWithIdentifier:simpleTableIdentifier];
+        BranchCircutVoltageDropLabelCell *cell = (BranchCircutVoltageDropLabelCell *)[_wireTV dequeueReusableCellWithIdentifier:simpleTableIdentifier];
         if (cell == nil)
         {
             NSArray *nib = [[NSBundle mainBundle] loadNibNamed:@"Cell" owner:self options:nil];
@@ -79,7 +79,7 @@
     }else{
         if (_config) {
             static NSString *simpleTableIdentifier = @"CellEdit";
-            WireSizeVoltageDropEditCell *cell = (WireSizeVoltageDropEditCell *)[_wireTV dequeueReusableCellWithIdentifier:simpleTableIdentifier];
+            BranchCircutVoltageDropEditCell *cell = (BranchCircutVoltageDropEditCell *)[_wireTV dequeueReusableCellWithIdentifier:simpleTableIdentifier];
             if (cell == nil)
             {
                 NSArray *nib = [[NSBundle mainBundle] loadNibNamed:@"CellEdit" owner:self options:nil];
@@ -104,7 +104,7 @@
             return cell;
         }else{
             static NSString *simpleTableIdentifier = @"Cell";
-            WireSizeVoltageDropLabelCell *cell = (WireSizeVoltageDropLabelCell *)[_wireTV dequeueReusableCellWithIdentifier:simpleTableIdentifier];
+            BranchCircutVoltageDropLabelCell *cell = (BranchCircutVoltageDropLabelCell *)[_wireTV dequeueReusableCellWithIdentifier:simpleTableIdentifier];
             if (cell == nil)
             {
                 NSArray *nib = [[NSBundle mainBundle] loadNibNamed:@"Cell" owner:self options:nil];
@@ -274,7 +274,7 @@
 -(void)initView{
     if (_wireSizeVoltageDropV == nil) {
         
-        _wireSizeVoltageDropV = [[ WireSizeVoltageDropVariables alloc ]init];
+        _wireSizeVoltageDropV = [[ BranchCircutVoltageDropVariables alloc ]init];
         
         NSData* myDataArrayWire = [UICKeyChainStore dataForKey:@"SystemDefaultsArrayWire"];
         NSMutableArray* defaultWires = [NSKeyedUnarchiver unarchiveObjectWithData:myDataArrayWire];
@@ -308,7 +308,7 @@
         _config = NO;
         [UICKeyChainStore setString:@"NO" forKey:@"FormulaConfiguration"];
         [_defaultBtn setTitle:@"Default" forState:UIControlStateNormal];[_defaultBtn setNeedsLayout];
-        [self.navigationController.viewControllers.lastObject setTitle:@"Wire Size Volt Drop"];
+        [self.navigationController.viewControllers.lastObject setTitle:@"Branch Circut Voltage Drop"];
         [[[self.navigationController.viewControllers.lastObject navigationItem] rightBarButtonItem]setTitle:@"Configure"];
         _cirtCurrentTxt.layer.borderColor=[[UIColor blackColor]CGColor];
         _cirtCurrentTxt.layer.borderWidth=1.0;
@@ -318,7 +318,7 @@
         _config = YES;
         [UICKeyChainStore setString:@"YES" forKey:@"FormulaConfiguration"];
         [_defaultBtn setTitle:@"Set Default" forState:UIControlStateNormal];[_defaultBtn setNeedsLayout];
-        [self.navigationController.viewControllers.lastObject setTitle:@"Wire Size Volt Drop Configuration"];
+        [self.navigationController.viewControllers.lastObject setTitle:@"Branch Circut Voltage Drop Configuration"];
         [[[self.navigationController.viewControllers.lastObject navigationItem] rightBarButtonItem]setTitle:@"Done"];
         _cirtCurrentTxt.layer.borderColor=[[UIColor clearColor]CGColor];
         _cirtCurrentTxt.layer.borderWidth=1.0;
@@ -403,9 +403,22 @@
     
 }
 
+-(void)getEmail{
+    NSString *emailWire = [[NSString alloc]initWithFormat:@"<table><tr><td style=\"border-right:1px solid black\">Wire Size</td><td>%@</td><td style=\"border-right:1px solid black\">Length of Conductors in Feet</td><td>%@</td></tr><tr><td style=\"border-right:1px solid black\">Ampacity</td><td>%@</td><td style=\"border-right:1px solid black\">Full Load Circuit Current</td><td>%@</td></tr><tr><td style=\"border-right:1px solid black\">Ohms</td><td>%@</td></tr></table>",_wireSizeVoltageDropV.selectWire.wireSize,[self roundingUp:[_wireSizeVoltageDropV.oneWayLength floatValue] andDecimalPlace:0],[self roundingUp:_wireSizeVoltageDropV.selectWire.ampacity andDecimalPlace:0],[self roundingUp:[_wireSizeVoltageDropV.current floatValue] andDecimalPlace:0],[self roundingUp:_wireSizeVoltageDropV.selectWire.ohms andDecimalPlace:6]];
+    
+    NSString *emailBody = [[NSString alloc]initWithFormat:@"</br><table><tr><td style=\"border-right:1px solid black%@ border-bottom:1px solid black\">%@</td><td >%@</td></tr><tr><td style=\"border-right:1px solid black\">%@</td><td >%@</td></tr><tr><td style=\"border-right:1px solid black\">%@</td><td >%@</td></tr><tr><td style=\"border-right:1px solid black\">%@</td><td >%@</td></tr><tr><td style=\"border-right:1px solid black\">%@</td><td >%@</td></tr><tr><td style=\"border-right:1px solid black%@ border-bottom:1px solid black\">%@</td><td >%@</td></tr><tr><td style=\"border-right:1px solid black\">%@</td><td >%@</td></tr><tr><td style=\"border-right:1px solid black\">%@</td><td >%@</td></tr><tr><td style=\"border-right:1px solid black\">%@</td><td >%@</td></tr><tr><td style=\"border-right:1px solid black\">%@</td><td >%@</td></tr></table>",@";",@"Wire Size",_wireSizeVoltageDropV.selectWire.wireSize,@"NEC Ampacity @",_attribute1Lbl.text,@"75 deg. C Insulation",_attribute2Lbl.text,@"80% Full Loadrate",_attribute3Lbl.text,@"(no neutral counted )" ,_attribute4Lbl.text,@";",@"Volts",_voltSizeLbl.text,@"Resistance of Run",_attribute5Lbl.text,@"Voltage Drop",_attribute6Lbl.text,@"Percent Drop",_attribute7Lbl.text,@"Resultant voltage",_attribute8Lbl.text];
+    
+    emailWire = [ emailWire stringByAppendingString:emailBody];
+    
+    [[self delegate]giveFormlaDetails:emailWire];
+    [[self delegate]giveFormlaInformation:@""];
+    [[self delegate]giveFormlaTitle:@"Branch Circut Voltage Drop"];
+}
+
+
 @end
 
-@implementation WireSizeVoltageDropEditCell
+@implementation BranchCircutVoltageDropEditCell
 - (void)textFieldDidEndEditing:(UITextField *)textField{
     
     WSVDWire * updated = [[ WSVDWire alloc]init];
@@ -455,11 +468,11 @@
 
 @end
 
-@implementation WireSizeVoltageDropLabelCell
+@implementation BranchCircutVoltageDropLabelCell
 
 @end
 
-@implementation WireSizeVoltageDropButton
+@implementation BranchCircutVoltageDropButton
 
 #pragma mark - UITableView Delegate
 
