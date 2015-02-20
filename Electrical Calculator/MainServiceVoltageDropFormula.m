@@ -7,9 +7,12 @@
 //
 
 #import "MainServiceVoltageDropFormula.h"
+#import "InformationViewController.h"
 
 @interface MainServiceVoltageDropFormula (){
     BOOL _config;
+    InformationViewController *_informationVC;
+    NSString *_info;
 }
 
 @end
@@ -33,6 +36,9 @@
     
     UIBarButtonItem * configure = [[UIBarButtonItem alloc]initWithTitle:@"" style:UIBarButtonItemStylePlain target:self action:@selector(pressedConfig:)];
     [[self.navigationController.viewControllers.lastObject navigationItem] setRightBarButtonItem:configure];
+    
+    UIBarButtonItem * back = [[UIBarButtonItem alloc]initWithTitle:@"Info" style:UIBarButtonItemStylePlain target:self action:@selector(pressedInfo:)];
+    [[self.navigationController.viewControllers.lastObject navigationItem] setLeftBarButtonItem:back];
     
     [self configureMode:0];
     
@@ -184,8 +190,10 @@
         [_aluminumACVoltDropV setCirtVoltage:[NSNumber numberWithFloat:[textField.text floatValue]]];
     if (textField == _lengthTxt)
         [_aluminumACVoltDropV setOneWayLength:[NSNumber numberWithFloat:[textField.text floatValue]]];
-    if (textField == _wireResistivityTxt)
+    if (textField == _wireResistivityTxt){
+     
         [_aluminumACVoltDropV setResistivity:[NSNumber numberWithFloat:[textField.text floatValue]]];
+    }
     [self calulateTotal];
 }
 
@@ -206,8 +214,26 @@
     return x;
 }
 
+#pragma  mark - PopoverControllerDelegate
+-(BOOL)popoverControllerShouldDismissPopover:(UIPopoverController *)popoverController{
+    return YES;
+}
 
 #pragma mark - IBActions
+
+- (IBAction)pressedInfo:(id)sender {
+    
+    [self setInfo];
+    _informationVC = [[InformationViewController alloc]init];
+    [_informationVC setInfoTitle:@"Main Service Voltage Drop Information"];
+    [_informationVC setInformation:_info];
+    
+    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:_informationVC];
+    
+    [navController setModalPresentationStyle:UIModalPresentationFormSheet];
+    
+    [self presentViewController:navController animated:YES completion:nil];
+}
 
 - (IBAction)pressedConfig:(id)sender {
 
@@ -248,8 +274,10 @@
     if (_config) {
         
         NSData* myDataArrayImpedance = [NSKeyedArchiver archivedDataWithRootObject:[_aluminumACVoltDropV wires]];
-        
         [UICKeyChainStore setData:myDataArrayImpedance forKey:@"SystemDefaultsArrayWire"];
+        
+        NSData* wireResist = [NSKeyedArchiver archivedDataWithRootObject:[_aluminumACVoltDropV resistivity]];
+        [UICKeyChainStore setData:wireResist forKey:@"SystemDefaultsWireResist"];
         
         [TSMessage showNotificationInViewController:self.navigationController.viewControllers.lastObject title:@"MainServiceVoltageDropFormula" subtitle:@"Defaults has been save." type:TSMessageNotificationTypeSuccess duration:1.5];
         
@@ -260,9 +288,13 @@
         NSMutableArray* defaultWires = [NSKeyedUnarchiver unarchiveObjectWithData:myDataArrayWire];
         NSData* myDataArrayPhase = [UICKeyChainStore dataForKey:@"SystemDefaultsArrayPhase"];
         NSMutableArray* defaultPhase = [NSKeyedUnarchiver unarchiveObjectWithData:myDataArrayPhase];
+        NSData* wireResist = [UICKeyChainStore dataForKey:@"SystemDefaultsWireResist"];
+        NSNumber* defaultWireResist = [NSKeyedUnarchiver unarchiveObjectWithData:wireResist];
         
+        [_aluminumACVoltDropV setResistivity:defaultWireResist];
         [_aluminumACVoltDropV setDefaultsWSVDWire:defaultWires];
         [_aluminumACVoltDropV setDefaultsAVDPhases:defaultPhase];
+        [_wireResistivityTxt setText:[self roundingUp:[defaultWireResist floatValue] andDecimalPlace:2]];
         
         [_wireTV setDataSource:self];
         [_wireTV setDelegate:self];
@@ -291,6 +323,24 @@
 }
 -(void)canAddAnotherWire:(BOOL)check{
     [_addFuseBtn setEnabled:check];
+}
+
+#pragma mark -  WireResistivityTypeLabelDelegate
+-(void)updateResistivity:(float)resistivity{
+    [_wireResistivityTxt setText:[self roundingUp:resistivity andDecimalPlace:2]];
+    [_aluminumACVoltDropV setResistivity:[NSNumber numberWithFloat:resistivity]];
+    if (resistivity == 0) {
+        [_wireResistivityTxt setTextColor:[UIColor blackColor]];
+        _wireResistivityTxt.layer.borderColor=[[UIColor blackColor]CGColor];
+        _wireResistivityTxt.layer.borderWidth=1.0;
+        [_wireResistivityTxt setEnabled:_config];
+    }else{
+        [_wireResistivityTxt setTextColor:[UIColor grayColor]];
+        _wireResistivityTxt.layer.borderColor=[[UIColor clearColor]CGColor];
+        _wireResistivityTxt.layer.borderWidth=1.0;
+        [_wireResistivityTxt setEnabled:NO];
+    }
+    [_quantityPickerPopover dismissPopoverAnimated:NO];
 }
 
 #pragma mark - Private Methods
@@ -327,12 +377,14 @@
         [_wireTV reloadData];
         
     }
+    UITapGestureRecognizer *tapper = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleSingleTap:)];
     if (UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPad){
-        UITapGestureRecognizer *tapper = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleSingleTap:)];
         tapper.cancelsTouchesInView = NO;
         [self.view addGestureRecognizer:tapper];
     }
-    
+    [_wireResieLbl setTag:789];
+    [_wireResieLbl addGestureRecognizer:tapper];
+    [_wireResieLbl setUserInteractionEnabled:YES];
     [_typeLbl setText:@""];
     [_attributeLbl setText:@""];
     [_wireResistivityTxt setDelegate:self];
@@ -341,8 +393,11 @@
     [_lengthTxt setDelegate:self];
 }
 
-- (void)handleSingleTap:(UITapGestureRecognizer *) sender
-{
+- (void)handleSingleTap:(id) sender{
+    UITapGestureRecognizer *tapRecognizer = (UITapGestureRecognizer *)sender;
+    if (_config && [tapRecognizer.view tag] == 789) {
+        [self createQuantityPopoverList];
+    }
     [self.view endEditing:YES];
 }
 
@@ -382,9 +437,7 @@
         [_defaultBtn setTitle:@"Default" forState:UIControlStateNormal];[_defaultBtn setNeedsLayout];
         [self.navigationController.viewControllers.lastObject setTitle:@"Main Service Voltage Drop"];
         [[[self.navigationController.viewControllers.lastObject navigationItem] rightBarButtonItem]setTitle:@"Configure"];
-        [_wireResistivityTxt setTextColor:[UIColor grayColor]];
-         _wireResistivityTxt.layer.borderColor=[[UIColor clearColor]CGColor];
-        _wireResistivityTxt.layer.borderWidth=1.0;
+        [_wireResieLbl setTextColor:[UIColor blackColor]];
         _lengthTxt.layer.borderColor=[[UIColor blackColor]CGColor];
         _lengthTxt.layer.borderWidth=1.0;
         _cirtCurrentTxt.layer.borderColor=[[UIColor blackColor]CGColor];
@@ -398,9 +451,7 @@
         [_defaultBtn setTitle:@"Set Default" forState:UIControlStateNormal];[_defaultBtn setNeedsLayout];
         [self.navigationController.viewControllers.lastObject setTitle:@"Main Service Voltage Drop Configuration"];
         [[[self.navigationController.viewControllers.lastObject navigationItem] rightBarButtonItem]setTitle:@"Done"];
-        [_wireResistivityTxt setTextColor:[UIColor blackColor]];
-        _wireResistivityTxt.layer.borderColor=[[UIColor blackColor]CGColor];
-        _wireResistivityTxt.layer.borderWidth=1.0;
+        [_wireResieLbl setTextColor:[UIColor blueColor]];
         _lengthTxt.layer.borderColor=[[UIColor clearColor]CGColor];
         _lengthTxt.layer.borderWidth=1.0;
         _cirtCurrentTxt.layer.borderColor=[[UIColor clearColor]CGColor];
@@ -411,10 +462,13 @@
     [_phaseTV setUserInteractionEnabled:!_config];
     [_addFuseBtn setHidden:!_config];
     [_addFuseBtn setEnabled:_config];
-    [_wireResistivityTxt setEnabled:_config];
     [_lengthTxt setEnabled:!_config];
     [_cirtCurrentTxt setEnabled:!_config];
     [_cirtVoltTxt setEnabled:!_config];
+    [_wireResistivityTxt setTextColor:[UIColor grayColor]];
+    _wireResistivityTxt.layer.borderColor=[[UIColor clearColor]CGColor];
+    _wireResistivityTxt.layer.borderWidth=1.0;
+    [_wireResistivityTxt setEnabled:NO];
     
     
 }
@@ -427,8 +481,41 @@
     emailBody = [ emailBody stringByAppendingString:emailAnw];
     
     [[self delegate]giveFormlaDetails:emailBody];
-    [[self delegate]giveFormlaInformation:@"Somthing"];
+    [[self delegate]giveFormlaInformation:@"Main Service Voltage Drop calculates the voltage drop and percentage of voltage drop by selecting aluminum or copper conductor, the phasing and wire size, plus entering the length of conductor, full load current, and circuit voltage."];
     [[self delegate]giveFormlaTitle:@"Main Service Voltage Drop"];
+}
+
+-(void)setInfo{
+    _info = @"Main Service Voltage Drop calculates the voltage drop and percentage of voltage drop by selecting aluminum or copper conductor, the phasing and wire size, plus entering the length of conductor, full load current, and circuit voltage.\n\nSelect the conductor type “Copper” or “Aluminum”.\nSelect a single “Phase 1” or three phase “Phase 3” circuit from the phase table.\nSelect the appropriate conductor size from the Wire Size table.\nEnter the one way total length of the conductor in feet.\nEnter the actual or estimated full load circuit current.\nEnter the circuit voltage.\nThe voltage drop in volts and percentage of voltage drop will be calculated.\n\nTo modify the Wire Size constants, select the “Configure” button.  To negate the modifications select the “Default” button.\n\nTo share the results select the “email” button.";
+}
+
+-(void)createQuantityPopoverList{
+    
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad ){
+        UIViewController *popoverContent=[[UIViewController alloc] init];
+        
+        UITableView *tableView2=[[UITableView alloc] initWithFrame:CGRectMake(150, 100, 0, 0) style:UITableViewStyleGrouped];
+        [tableView2 setBounces:NO];
+        popoverContent.preferredContentSize=CGSizeMake(150, 100);
+        popoverContent.view=tableView2; //Adding tableView to popover
+        tableView2.delegate = _wireResieLbl;
+        tableView2.dataSource = _wireResieLbl;
+        [_wireResieLbl setDelegate:self];
+        _quantityPickerPopover = [[UIPopoverController alloc] initWithContentViewController:popoverContent];
+        [_quantityPickerPopover setDelegate:self];
+        _quantityPickerPopover.contentViewController.preferredContentSize = CGSizeMake(150, 100);
+        [_quantityPickerPopover presentPopoverFromRect:CGRectMake(_wireResieLbl.frame.size.width, _wireResieLbl.frame.size.height/2, 0, 0) inView:_wireResieLbl
+                              permittedArrowDirections:UIPopoverArrowDirectionUp
+                                              animated:NO];
+        
+    }else {
+        UITableViewController *tableView = [[UITableViewController alloc]init];
+        tableView.tableView.delegate = _wireResieLbl;
+        tableView.tableView.dataSource = _wireResieLbl;
+        
+        [self.navigationController pushViewController:tableView animated:YES];
+    }
+    
 }
 @end
 
@@ -482,4 +569,46 @@
 -(void)OneAtATime{
     [[self delegate]canAddAnotherWire:NO];
 }
+@end
+
+#pragma mark - Implementation WireResistivityTypeLabel
+@interface WireResistivityTypeLabel(){
+    NSMutableArray *types;
+}
+@end
+@implementation WireResistivityTypeLabel
+
+#pragma mark - UITableView Delegate
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    return 1;
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    types = [[NSMutableArray alloc]initWithObjects:@"Copper",@"Aluminum",@"Other", nil];
+    return 2;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    UITableViewCell *cell = [[UITableViewCell alloc]init];
+    [cell.textLabel setText:[NSString stringWithFormat:@"%@",types[indexPath.row]]];
+    return cell;
+}
+
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+
+    float temp = 0;
+    switch (indexPath.row) {
+        case 0:
+            temp = 12.9;
+            break;
+        case 1:
+            temp = 21.2;
+            break;
+        case 2:
+            temp = 0;
+            break;
+    }
+    [[self delegate] updateResistivity:temp];
+}
+
 @end

@@ -7,9 +7,12 @@
 //
 
 #import "BranchCircutVoltageDropFormula.h"
+#import "InformationViewController.h"
 
 @interface BranchCircutVoltageDropFormula (){
     BOOL _config;
+    InformationViewController *_informationVC;
+    NSString *_info;
 }
 
 @end
@@ -30,6 +33,9 @@
     
     UIBarButtonItem * configure = [[UIBarButtonItem alloc]initWithTitle:@"Configure" style:UIBarButtonItemStylePlain target:self action:@selector(pressedConfig:)];
     [[self.navigationController.viewControllers.lastObject navigationItem] setRightBarButtonItem:configure];
+    
+    UIBarButtonItem * back = [[UIBarButtonItem alloc]initWithTitle:@"Info" style:UIBarButtonItemStylePlain target:self action:@selector(pressedInfo:)];
+    [[self.navigationController.viewControllers.lastObject navigationItem] setLeftBarButtonItem:back];
     
     [self configureMode:0];
 }
@@ -181,6 +187,20 @@
 }
 
 #pragma mark - IBActions
+
+- (IBAction)pressedInfo:(id)sender {
+    
+    [self setInfo];
+    _informationVC = [[InformationViewController alloc]init];
+    [_informationVC setInfoTitle:@"Branch Circut Voltage Drop Information"];
+    [_informationVC setInformation:_info];
+    
+    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:_informationVC];
+    
+    [navController setModalPresentationStyle:UIModalPresentationFormSheet];
+    
+    [self presentViewController:navController animated:YES completion:nil];
+}
 
 - (IBAction)pressedConfig:(id)sender {
     
@@ -411,11 +431,13 @@
     emailWire = [ emailWire stringByAppendingString:emailBody];
     
     [[self delegate]giveFormlaDetails:emailWire];
-    [[self delegate]giveFormlaInformation:@""];
+    [[self delegate]giveFormlaInformation:@"Branch Circuit Voltage Drop calculates the resistance of run, voltage drop, percentage of voltage drop, and resultant voltage by selecting a copper conductor wire size, plus entering the length of conductor, full load current, and then selecting the circuit voltage of either 120 or 240 volts."];
     [[self delegate]giveFormlaTitle:@"Branch Circut Voltage Drop"];
 }
 
-
+-(void)setInfo{
+    _info = @"Branch Circuit Voltage Drop calculates the resistance of run, voltage drop, percentage of voltage drop, and resultant voltage by selecting a copper conductor wire size, plus entering the length of conductor, full load current, and then selecting the circuit voltage of either 120 or 240 volts.  It also lists the NEC rated ampacity of the selected conductor with de-rating factors.\n\nSelect the appropriate conductor size from the Wire Size table.\nEnter the one way total length of the conductor in feet.\nEnter the actual or estimated full load circuit current.\nSelect the circuit voltage of either 120 or 240 volts.\n\nThe voltage drop in volts and percentage of voltage drop will be calculated.  The NEC ampacity and derating amperages will be given.\n\nTo modify the Wire Size constants, select the “Configure” button.  To negate the modifications select the “Default” button.\n\nTo share the results select the “email” button.";
+}
 @end
 
 @implementation BranchCircutVoltageDropEditCell

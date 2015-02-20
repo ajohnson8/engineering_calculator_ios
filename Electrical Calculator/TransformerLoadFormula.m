@@ -7,11 +7,14 @@
 //
 
 #import "TransformerLoadFormula.h"
+#import "InformationViewController.h"
 
 @interface TransformerLoadFormula (){
     BOOL _config;
     TCPhase *_selectedPhase;
     TCLLSec *_selectedLLSec;
+    InformationViewController *_informationVC;
+    NSString *_info;
 }
 
 @end
@@ -32,6 +35,9 @@
     UIBarButtonItem * configure = [[UIBarButtonItem alloc]initWithTitle:@"" style:UIBarButtonItemStylePlain target:self action:@selector(pressedConfig:)];
      [[self.navigationController.viewControllers.lastObject navigationItem] setRightBarButtonItem:configure];
     
+    UIBarButtonItem * back = [[UIBarButtonItem alloc]initWithTitle:@"Info" style:UIBarButtonItemStylePlain target:self action:@selector(pressedInfo:)];
+    [[self.navigationController.viewControllers.lastObject navigationItem] setLeftBarButtonItem:back];
+    
     [self configureMode:0];
     
 }
@@ -42,6 +48,20 @@
 }
 
 #pragma mark - IBActions
+
+- (IBAction)pressedInfo:(id)sender {
+    
+    [self setInfo];
+    _informationVC = [[InformationViewController alloc]init];
+    [_informationVC setInfoTitle:@"Transformer Load Information"];
+    [_informationVC setInformation:_info];
+    
+    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:_informationVC];
+    
+    [navController setModalPresentationStyle:UIModalPresentationFormSheet];
+    
+    [self presentViewController:navController animated:YES completion:nil];
+}
 
 - (IBAction)pressedConfig:(id)sender {
     
@@ -449,8 +469,12 @@
     emailBody = [ emailBody stringByAppendingString:emailAnw];
 
     [[self delegate]giveFormlaDetails:emailBody];
-    [[self delegate]giveFormlaInformation:@"Somthing"];
+    [[self delegate]giveFormlaInformation:@"Transformer Load calculates the available full load amps and fault current on the primary and secondary sides of a transformer by entering the nameplate data."];
     [[self delegate]giveFormlaTitle:@"Transformer Load"];
+}
+
+-(void)setInfo{
+    _info = @"Transformer Load calculates the available full load amps and fault current on the primary and secondary sides of a transformer by entering the nameplate data.\n\nSelect whether the transformer is a single or three phase  unit.  “Phase (1 or 3)”\nSelect the secondary voltage rating on the transformer.  “SEC. L-L VOLTS”\nEnter the transformer nameplate size in kVA.\nEnter the transformer nameplate % impedance value.\n\nFull load amps and available fault current on the primary and secondary of transformer will be calculated.\n\nTo modify the Phase Value constants, Phase Voltages, or Secondary Voltages select the “Configure” button.  To negate the modifications select the “Default” button.\n\nTo share the results select the “email” button.";
 }
 @end
 

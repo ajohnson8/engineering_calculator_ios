@@ -10,6 +10,7 @@
 #import <TSMessages/TSMessage.h>
 #import <UICKeyChainStore/UICKeyChainStore.h>
 #import "TransformerRatingCalcVariables.h"
+#import "FuseWizardFormula.h"
 
 @protocol TransformerRatingCalcFormulaDelegate <NSObject>
 -(void)giveFormlaDetails:(NSString *)details;
@@ -42,6 +43,9 @@
 @property (weak, nonatomic) IBOutlet UILabel *secBreakerLbl;
 @property (weak, nonatomic) IBOutlet UILabel *faultPriLbl;
 @property (weak, nonatomic) IBOutlet UILabel *faultSecLbl;
+
+@property (strong, nonatomic) IBOutlet UILabel *maxRecommendedFuse;
+@property (strong, nonatomic) IBOutlet UILabel *minRecommendedFuse;
 
 @property (weak, nonatomic) IBOutlet UIButton *addImpedanceBtn;
 @property (weak, nonatomic) IBOutlet UIButton *defaultBtn;

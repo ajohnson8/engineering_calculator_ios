@@ -33,7 +33,6 @@
 
 @end
 
-
 @interface BranchCircutVoltageDropButton: UIButton <UITableViewDataSource,UITableViewDelegate>
 
 @property (weak, nonatomic)id <BranchCircutVoltageDropButtonDelegate> delegate;
@@ -69,6 +68,8 @@
 -(void)getEmail;
 
 @end
+
+
 
 @interface BranchCircutVoltageDropLabelCell: UITableViewCell
 

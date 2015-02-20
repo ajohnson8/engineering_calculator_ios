@@ -7,10 +7,13 @@
 //
 
 #import "FuseWizardFormula.h"
+#import "InformationViewController.h"
 
 @interface FuseWizardFormula () {
     BOOL _config;
     id _selectedFuse;
+    InformationViewController *_informationVC;
+    NSString *_info;
 }
 
 @end
@@ -28,6 +31,10 @@
     [_typeLbl setText:@"UG"];
     UIBarButtonItem * configure = [[UIBarButtonItem alloc]initWithTitle:@"" style:UIBarButtonItemStylePlain target:self action:@selector(pressedConfig:)];
     [[self.navigationController.viewControllers.lastObject navigationItem] setRightBarButtonItem:configure];
+    
+    UIBarButtonItem * back = [[UIBarButtonItem alloc]initWithTitle:@"Info" style:UIBarButtonItemStylePlain target:self action:@selector(pressedInfo:)];
+    [[self.navigationController.viewControllers.lastObject navigationItem] setLeftBarButtonItem:back];
+    
     [self configureMode:0];
 }
 - (void)didReceiveMemoryWarning {
@@ -230,6 +237,20 @@
 
 #pragma mark - IBActions
 
+- (IBAction)pressedInfo:(id)sender {
+    
+    [self setInfo];
+    _informationVC = [[InformationViewController alloc]init];
+    [_informationVC setInfoTitle:@"Fuse Wizard Information"];
+    [_informationVC setInformation:_info];
+    
+    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:_informationVC];
+    
+    [navController setModalPresentationStyle:UIModalPresentationFormSheet];
+    
+    [self presentViewController:navController animated:YES completion:nil];
+}
+
 - (IBAction)pressedConfig:(id)sender {
     
     [UIView transitionWithView:self.view
@@ -352,6 +373,54 @@
 
 -(void)canAddAnotherFuse:(BOOL)check{
     [_addFuseBtn setEnabled:check];
+}
+
+#pragma mark - Class Method
++(id)sreachForFuseByTempFuseType:(id)type{
+    
+    if ([type isKindOfClass:[TFCUG class]]) {
+        NSData* myDataArrayUG = [UICKeyChainStore dataForKey:@"SystemDefaultsArrayUG"];
+        NSMutableArray* defaultUG = [NSKeyedUnarchiver unarchiveObjectWithData:myDataArrayUG];
+        TFCUG *selectug = [[TFCUG alloc]init];
+        selectug = type;
+        for( TFCUG *temp in defaultUG){
+            if ([temp.KVA floatValue] > [selectug.KVA floatValue]) {
+                return temp;
+            }
+        }
+        return @"No Default Fuse Fit Recommendation";
+
+    }
+    if ([type isKindOfClass:[TFCOH class]]) {
+        NSData* myDataArrayOH = [UICKeyChainStore dataForKey:@"SystemDefaultsArrayOH"];
+        NSMutableArray* defaultOH = [NSKeyedUnarchiver unarchiveObjectWithData:myDataArrayOH];
+        TFCOH *selectoh = [[TFCOH alloc]init];
+        selectoh = type;
+        for( TFCOH *temp in defaultOH){
+            if (temp.KVA > selectoh.KVA) {
+                return temp;
+            }
+        }
+        return @"No Default Fuse Fit Recommendation";
+    }
+    if ([type isKindOfClass:[TFCSUBD class]]) {
+        NSData* myDataArraySUBD = [UICKeyChainStore dataForKey:@"SystemDefaultsArraySUBD"];
+        NSMutableArray* defaultSUBD = [NSKeyedUnarchiver unarchiveObjectWithData:myDataArraySUBD];
+        TFCSUBD *selectsubd = [[TFCSUBD alloc]init];
+        selectsubd= type;
+        NSString *selSubd = selectsubd.CKVAnPhase;
+        selSubd = [ selSubd stringByReplacingOccurrencesOfString:@"<" withString:@""];
+        for( TFCSUBD *temp in defaultSUBD){
+            NSString *tempSubd = temp.CKVAnPhase;
+            tempSubd = [ tempSubd stringByReplacingOccurrencesOfString:@"<" withString:@""];
+            if ([tempSubd floatValue] > [selSubd floatValue]) {
+                return temp;
+            }
+        }
+        return @"No Default Fuse Fit Recommendation";
+    }
+
+    return self;
 }
 
 #pragma mark - Private Methods
@@ -522,8 +591,12 @@
     NSString *emailBody = [[NSString alloc]initWithFormat:@"<table><tr><td style=\"border-right:1px solid black\">%@</td><td >%@</td></tr><tr><td style=\"border-right:1px solid black\">%@</td><td >%@</td></tr><tr><td style=\"border-right:1px solid black\">%@</td><td >%@</td></tr><tr><td style=\"border-right:1px solid black\">%@</td><td >%@</td></tr><tr><td style=\"border-right:1px solid black\">%@</td><td >%@</td></tr></table>",_typeLbl.text,emailType,_title1Lbl.text, _attribute1Lbl.text,_title2Lbl.text,_attribute2Lbl.text,_title3Lbl.text,_attribute3Lbl.text,_title4Lbl.text,_attribute4Lbl.text];
     
     [[self delegate]giveFormlaDetails:emailBody];
-    [[self delegate]giveFormlaInformation:@""];
+    [[self delegate]giveFormlaInformation:@"Fuse Wizard will identify the company standard fusing per phase utilizing the selected variables from the table."];
     [[self delegate]giveFormlaTitle:@"Fuse Wizard"];
+}
+
+-(void)setInfo{
+    _info = @"Fuse Wizard will identify the company standard fusing per phase utilizing the selected variables from the table.\n\nSelect the appropriate tab at the top for the construction type.  For underground construction and padmounted transformers select the “UG” tab.  For overhead construction and overhead transformers select the “OH” tab.  For underground subdivisions  select the “SUBD” tab.\nSelect the kVA rating for a transformer or total connected kVA on a lateral tap using the table for “UG” or “OH”, or, Select the total connected (all transformers) kVA for a phase in an underground subdivision.\n\nThe appropriate fuse sizes will be given for the condition selected.\n\nTo modify the default kVA sizes and fuses select the “Configure” button.  To negate the modifications select the “Default” button.\n\nTo share the results select the “email” button.";
 }
 
 @end

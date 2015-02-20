@@ -11,6 +11,13 @@
 #import <UICKeyChainStore/UICKeyChainStore.h>
 #import "MainServiceVoltageDropVariables.h"
 
+@protocol WireResistivityTypeLabelDelegate <NSObject>
+
+@required
+-(void)updateResistivity:(float)resistivity;
+
+@end
+
 @protocol MainServiceVoltageDropFormulaDelegate <NSObject>
 -(void)giveFormlaDetails:(NSString *)details;
 -(void)giveFormlaInformation:(NSString *)information;
@@ -25,11 +32,19 @@
 -(void)canAddAnotherWire:(BOOL)check;
 
 @end
-@interface MainServiceVoltageDropFormula : UIViewController <UITextFieldDelegate,UITableViewDataSource,UITableViewDelegate,MainServiceVoltageDropEditCellDelegate>
+
+@interface WireResistivityTypeLabel: UILabel <UITableViewDataSource,UITableViewDelegate>
+
+@property (weak, nonatomic)id <WireResistivityTypeLabelDelegate> delegate;
+
+@end
+
+@interface MainServiceVoltageDropFormula : UIViewController <UITextFieldDelegate,UITableViewDataSource,UITableViewDelegate,UIPopoverControllerDelegate,WireResistivityTypeLabelDelegate,MainServiceVoltageDropEditCellDelegate>
 
 @property (strong, nonatomic) IBOutlet UITableView *wireTV;
 @property (strong, nonatomic) IBOutlet UITableView *phaseTV;
 
+@property (weak, nonatomic) IBOutlet WireResistivityTypeLabel *wireResieLbl;
 @property (weak, nonatomic) IBOutlet UILabel *typeLbl;
 @property (weak, nonatomic) IBOutlet UILabel *attributeLbl;
 @property (weak, nonatomic) IBOutlet UILabel *type2Lbl;
@@ -42,6 +57,8 @@
 
 @property (weak, nonatomic) IBOutlet UIButton *addFuseBtn;
 @property (weak, nonatomic) IBOutlet UIButton *defaultBtn;
+
+@property (nonatomic, strong) UIPopoverController *quantityPickerPopover;
 
 @property (strong, nonatomic) MainServiceVoltageDropVariables*  aluminumACVoltDropV;
 @property (weak, nonatomic)id <MainServiceVoltageDropFormulaDelegate> delegate;
@@ -63,3 +80,4 @@
 @property (weak, nonatomic)id <MainServiceVoltageDropEditCellDelegate> delegate;
 
 @end
+

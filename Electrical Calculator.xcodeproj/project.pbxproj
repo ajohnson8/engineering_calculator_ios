@@ -30,6 +30,7 @@
 		E5AEE6D61A8BBC1E002E3BB7 /* BranchCircutVoltageDropFormula.m in Sources */ = {isa = PBXBuildFile; fileRef = E5AEE6D51A8BBC1E002E3BB7 /* BranchCircutVoltageDropFormula.m */; };
 		E5BD39A61A83BE3F00CFFD8B /* FuseWizardVariables.m in Sources */ = {isa = PBXBuildFile; fileRef = E5BD39A51A83BE3F00CFFD8B /* FuseWizardVariables.m */; };
 		E5BD39A91A83BE7C00CFFD8B /* FuseWizardFormula.m in Sources */ = {isa = PBXBuildFile; fileRef = E5BD39A81A83BE7C00CFFD8B /* FuseWizardFormula.m */; };
+		E5EE93361A96688F004BBB72 /* InformationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E5EE93351A96688F004BBB72 /* InformationViewController.m */; };
 		E5F3C0291A8E5A0800B0196C /* ElectricalEnvCal.m in Sources */ = {isa = PBXBuildFile; fileRef = E5F3C0281A8E5A0800B0196C /* ElectricalEnvCal.m */; };
 /* End PBXBuildFile section */
 
@@ -88,6 +89,8 @@
 		E5BD39A51A83BE3F00CFFD8B /* FuseWizardVariables.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FuseWizardVariables.m; sourceTree = "<group>"; };
 		E5BD39A71A83BE7C00CFFD8B /* FuseWizardFormula.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FuseWizardFormula.h; sourceTree = "<group>"; };
 		E5BD39A81A83BE7C00CFFD8B /* FuseWizardFormula.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FuseWizardFormula.m; sourceTree = "<group>"; };
+		E5EE93341A96688F004BBB72 /* InformationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InformationViewController.h; sourceTree = "<group>"; };
+		E5EE93351A96688F004BBB72 /* InformationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InformationViewController.m; sourceTree = "<group>"; };
 		E5F3C0271A8E5A0800B0196C /* ElectricalEnvCal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ElectricalEnvCal.h; sourceTree = "<group>"; };
 		E5F3C0281A8E5A0800B0196C /* ElectricalEnvCal.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ElectricalEnvCal.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -342,6 +345,8 @@
 				E52807D91A7692B600AF1A17 /* MasterViewController.m */,
 				E52807DA1A7692B600AF1A17 /* DetailViewController.h */,
 				E52807DB1A7692B600AF1A17 /* DetailViewController.m */,
+				E5EE93341A96688F004BBB72 /* InformationViewController.h */,
+				E5EE93351A96688F004BBB72 /* InformationViewController.m */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -501,6 +506,7 @@
 				E5AEE6D61A8BBC1E002E3BB7 /* BranchCircutVoltageDropFormula.m in Sources */,
 				E5AEE6CF1A8AC2DC002E3BB7 /* BranchCircutVoltageDropVariables.m in Sources */,
 				E5F3C0291A8E5A0800B0196C /* ElectricalEnvCal.m in Sources */,
+				E5EE93361A96688F004BBB72 /* InformationViewController.m in Sources */,
 				E52807E71A76CF0300AF1A17 /* TransformerLoadFormula.m in Sources */,
 				E5BD39A91A83BE7C00CFFD8B /* FuseWizardFormula.m in Sources */,
 				E52807E21A76CE9700AF1A17 /* TransformerCalcVariables.m in Sources */,

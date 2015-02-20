@@ -11,6 +11,10 @@
 @interface SubdivisionLoadFormula () {
     
     BOOL _config;
+    InformationViewController *_informationVC;
+    NSString *_info;
+    TFCSUBD *_calSubd;
+
 }
 
 @end
@@ -42,12 +46,28 @@
     
     UIBarButtonItem * configure = [[UIBarButtonItem alloc]initWithTitle:@"" style:UIBarButtonItemStylePlain target:self action:@selector(pressedConfig:)];
     [[self.navigationController.viewControllers.lastObject navigationItem] setRightBarButtonItem:configure];
+    
+    UIBarButtonItem * back = [[UIBarButtonItem alloc]initWithTitle:@"Info" style:UIBarButtonItemStylePlain target:self action:@selector(pressedInfo:)];
+    [[self.navigationController.viewControllers.lastObject navigationItem] setLeftBarButtonItem:back];
 
     [self configureMode:0];
 }
 
 
 #pragma mark - IBActions
+- (IBAction)pressedInfo:(id)sender {
+
+    [self setInfo];
+    _informationVC = [[InformationViewController alloc]init];
+    [_informationVC setInfoTitle:@"Subdivision Load Information"];
+    [_informationVC setInformation:_info];
+    
+     UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:_informationVC];
+    
+    [navController setModalPresentationStyle:UIModalPresentationFormSheet];
+    
+    [self presentViewController:navController animated:YES completion:nil];
+}
 
 - (IBAction)pressedConfig:(id)sender {
     
@@ -60,7 +80,7 @@
     
     [self configureMode:1];
     
-    [_calulationTotal setText:[NSString stringWithFormat:@"Full Load is : %i",0]];
+    [_calulationTotal setText:[NSString stringWithFormat:@"Full Load : %i",0]];
     [_xfrmrTVC reloadData];
 }
 
@@ -253,7 +273,20 @@
 
 #pragma  mark - Calulations and Editting
 -(void)calulateXFRMRFULLLOAD{
-    [_calulationTotal setText:[NSString stringWithFormat:@"Full Load is : %f",[subDivLoadVar calulateXFRMRFullLoad]]];
+    _calSubd = [[TFCSUBD alloc]init];
+    [_calSubd setCKVAnPhase:[NSString stringWithFormat:@"<%f",[subDivLoadVar calulateXFRMRFullLoad]]];
+    [_calulationTotal setText:[NSString stringWithFormat:@"Full Load : %f",[subDivLoadVar calulateXFRMRFullLoad]]];
+    
+    id temp = [FuseWizardFormula sreachForFuseByTempFuseType:_calSubd];
+    
+    if ([temp isKindOfClass:[NSString class]])
+        [_recommendedFuse setText:temp];
+    else if ([temp isKindOfClass:[TFCSUBD class]] && [subDivLoadVar calulateXFRMRFullLoad] != 0){
+        _calSubd = temp;
+        [_recommendedFuse setText:[NSString stringWithFormat:@"SUBD\nkVA %@\nS&C STD %@",_calSubd.CKVAnPhase,[self roundingUp:_calSubd.SnCSTD andDecimalPlace:0]]];
+    } else {
+        [_recommendedFuse setText:@""];
+    }
 }
 
 
@@ -353,7 +386,7 @@
         _quantityPickerPopover.contentViewController.preferredContentSize = CGSizeMake(150, 200);
         [_quantityPickerPopover presentPopoverFromRect:CGRectMake(cell.frame.size.width, cell.frame.size.height/2, 0, 0) inView:cell
                               permittedArrowDirections:UIPopoverArrowDirectionLeft
-                                              animated:YES];
+                                              animated:NO];
         
     }else {
         UITableViewController *tableView = [[UITableViewController alloc]init];
@@ -405,6 +438,9 @@
     [_xfrmrTVC reloadData];
 
 }
+-(void)setInfo{
+    _info = @"Subdivision Load Calculates the available full load amps on a phase conductor.  Select the quantity of the appropriate size transformer kVA sizes and the total full load amps will be calculated.\n\nTo add or modify the Transformer Sizes, Volt Amps, or Volts select the “Configure” button.  To negate the modifications select the “Default” button.\n\nTo share the results select the “E-mail” button.";
+}
 
 -(void)getEmail{
     NSString *emailBody = [[NSString alloc]initWithFormat:@"<table style=\"width:100\"><tr><td>Transformer Size</td><td>Quality</td></tr>"];
@@ -417,12 +453,24 @@
     
     emailBody = [emailBody stringByAppendingString:[NSString stringWithFormat: @"<tr><td>Full Amp Load</td><td>%f</td></tr></table>",subDivLoadVar.calulateXFRMRFullLoad]];
     
+    emailBody = [emailBody stringByAppendingString:
+                 [NSString stringWithFormat: @"</br><table>Recommended Fuse<tr><td>Subd</td></tr><tr><td>kVA</td><td>%@</td></tr><tr><td>S&C STD</td><td>%@</td></tr></table>",_calSubd.CKVAnPhase,[self roundingUp:_calSubd.SnCSTD andDecimalPlace:2]]];
     
     [[self delegate]giveFormlaDetails:emailBody];
-    [[self delegate]giveFormlaInformation:@"Somthing"];
+    [[self delegate]giveFormlaInformation:@"Subdivision Load Calculates the available full load amps on a phase conductor."];
     [[self delegate]giveFormlaTitle:@"Subdivision Load"];
 }
 
+-(NSString *)roundingUp:(float)num andDecimalPlace:(int)place{
+             
+             NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
+             
+             [formatter setNumberStyle:NSNumberFormatterDecimalStyle];
+             [formatter setMaximumFractionDigits:place];
+             [formatter setRoundingMode: NSNumberFormatterRoundHalfUp];
+             
+             return [formatter stringFromNumber:[NSNumber numberWithFloat:num]];
+         }
 @end
 
 #pragma mark - Implementation XFRMRSizeCell

@@ -267,7 +267,7 @@
     if ([MFMailComposeViewController canSendMail]) {
         MFMailComposeViewController *composeViewController = [[MFMailComposeViewController alloc] initWithNibName:nil bundle:nil];
         [composeViewController setMailComposeDelegate:self];
-        [composeViewController setToRecipients:@[@"marneypt@guc.com"]];
+        [composeViewController setToRecipients:nil];
         [composeViewController setSubject:[NSString stringWithFormat:@"%@-%@",@"EngineeringCalculator",[_detailViewController emailTitle]]];
         
         UIImageView *imgView = [self returnStoredImage];

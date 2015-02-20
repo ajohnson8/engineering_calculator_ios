@@ -7,9 +7,14 @@
 //
 
 #import "TransformerRatingCalcFormula.h"
+#import "InformationViewController.h"
 
 @interface TransformerRatingCalcFormula () {
     BOOL _config;
+    InformationViewController *_informationVC;
+    TFCUG *_calugMax;
+    TFCUG *_calugMin;
+    NSString *_info;
 }
 
 @end
@@ -34,7 +39,11 @@
     
     UIBarButtonItem * configure = [[UIBarButtonItem alloc]initWithTitle:@"" style:UIBarButtonItemStylePlain target:self action:@selector(pressedConfig:)];
     [[self.navigationController.viewControllers.lastObject navigationItem] setRightBarButtonItem:configure];
-     [self configureMode:0];
+    
+    UIBarButtonItem * back = [[UIBarButtonItem alloc]initWithTitle:@"Info" style:UIBarButtonItemStylePlain target:self action:@selector(pressedInfo:)];
+    [[self.navigationController.viewControllers.lastObject navigationItem] setLeftBarButtonItem:back];
+    
+    [self configureMode:0];
 }
 
 
@@ -169,6 +178,19 @@
 
 
 #pragma mark - IBActions
+- (IBAction)pressedInfo:(id)sender {
+    
+    [self setInfo];
+    _informationVC = [[InformationViewController alloc]init];
+    [_informationVC setInfoTitle:@"Transformer Rating Information"];
+    [_informationVC setInformation:_info];
+    
+    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:_informationVC];
+    
+    [navController setModalPresentationStyle:UIModalPresentationFormSheet];
+    
+    [self presentViewController:navController animated:YES completion:nil];
+}
 
 - (IBAction)pressedConfig:(id)sender {
     
@@ -307,6 +329,34 @@
     [_faultPriLbl setText:[self roundingUp:[_transformerRateCalcV calulateFaultDutyPri]andDecimalPlace:0]];
     [_faultSecLbl setText:[self roundingUp:[_transformerRateCalcV calulateFaultDutySec]andDecimalPlace:0]];
     
+    _calugMax = [[TFCUG alloc]init];
+    _calugMin = [[TFCUG alloc]init];
+    
+    [_calugMax setKVA:[NSString stringWithFormat:@"%f",[_transformerRateCalcV calulatePriFuseMax]]];
+    [_calugMin setKVA:[NSString stringWithFormat:@"%f",[_transformerRateCalcV calulatePriFuseMin]]];
+    
+     id maxTemp = [FuseWizardFormula sreachForFuseByTempFuseType:_calugMax];
+     id minTemp = [FuseWizardFormula sreachForFuseByTempFuseType:_calugMin];
+    
+    if ([maxTemp isKindOfClass:[NSString class]])
+        [_maxRecommendedFuse setText:maxTemp];
+    else if ([maxTemp isKindOfClass:[TFCUG class]] && [_transformerRateCalcV calulatePriFuseMax] != 0){
+        _calugMax = maxTemp;
+        [_maxRecommendedFuse setText:[NSString stringWithFormat:@"UG Max\nkVA %@\nBayonet %@\nNX %@\nS&C SM%@",_calugMax.KVA,[self roundingUp:_calugMax.Bayonet andDecimalPlace:0],_calugMax.NX,_calugMax.SnCSM]];
+    } else {
+        [_maxRecommendedFuse setText:@""];
+    }
+    
+    if ([minTemp isKindOfClass:[NSString class]])
+        [_minRecommendedFuse setText:maxTemp];
+    else if ([minTemp isKindOfClass:[TFCUG class]] && [_transformerRateCalcV calulatePriFuseMin] != 0){
+        _calugMin = minTemp;
+        [_minRecommendedFuse setText:[NSString stringWithFormat:@"UG Min\nkVA %@\nBayonet %@\nNX %@\nS&C SM%@",_calugMin.KVA,[self roundingUp:_calugMin.Bayonet andDecimalPlace:0],_calugMin.NX,_calugMin.SnCSM]];
+    } else {
+        [_minRecommendedFuse setText:@""];
+    }
+    
+    
 }
 
 -(NSString *)roundingUp:(float)num andDecimalPlace:(int)place{
@@ -367,11 +417,18 @@
     
     NSString *emailAnw =[[NSString alloc]initWithFormat:@"</br><table><tr><td>SNL Standard Impedance, </td><td>%@</td></tr><tr><td>Primary current, FLA:</td><td>%@</td></tr><tr><td>Secondary current, FLA:</td><td>%@</td></tr><tr><td>Primary fuse, max of 300</td><td>%@</td></tr><tr><td>Primary fuse, min of 125</td><td>%@</td></tr><tr><td>Secondary breaker, 125</td><td>%@</td></tr><tr><td>Fault duty, primary</td><td>%@</td></tr><tr><td>Fault duty, secondary</td><td>%@</td></tr></table>",_impedancePerLbl.text,_priFLALbl.text,_secFLALbl.text,_priMaxLbl.text,_priMinLbl.text,_secBreakerLbl.text,_faultPriLbl.text,_faultSecLbl.text];
     
+    NSString *fuses  =[[NSString alloc]initWithFormat:@"</br><table><tr><td colspan=\"2\">Max Fuse</td><td colspan=\"2\">Min Fuse</td></tr><tr><td>kVA</td><td>%@</td><td>kVA</td><td>%@</td></tr><tr><td>Bayonet</td><td>%@</td><td>Bayonet</td><td>%@</td></tr><tr><td>NX</td><td>%@</td><td>NX</td><td>%@</td></tr><tr><td>S&C SM</td><td>%@</td><td>S&C SM</td><td>%@</td></tr></table>",_calugMax.KVA,_calugMin.KVA,[self roundingUp:_calugMax.Bayonet andDecimalPlace:0],[self roundingUp:_calugMin.Bayonet andDecimalPlace:0],_calugMax.NX,_calugMin.NX,_calugMax.SnCSM,_calugMax.SnCSM];
+    
     emailBody = [ emailBody stringByAppendingString:emailAnw];
+    emailBody = [ emailBody stringByAppendingString:fuses];
     
     [[self delegate]giveFormlaDetails:emailBody];
-    [[self delegate]giveFormlaInformation:@"Somthing"];
+    [[self delegate]giveFormlaInformation:@"Transformer Rating calculates the available full load amps and fault current on the primary and secondary sides of a transformer by entering kVA, phase to phase primary voltage and phase to phase secondary voltage.  It also estimates appropriate fuse and breaker amperages."];
     [[self delegate]giveFormlaTitle:@"Transformer Rating"];
+}
+
+-(void)setInfo{
+    _info = @"Transformer Rating calculates the available full load amps and fault current on the primary and secondary sides of a transformer by entering kVA, phase to phase primary voltage and phase to phase secondary voltage.  It also estimates appropriate fuse and breaker amperages.\n\nEnter the transformer full load rating in kVA.\nEnter the phase to phase primary voltage.\nEnter the phase to phase secondary voltage.\n\nFull load amps and available fault current on the primary and secondary of transformer will be calculated, along with maximum (300%) protective primary fuse, minimum (125%) primary protective fuse, and maximum secondary breaker (125%) size.\n\nTo modify the Impedance Table kVA sizes and Impedances, select the “Configure” button.  To negate the modifications select the “Default” button.\n\nTo share the results select the “email” button.";
 }
 @end
 

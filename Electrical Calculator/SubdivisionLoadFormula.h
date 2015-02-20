@@ -11,6 +11,8 @@
 #import <UICKeyChainStore/UICKeyChainStore.h>
 #import <TSMessages/TSMessage.h>
 #import "SubdivisionLoadVariables.h"
+#import "FuseWizardFormula.h"
+#import "InformationViewController.h"
 
 @protocol SubdivisionLoadFormulaDelegate <NSObject>
 -(void)giveFormlaDetails:(NSString *)details;
@@ -41,8 +43,9 @@
 @property (strong, nonatomic) IBOutlet UITextField *voltTxt;
 
 @property (strong, nonatomic) IBOutlet UILabel *calulationTotal;
+@property (strong, nonatomic) IBOutlet UILabel *recommendedFuse;
 
-@property (strong, nonatomic) IBOutlet UIButton *configBtn;
+@property (strong, nonatomic) IBOutlet UIButton *infoBtn;
 @property (weak  , nonatomic) IBOutlet UIButton *addSizeBtn;
 @property (strong, nonatomic) IBOutlet UIButton *defaultBtn;
 

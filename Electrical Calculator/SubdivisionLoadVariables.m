@@ -75,7 +75,7 @@
     }
     _xfrmr = unique;
     
-    NSSortDescriptor *sort=[NSSortDescriptor sortDescriptorWithKey:@"size" ascending:YES];
+    NSSortDescriptor *sort=[NSSortDescriptor sortDescriptorWithKey:@"vKA" ascending:YES];
     [_xfrmr sortUsingDescriptors:[NSArray arrayWithObject:sort]];
     
 }

@@ -54,6 +54,9 @@
 @property (weak, nonatomic)id <FuseWizardFormulaDelegate> delegate;
 
 -(void)getEmail;
+
++(id)sreachForFuseByTempFuseType:(id)type;
+
 @end
 
 @interface FuseWizardLabelCell: UITableViewCell <UITextFieldDelegate>
