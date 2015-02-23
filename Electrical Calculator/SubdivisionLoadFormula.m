@@ -31,6 +31,10 @@
     [self initView];
 }
 
+-(void)viewWillDisappear:(BOOL)animated{
+    [_quantityPickerPopover dismissPopoverAnimated:NO];
+}
+
 -(void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     
@@ -87,6 +91,16 @@
 - (IBAction)addSizeAction:(id)sender {
     XFRMR *temp = [[XFRMR alloc]init];
     [subDivLoadVar addXFRMR:temp];
+    [_xfrmrTVC reloadData];
+}
+- (IBAction)pressedClear:(id)sender {
+    for (int x = 0 ; x < subDivLoadVar.xfrmr.count; x++) {
+        XFRMR * temp = subDivLoadVar.xfrmr[x];
+        [temp setQtyl:0];
+        [subDivLoadVar updateXFRMRSize:temp andIndex:x];
+    }
+    [_calulationTotal setText:@""];
+    [_recommendedFuse setText:@""];
     [_xfrmrTVC reloadData];
 }
 
@@ -217,12 +231,34 @@
 }
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-    
-    if (tableView == _xfrmrTVC && indexPath.row != 0) {
+    if (indexPath.row != 0) {
         if (!_config && (_quantityPickerPopover==nil  ||  ![_quantityPickerPopover isPopoverVisible])) {
-            _quantityPickerPopover = nil;
             XFRMRQtylCell *cell =(XFRMRQtylCell *) [tableView cellForRowAtIndexPath:indexPath];
-            [self createQuantityPopoverListWithCell:cell];
+            if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad ){
+                UIViewController *popoverContent=[[UIViewController alloc] init];
+                
+                UITableView *tableView2=[[UITableView alloc] initWithFrame:CGRectMake(265, 680, 0, 0) style:UITableViewStylePlain];
+                
+                popoverContent.preferredContentSize=CGSizeMake(200, 420);
+                popoverContent.view=tableView2; //Adding tableView to popover
+                tableView2.delegate = cell;
+                tableView2.dataSource = cell;
+                
+                _quantityPickerPopover = [[UIPopoverController alloc] initWithContentViewController:popoverContent];
+                [_quantityPickerPopover setDelegate:self];
+                _quantityPickerPopover.contentViewController.preferredContentSize = CGSizeMake(150, 200);
+                [_quantityPickerPopover presentPopoverFromRect:CGRectMake(cell.frame.size.width, cell.frame.size.height/2, 0, 0) inView:cell
+                                      permittedArrowDirections:UIPopoverArrowDirectionLeft
+                                                      animated:NO];
+                
+            }else {
+                UITableViewController *tableView = [[UITableViewController alloc]init];
+                tableView.tableView.delegate = cell;
+                tableView.tableView.dataSource = cell;
+                
+                [self.navigationController pushViewController:tableView animated:YES];
+            }
+
         }
     }
 }
@@ -244,6 +280,9 @@
         [self deleteXFRMR:temp];
         
         [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:indexPath.row-1 inSection:indexPath.section]] withRowAnimation:UITableViewRowAnimationLeft];
+        
+        if (temp.vKA == 0  && temp.qtyl == 0)
+            [self canAddAnother:YES];
         [self.xfrmrTVC reloadData];
     }
 }
@@ -295,7 +334,7 @@
 -(void)updateXFRMRQuantity:(XFRMR *)xfrmr{
     
     if (UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPad){
-        [[self navigationController] popViewControllerAnimated:YES];
+        [[self navigationController] popViewControllerAnimated:NO];
     }else{
         [_quantityPickerPopover dismissPopoverAnimated:NO];
         _quantityPickerPopover = nil;
@@ -367,35 +406,6 @@
         tapper.cancelsTouchesInView = NO;
         [self.view addGestureRecognizer:tapper];
     }
-}
-
--(void)createQuantityPopoverListWithCell:(XFRMRQtylCell *)cell{
-    
-    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad ){
-        UIViewController *popoverContent=[[UIViewController alloc] init];
-        
-        UITableView *tableView2=[[UITableView alloc] initWithFrame:CGRectMake(265, 680, 0, 0) style:UITableViewStylePlain];
-        
-        popoverContent.preferredContentSize=CGSizeMake(200, 420);
-        popoverContent.view=tableView2; //Adding tableView to popover
-        tableView2.delegate = cell;
-        tableView2.dataSource = cell;
-        
-        _quantityPickerPopover = [[UIPopoverController alloc] initWithContentViewController:popoverContent];
-        [_quantityPickerPopover setDelegate:self];
-        _quantityPickerPopover.contentViewController.preferredContentSize = CGSizeMake(150, 200);
-        [_quantityPickerPopover presentPopoverFromRect:CGRectMake(cell.frame.size.width, cell.frame.size.height/2, 0, 0) inView:cell
-                              permittedArrowDirections:UIPopoverArrowDirectionLeft
-                                              animated:NO];
-        
-    }else {
-        UITableViewController *tableView = [[UITableViewController alloc]init];
-        tableView.tableView.delegate = cell;
-        tableView.tableView.dataSource = cell;
-        
-        [self.navigationController pushViewController:tableView animated:YES];
-    }
-    
 }
 
 -(void)configureMode:(int)mode{

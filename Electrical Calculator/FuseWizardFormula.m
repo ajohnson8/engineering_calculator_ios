@@ -196,24 +196,39 @@
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
         id temp;
+        TFCOH *x;
+        TFCUG *y;
+        TFCSUBD *z;
         switch (_typeSmc.selectedSegmentIndex) {
             case 0:
                 //UG
                 temp  = _transformerFuseCalcV.ugs[indexPath.row-1];
                 [_transformerFuseCalcV deleteTFCUGs:temp];
+                y = temp;
+                if (y.KVA.length == 0 && y.Bayonet == 0 && y.NX.length == 0 && y.SnCSM.length == 0)
+                    [self canAddAnotherFuse:YES];
+
                 break;
             case 1:
                 //OH
                 temp = _transformerFuseCalcV.ohs[indexPath.row-1];
                 [_transformerFuseCalcV deleteTFCOHs:temp];
+                x = temp;
+                if (x.KVA == 0 && x.SnC == 0 && x.MultSnC == 0 && x.NXCompII.length == 0)
+                    [self canAddAnotherFuse:YES];
                 break;
             case 2:
                 //SUBD
                 temp  = _transformerFuseCalcV.subds[indexPath.row-1];
                 [_transformerFuseCalcV deleteTFCSUBD:temp];
+                z = temp;
+                if (z.CKVAnPhase.length == 0 && z.SnCSTD == 0)
+                    [self canAddAnotherFuse:YES];
                 break;
         }
         [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section]] withRowAnimation:UITableViewRowAnimationLeft];
+        
+    
     }
 }
 
@@ -269,6 +284,10 @@
     [_attribute2Lbl setText:@""];
     [_attribute3Lbl setText:@""];
     [_attribute4Lbl setText:@""];
+}
+
+- (IBAction)pressedClear:(id)sender {
+    
 }
 
 - (IBAction)addFuseAction:(id)sender {
@@ -411,9 +430,8 @@
         NSString *selSubd = selectsubd.CKVAnPhase;
         selSubd = [ selSubd stringByReplacingOccurrencesOfString:@"<" withString:@""];
         for( TFCSUBD *temp in defaultSUBD){
-            NSString *tempSubd = temp.CKVAnPhase;
-            tempSubd = [ tempSubd stringByReplacingOccurrencesOfString:@"<" withString:@""];
-            if ([tempSubd floatValue] > [selSubd floatValue]) {
+            float tempSubd = temp.SnCSTD;
+            if (tempSubd > selectsubd.SnCSTD) {
                 return temp;
             }
         }

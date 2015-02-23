@@ -24,7 +24,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self initView];
-  
+    
 }
 
 -(void)viewWillAppear:(BOOL)animated{
@@ -171,6 +171,8 @@
             WSVDWire *temp = _aluminumACVoltDropV.wires[indexPath.row-1];
             [_aluminumACVoltDropV deleteWSVDWire:temp];
             [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section]] withRowAnimation:UITableViewRowAnimationLeft];
+            if (temp.wireSize.length == 0 && temp.circ == 0)
+                [self canAddAnotherWire:YES];
         }
 }
 
@@ -191,7 +193,7 @@
     if (textField == _lengthTxt)
         [_aluminumACVoltDropV setOneWayLength:[NSNumber numberWithFloat:[textField.text floatValue]]];
     if (textField == _wireResistivityTxt){
-     
+        
         [_aluminumACVoltDropV setResistivity:[NSNumber numberWithFloat:[textField.text floatValue]]];
     }
     [self calulateTotal];
@@ -236,7 +238,7 @@
 }
 
 - (IBAction)pressedConfig:(id)sender {
-
+    
     [UIView transitionWithView:self.view
                       duration:1
                        options:UIViewAnimationOptionTransitionFlipFromRight
@@ -269,6 +271,24 @@
     [_addFuseBtn setEnabled:NO];
 }
 
+- (IBAction)pressedClear:(id)sender {
+    [_wireTV deselectRowAtIndexPath:[_wireTV indexPathForSelectedRow] animated:YES];
+    [_phaseTV deselectRowAtIndexPath:[_phaseTV indexPathForSelectedRow] animated:YES];
+    
+    [_typeLbl setText:@""];
+    [_attributeLbl setText:@""];
+    [_type2Lbl setText:@""];
+    [_attribute2Lbl setText:@""];
+    [_lengthTxt setText:@""];
+    [_cirtCurrentTxt setText:@""];
+    [_cirtVoltTxt setText:@""];
+    
+    [_aluminumACVoltDropV setCurrent:[NSNumber numberWithFloat:0]];
+    [_aluminumACVoltDropV setCirtVoltage:[NSNumber numberWithFloat:0]];
+    [_aluminumACVoltDropV setOneWayLength:[NSNumber numberWithFloat:0]];
+    [_aluminumACVoltDropV setResistivity:[NSNumber numberWithFloat:0]];
+}
+
 - (IBAction)resetDefaults:(id)sender {
     
     if (_config) {
@@ -281,7 +301,7 @@
         
         [TSMessage showNotificationInViewController:self.navigationController.viewControllers.lastObject title:@"MainServiceVoltageDropFormula" subtitle:@"Defaults has been save." type:TSMessageNotificationTypeSuccess duration:1.5];
         
-
+        
         
     }else {
         NSData* myDataArrayWire = [UICKeyChainStore dataForKey:@"SystemDefaultsArrayWire"];
@@ -341,6 +361,7 @@
         [_wireResistivityTxt setEnabled:NO];
     }
     [_quantityPickerPopover dismissPopoverAnimated:NO];
+    [self calulateTotal];
 }
 
 #pragma mark - Private Methods
@@ -395,7 +416,7 @@
 
 - (void)handleSingleTap:(id) sender{
     UITapGestureRecognizer *tapRecognizer = (UITapGestureRecognizer *)sender;
-    if (_config && [tapRecognizer.view tag] == 789) {
+    if (!_config && [tapRecognizer.view tag] == 789) {
         [self createQuantityPopoverList];
     }
     [self.view endEditing:YES];
@@ -437,7 +458,7 @@
         [_defaultBtn setTitle:@"Default" forState:UIControlStateNormal];[_defaultBtn setNeedsLayout];
         [self.navigationController.viewControllers.lastObject setTitle:@"Main Service Voltage Drop"];
         [[[self.navigationController.viewControllers.lastObject navigationItem] rightBarButtonItem]setTitle:@"Configure"];
-        [_wireResieLbl setTextColor:[UIColor blackColor]];
+        [_wireResieLbl setTextColor:[UIColor blueColor]];
         _lengthTxt.layer.borderColor=[[UIColor blackColor]CGColor];
         _lengthTxt.layer.borderWidth=1.0;
         _cirtCurrentTxt.layer.borderColor=[[UIColor blackColor]CGColor];
@@ -451,7 +472,7 @@
         [_defaultBtn setTitle:@"Set Default" forState:UIControlStateNormal];[_defaultBtn setNeedsLayout];
         [self.navigationController.viewControllers.lastObject setTitle:@"Main Service Voltage Drop Configuration"];
         [[[self.navigationController.viewControllers.lastObject navigationItem] rightBarButtonItem]setTitle:@"Done"];
-        [_wireResieLbl setTextColor:[UIColor blueColor]];
+        [_wireResieLbl setTextColor:[UIColor blackColor]];
         _lengthTxt.layer.borderColor=[[UIColor clearColor]CGColor];
         _lengthTxt.layer.borderWidth=1.0;
         _cirtCurrentTxt.layer.borderColor=[[UIColor clearColor]CGColor];
@@ -475,7 +496,7 @@
 -(void)getEmail{
     
     NSString *emailBody = [[NSString alloc]initWithFormat:@"<table><tr><td style=\"border-right:1px solid black\">Phase</td><td>%i</td><td style=\"border-right:1px solid black\">Length of Conductors in Feet</td><td>%@</td></tr><tr><td style=\"border-right:1px solid black\">Wire Size</td><td>%@</td><td style=\"border-right:1px solid black\">Full Load Circuit Current</td><td>%@</td></tr><tr><td style=\"border-right:1px solid black\">Resistivity</td><td>%@</td><td style=\"border-right:1px solid black\">Circuit Voltage</td><td>%@</td></tr><tr><td style=\"border-right:1px solid black\">Circular-mil-area</td><td>%@</td></tr></table>",_aluminumACVoltDropV.selectPhase.phaseID,[self roundingUp:[_aluminumACVoltDropV.oneWayLength floatValue] andDecimalPlace:0],_aluminumACVoltDropV.selectWire.wireSize,[self roundingUp:[_aluminumACVoltDropV.current floatValue] andDecimalPlace:0],[self roundingUp:[_aluminumACVoltDropV.resistivity floatValue] andDecimalPlace:2],[self roundingUp:[_aluminumACVoltDropV.cirtVoltage floatValue] andDecimalPlace:0],[self roundingUp:_aluminumACVoltDropV.selectWire.circ andDecimalPlace:6]];
-
+    
     NSString *emailAnw =[[NSString alloc]initWithFormat:@"</br><table><tr><td style=\"border-right:1px solid black\">%@</td><td>%@</td></tr><tr><td style=\"border-right:1px solid black\">Volt Drop%@</td><td>%@</td></tr></table>",_typeLbl.text,_attributeLbl.text,@"%",_attribute2Lbl.text];
     
     emailBody = [ emailBody stringByAppendingString:emailAnw];
@@ -595,7 +616,7 @@
 }
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-
+    
     float temp = 0;
     switch (indexPath.row) {
         case 0:

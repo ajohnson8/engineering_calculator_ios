@@ -146,7 +146,10 @@
         TRCImpedance *temp = _transformerRateCalcV.impedances[indexPath.row-1];
         [_transformerRateCalcV deleteTRCImpedances:temp];
         [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section]] withRowAnimation:UITableViewRowAnimationLeft];
+        if (temp.KVA == 0 && temp.V208 == 0 && temp.V480 == 0)
+            [self canAddAnotherImpedance:YES];
     }
+
 }
 
 
@@ -220,6 +223,26 @@
     [_transformerRateCalcV addTRCImpedances:temp];
     [_impedanceTV reloadData];
     [_addImpedanceBtn setEnabled:NO];
+}
+
+- (IBAction)pressedClear:(id)sender {
+    [_impedancePerLbl setText:[self roundingUp:0.00 andDecimalPlace:0]];
+    [_priFLALbl setText:[self roundingUp:0.00 andDecimalPlace:0]];
+    [_secFLALbl setText:[self roundingUp:0.00 andDecimalPlace:0]];
+    [_priMaxLbl setText:[self roundingUp:0.00 andDecimalPlace:0]];
+    [_priMinLbl setText:[self roundingUp:0.00 andDecimalPlace:0]];
+    [_secBreakerLbl setText:[self roundingUp:0.00 andDecimalPlace:0]];
+    [_faultPriLbl setText:[self roundingUp:0.00 andDecimalPlace:0]];
+    [_faultSecLbl setText:[self roundingUp:0.00 andDecimalPlace:0]];
+    [_secVoltTxt  setText:@""];
+    [_priVoltTxt setText:@""];
+    [_kilaVoltAmpsTxt setText:@""];
+    [_maxRecommendedFuse setText:@""];
+    [_minRecommendedFuse setText:@""];
+    [_transformerRateCalcV setDefaultsPriVolts:0];
+    [_transformerRateCalcV setDefaultskilovolt_amps:0];
+    [_transformerRateCalcV setDefaultsSecVolts:0];
+    
 }
 
 - (IBAction)resetDefaults:(id)sender {

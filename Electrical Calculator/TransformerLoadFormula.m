@@ -90,6 +90,26 @@
     [_addLLVoltsBtn setEnabled:NO];
 }
 
+- (IBAction)pressedClear:(id)sender {
+    
+    _selectedPhase = nil;
+    _selectedLLSec = nil;
+    [_phaseTV deselectRowAtIndexPath:[_phaseTV indexPathForSelectedRow] animated:YES];
+    [_secLLVoltTV deselectRowAtIndexPath:[_secLLVoltTV indexPathForSelectedRow] animated:YES];
+    
+    [_kilaVoltAmpsTxt setText:@""];
+    [_ampsTxt setText:@""];
+    
+    [_transformerCalcV setDefaultskilovolt_amps:0];
+    [_transformerCalcV setDefaultsAmpsPer:0];
+    
+    [_AFCPLlb setText:[self roundingUp:0.00]];
+    [_AFCSLlb setText:[self roundingUp:0.00]];
+    [_FLAPLlb setText:[self roundingUp:0.00]];
+    [_FLASLlb setText:[self roundingUp:0.00]];
+    
+}
+
 - (IBAction)resetDefaults:(id)sender {
     
     if (_config) {
@@ -306,6 +326,8 @@
             TCLLSec *temp = _transformerCalcV.llSecs[indexPath.row];
             [_transformerCalcV deleteTCLLSec:temp];
             [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section]] withRowAnimation:UITableViewRowAnimationLeft];
+            if (temp.llSecVaule == 0)
+                [self canAddAnotherLLSec:YES];
         }
     }
 }

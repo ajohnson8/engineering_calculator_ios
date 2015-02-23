@@ -150,6 +150,8 @@
         WSVDWire *temp = _wireSizeVoltageDropV.wires[indexPath.row-1];
         [_wireSizeVoltageDropV deleteWSVDWire:temp];
         [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section]] withRowAnimation:UITableViewRowAnimationLeft];
+        if (temp.wireSize.length == 0 && temp.ampacity == 0 && temp.ohms == 0)
+            [self canAddAnotherWire:YES];
     }
 }
 
@@ -238,6 +240,24 @@
     [_wireSizeVoltageDropV addWSVDWire:temp];
     [_wireTV reloadData];
     [_addFuseBtn setEnabled:NO];
+}
+
+- (IBAction)pressedClear:(id)sender {
+    [_wireSizeLbl  setText:@"Wire Size"];
+    [_attribute1Lbl setText:@""];
+    [_attribute2Lbl setText:@""];
+    [_attribute3Lbl setText:@""];
+    [_attribute4Lbl setText:@""];
+    [_attribute5Lbl setText:@""];
+    [_attribute6Lbl setText:@""];
+    [_attribute7Lbl setText:@""];
+    [_attribute8Lbl setText:@""];
+    [_voltSizeLbl setText:@"<- Select Voltage"];
+    
+    [_lengthTxt setText:@""];
+    [_cirtCurrentTxt setText:@""];
+    
+    [_wireSizeVoltageDropV removeValues];
 }
 
 - (IBAction)resetDefaults:(id)sender {

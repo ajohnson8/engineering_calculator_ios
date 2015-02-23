@@ -150,6 +150,7 @@
         else
             return testfirst.V208;
     } else if ([secVolts floatValue] >= 208){
+        
         for (TRCImpedance* temp in impedancesList) {
             if (temp.KVA >= [kva floatValue])
                 return returnValue.V480;
@@ -157,8 +158,11 @@
         }
     }else{
         for (TRCImpedance* temp in impedancesList) {
-            if (temp.KVA >= [kva floatValue])
+            if (temp.KVA >= [kva floatValue]){
+                if (returnValue.V208 == 0)
+                    return temp.V208;
                 return returnValue.V208;
+            }
             returnValue = temp;
         }
             return returnValue.V208;
