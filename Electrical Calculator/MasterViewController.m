@@ -31,8 +31,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.detailViewController = (DetailViewController *)[[self.splitViewController.viewControllers
-                                                          lastObject] topViewController];
+    self.detailViewController = (DetailViewController *)[[self.splitViewController.viewControllers lastObject] topViewController];
     self.detailViewController = [self.detailViewController init];
     if (!_objects){
         _objects = [[NSMutableArray alloc]init];
@@ -42,7 +41,6 @@
     _trans = 0;
     _preTrans = 0;
     [self.tableView reloadData];
-    
 }
 
 -(void)viewDidAppear:(BOOL)animated{
@@ -55,7 +53,6 @@
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 #pragma mark - Segues
@@ -87,6 +84,7 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     ForumalCell *cell = (ForumalCell *) [_table dequeueReusableCellWithIdentifier:@"Cell" forIndexPath:indexPath];
+    
     if (cell == nil)
     {
         NSArray *nib = [[NSBundle mainBundle] loadNibNamed:@"Cell" owner:self options:nil];

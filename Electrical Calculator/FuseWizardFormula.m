@@ -430,8 +430,7 @@
         NSString *selSubd = selectsubd.CKVAnPhase;
         selSubd = [ selSubd stringByReplacingOccurrencesOfString:@"<" withString:@""];
         for( TFCSUBD *temp in defaultSUBD){
-            float tempSubd = temp.SnCSTD;
-            if (tempSubd > selectsubd.SnCSTD) {
+            if (temp.SnCSTD > [selSubd floatValue]) {
                 return temp;
             }
         }

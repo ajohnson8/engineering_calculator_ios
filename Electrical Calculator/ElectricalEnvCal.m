@@ -547,29 +547,29 @@
     
     WSVDWire * wire16 = [[WSVDWire alloc]init];
     [wire16 setWireSize:@"250"];
-    [wire16 setAmpacity:0.0];
-    [wire16 setOhms:0.0];
+    [wire16 setAmpacity:255];
+    [wire16 setOhms:0.00004148];
     [wire16 setCirc:250000.00];
     [defaultWires addObject:wire16];
     
     WSVDWire * wire17 = [[WSVDWire alloc]init];
     [wire17 setWireSize:@"350"];
-    [wire17 setAmpacity:0.0];
-    [wire17 setOhms:0.0];
+    [wire17 setAmpacity:310];
+    [wire17 setOhms:0.000029629];
     [wire17 setCirc:350000.00];
     [defaultWires addObject:wire17];
     
     WSVDWire * wire18 = [[WSVDWire alloc]init];
     [wire18 setWireSize:@"500"];
-    [wire18 setAmpacity:0.0];
-    [wire18 setOhms:0.0];
+    [wire18 setAmpacity:380];
+    [wire18 setOhms:0.000020740];
     [wire18 setCirc:500000.00];
     [defaultWires addObject:wire18];
     
     WSVDWire * wire19 = [[WSVDWire alloc]init];
     [wire19 setWireSize:@"750"];
-    [wire19 setAmpacity:0.0];
-    [wire19 setOhms:0.0];
+    [wire19 setAmpacity:475];
+    [wire19 setOhms:0.000013827];
     [wire19 setCirc:750000.00];
     [defaultWires addObject:wire19];
     
