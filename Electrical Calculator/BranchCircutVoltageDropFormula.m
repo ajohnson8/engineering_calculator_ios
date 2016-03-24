@@ -428,7 +428,7 @@
         
         _quantityPickerPopover = [[UIPopoverController alloc] initWithContentViewController:popoverContent];
         [_quantityPickerPopover setDelegate:self];
-        _quantityPickerPopover.contentViewController.preferredContentSize = CGSizeMake(150, 200);
+        _quantityPickerPopover.contentViewController.preferredContentSize = CGSizeMake(150, 155);
         [_quantityPickerPopover presentPopoverFromRect:CGRectMake(_voltage.frame.size.width, _voltage.frame.size.height/2, 0, 0) inView:_voltage
                               permittedArrowDirections:UIPopoverArrowDirectionLeft
                                               animated:YES];

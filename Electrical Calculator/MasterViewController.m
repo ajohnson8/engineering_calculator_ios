@@ -10,7 +10,7 @@
 #import "DetailViewController.h"
 
 @interface MasterViewController (){
-    
+    AppDelegate *_appDelegate;
     DetailViewController *controller;
     int _trans;
     int _preTrans;
@@ -33,6 +33,9 @@
     [super viewDidLoad];
     self.detailViewController = (DetailViewController *)[[self.splitViewController.viewControllers lastObject] topViewController];
     self.detailViewController = [self.detailViewController init];
+    
+    _appDelegate = (AppDelegate*)[[UIApplication sharedApplication]delegate];
+    
     if (!_objects){
         _objects = [[NSMutableArray alloc]init];
     }
@@ -125,6 +128,9 @@
 #pragma mark - MFMailComposeViewControllerDelegate
 - (void)mailComposeController:(MFMailComposeViewController*)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError*)error
 {
+    
+    [_appDelegate setIsEmail:false];
+    
     switch (result)
     {
         case MFMailComposeResultCancelled:
@@ -261,6 +267,8 @@
 
 - (void) sendEmail: (id)sender
 {
+    [_appDelegate setIsEmail:true];
+    
     [_detailViewController setupEmail];
     if ([MFMailComposeViewController canSendMail]) {
         MFMailComposeViewController *composeViewController = [[MFMailComposeViewController alloc] initWithNibName:nil bundle:nil];

@@ -10,6 +10,7 @@
 #import "DetailViewController.h"
 
 @interface AppDelegate () <UISplitViewControllerDelegate> {
+    BOOL _isEditing;
     BOOL _rotate;
     int _dismissKeyCount;
     NSNotification *_hideNotification;
@@ -42,6 +43,7 @@
                                                      name:UIApplicationDidChangeStatusBarOrientationNotification
                                                    object:nil];
     }
+    _isEditing = false;
     _rotate = false;
     _dismissKeyCount = 0;
     if (![UICKeyChainStore stringForKey:@"FirstLoad"]) {
@@ -92,27 +94,7 @@
 #pragma mark - NSNotificationCenter
 
 - (void)keyboardWillShow:(NSNotification*)notification{
-    
-    [UIView beginAnimations:nil context:NULL];
-    [UIView setAnimationDuration:[notification.userInfo[UIKeyboardAnimationDurationUserInfoKey] doubleValue]];
-    [UIView setAnimationCurve:[notification.userInfo[UIKeyboardAnimationCurveUserInfoKey] integerValue]];
-    [UIView setAnimationBeginsFromCurrentState:YES];
-    
-    NSDictionary* keyboardInfo = [notification userInfo];
-    NSValue* keyboardFrameBegin = [keyboardInfo valueForKey:UIKeyboardFrameEndUserInfoKey];
-    CGRect keyboardFrameBeginRect = [keyboardFrameBegin CGRectValue];
-    _window.frame = CGRectMake(_window.frame.origin.x,
-                               _window.frame.origin.y,
-                               _window.frame.size.width,
-                               _window.frame.size.height - keyboardFrameBeginRect.size.height);
-    _hideNotification = notification;
-    [UIView commitAnimations];
-    _rotate = true;
-    _dismissKeyCount = 0;
-    
-}
-- (void)keyboardWillHide:(NSNotification*)notification{
-    if (_rotate){// && _dismissKeyCount == 0) {
+    if (_isEditing == false && _isEmail == false) {
         [UIView beginAnimations:nil context:NULL];
         [UIView setAnimationDuration:[notification.userInfo[UIKeyboardAnimationDurationUserInfoKey] doubleValue]];
         [UIView setAnimationCurve:[notification.userInfo[UIKeyboardAnimationCurveUserInfoKey] integerValue]];
@@ -124,21 +106,47 @@
         _window.frame = CGRectMake(_window.frame.origin.x,
                                    _window.frame.origin.y,
                                    _window.frame.size.width,
-                                   _window.frame.size.height + keyboardFrameBeginRect.size.height);
+                                   _window.frame.size.height - keyboardFrameBeginRect.size.height);
+        _hideNotification = notification;
         [UIView commitAnimations];
-    } else {
-        [UIView beginAnimations:nil context:NULL];
-        [UIView setAnimationDuration:[notification.userInfo[UIKeyboardAnimationDurationUserInfoKey] doubleValue]];
-        [UIView setAnimationCurve:[notification.userInfo[UIKeyboardAnimationCurveUserInfoKey] integerValue]];
-        [UIView setAnimationBeginsFromCurrentState:YES];
-        
-        [_window setFrame:CGRectMake(0,
-                                     0,
-                                     ([[UIScreen mainScreen] bounds].size.width),
-                                     ([[UIScreen mainScreen] bounds].size.height))];
-        
-        [UIView commitAnimations];
-        _dismissKeyCount = 1;
+        _isEditing = true;
+        _rotate = true;
+        _dismissKeyCount = 0;
+    }
+    
+}
+- (void)keyboardWillHide:(NSNotification*)notification{
+    _isEditing = false;
+    
+    if (_isEmail == false) {
+        if (_rotate){// && _dismissKeyCount == 0) {
+            [UIView beginAnimations:nil context:NULL];
+            [UIView setAnimationDuration:[notification.userInfo[UIKeyboardAnimationDurationUserInfoKey] doubleValue]];
+            [UIView setAnimationCurve:[notification.userInfo[UIKeyboardAnimationCurveUserInfoKey] integerValue]];
+            [UIView setAnimationBeginsFromCurrentState:YES];
+            
+            NSDictionary* keyboardInfo = [notification userInfo];
+            NSValue* keyboardFrameBegin = [keyboardInfo valueForKey:UIKeyboardFrameEndUserInfoKey];
+            CGRect keyboardFrameBeginRect = [keyboardFrameBegin CGRectValue];
+            _window.frame = CGRectMake(_window.frame.origin.x,
+                                       _window.frame.origin.y,
+                                       _window.frame.size.width,
+                                       _window.frame.size.height + keyboardFrameBeginRect.size.height);
+            [UIView commitAnimations];
+        } else {
+            [UIView beginAnimations:nil context:NULL];
+            [UIView setAnimationDuration:[notification.userInfo[UIKeyboardAnimationDurationUserInfoKey] doubleValue]];
+            [UIView setAnimationCurve:[notification.userInfo[UIKeyboardAnimationCurveUserInfoKey] integerValue]];
+            [UIView setAnimationBeginsFromCurrentState:YES];
+            
+            [_window setFrame:CGRectMake(0,
+                                         0,
+                                         ([[UIScreen mainScreen] bounds].size.width),
+                                         ([[UIScreen mainScreen] bounds].size.height))];
+            
+            [UIView commitAnimations];
+            _dismissKeyCount = 1;
+        }
     }
 }
 

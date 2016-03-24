@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import <MessageUI/MessageUI.h>
+#import "AppDelegate.h"
 #import "TransformerCalcVariables.h"
 
 @class DetailViewController;

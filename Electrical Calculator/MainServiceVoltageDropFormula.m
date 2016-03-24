@@ -524,7 +524,7 @@
         [_wireResieLbl setDelegate:self];
         _quantityPickerPopover = [[UIPopoverController alloc] initWithContentViewController:popoverContent];
         [_quantityPickerPopover setDelegate:self];
-        _quantityPickerPopover.contentViewController.preferredContentSize = CGSizeMake(150, 100);
+        _quantityPickerPopover.contentViewController.preferredContentSize = CGSizeMake(150, 155);
         [_quantityPickerPopover presentPopoverFromRect:CGRectMake(_wireResieLbl.frame.size.width, _wireResieLbl.frame.size.height/2, 0, 0) inView:_wireResieLbl
                               permittedArrowDirections:UIPopoverArrowDirectionUp
                                               animated:NO];
