@@ -81,7 +81,7 @@
 		E52807E11A76CE9700AF1A17 /* TransformerCalcVariables.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransformerCalcVariables.m; sourceTree = "<group>"; };
 		E52807E51A76CF0300AF1A17 /* TransformerLoadFormula.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TransformerLoadFormula.h; sourceTree = "<group>"; };
 		E52807E61A76CF0300AF1A17 /* TransformerLoadFormula.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransformerLoadFormula.m; sourceTree = "<group>"; };
-		E53D097A1A6FE82E00A101E8 /* Electrical Calculator.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Electrical Calculator.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		E53D097A1A6FE82E00A101E8 /* Eng Calculator.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Eng Calculator.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E53D097E1A6FE82F00A101E8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E53D097F1A6FE82F00A101E8 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		E53D09811A6FE82F00A101E8 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -224,7 +224,7 @@
 		E53D097B1A6FE82E00A101E8 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				E53D097A1A6FE82E00A101E8 /* Electrical Calculator.app */,
+				E53D097A1A6FE82E00A101E8 /* Eng Calculator.app */,
 				E53D09931A6FE82F00A101E8 /* Electrical CalculatorTests.xctest */,
 			);
 			name = Products;
@@ -423,7 +423,7 @@
 			);
 			name = "Electrical Calculator";
 			productName = "Electrical Calculator";
-			productReference = E53D097A1A6FE82E00A101E8 /* Electrical Calculator.app */;
+			productReference = E53D097A1A6FE82E00A101E8 /* Eng Calculator.app */;
 			productType = "com.apple.product-type.application";
 		};
 		E53D09921A6FE82F00A101E8 /* Electrical CalculatorTests */ = {
@@ -698,7 +698,7 @@
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = "Electrical Calculator/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = "Eng Calculator";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -711,7 +711,7 @@
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = "Electrical Calculator/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = "Eng Calculator";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
