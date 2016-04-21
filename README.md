@@ -1,8 +1,8 @@
-# Electric Disritbution Engineering Calculator IOS
+# Electric Distribution Engineering Calculator IOS
 
 ##Overview
 The Engineering Calculator application simplifies complex electrical engineering calculations
-for easy access to field employees. This application is improving field employee’s efficiency
+for easy access to field employees. This application improves field employee’s efficiency
 by providing faster, error free calculations, improvement in field troubleshooting, and better
 response to customer inquiries. This application was developed as part of the [APPA DEED Program.](http://www.publicpower.org/Programs/Landing.cfm?ItemNumber=31245&navItemNumber=37529)
 
@@ -11,8 +11,8 @@ The Engineering Calculator application contains six different formulas.  When th
 the user is presented with the Subdivision Load Calculator.  If the user is in landscape mode the list of
 formulas appears on the left.  In portrait, the formula list is hidden and the user must swipe from the left
 edge of the screen to the center of the calculator for the formulas to appear on the left.  For all of the formulas
-there is an info button, configure button, clear button and defaults button.  The editable values will be in fields
-that are outlined in a box.  The results of the formula will be in a white box on the right.  
+there is an info button, configure button, clear button and default button.  The editable values will be in the fields
+that are outlined in a box.  The results of the formula will be in the white box on the right.  
 
 The user is able to edit the values in the formula and also save the values as defaults for the formula.
 The user is able to load the defaults from the default button on the formula screen.  
@@ -82,7 +82,7 @@ To modify the Impedance Table kVA sizes and Impedances, select the “Configure�
 “Default” button.  To share the results, select the “email” button.
 
 ## Contributors
-[Aaron Johnson](https://www.linkedin.com/in/aaron-johnson-30087469), [Kelly Mayo](), [John Worrell](), [Paul Marney](), [Krystle Small](), [John Little](https://www.linkedin.com/in/johnclittle), and others.
+[Aaron Johnson](https://www.linkedin.com/in/aaron-johnson-30087469), [Kelly Mayo](), [John Worrell](), [Paul Marney](), [Krystle Small](http://linkedin.com/in/krystle-small-94794385), [John Little](https://www.linkedin.com/in/johnclittle), and others.
 
 ## License
 The MIT License (MIT)
